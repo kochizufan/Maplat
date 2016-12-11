@@ -136,14 +136,14 @@
     var MaplatImageryProvider = function MaplatImageryProvider(options) {
         options = defaultValue(options, {});
 
-        var url = defaultValue(options.url, '//a.tile.openstreetmap.org/');
+        var url = defaultValue(options.url, '../tiles/morioka/');
 
         if (!trailingSlashRegex.test(url)) {
             url = url + '/';
         }
 
         this._url = url;
-        this._fileExtension = defaultValue(options.fileExtension, 'png');
+        this._fileExtension = defaultValue(options.fileExtension, 'jpg');
         this._proxy = options.proxy;
         this._tileDiscardPolicy = options.tileDiscardPolicy;
 
@@ -185,7 +185,7 @@
         var url;
         if (imageryProvider._layerLists[level]) {
             var layer = imageryProvider._layerLists[level];
-            url = "//cyberjapandata.gsi.go.jp/xyz/" + layer.id + "/" + level + "/" + x + "/" + y + "." + layer.ext;
+            url = "../tiles/morioka/" + level + "/" + x + "/" + y + ".jpg";
         } else {
             url = imageryProvider._url + level + '/' + x + '/' + y + '.' + imageryProvider._fileExtension;
         }

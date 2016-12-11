@@ -22,7 +22,7 @@ var
     var MaplatTerrainProvider = function MaplatTerrainProvider(options) {
         options = defaultValue(options, {});
 
-        var url = defaultValue(options.url, 'elevs/morioka/');
+        var url = defaultValue(options.url, '../elevs/morioka/');
 
         if (!trailingSlashRegex.test(url)) {
             url = url + '/';
