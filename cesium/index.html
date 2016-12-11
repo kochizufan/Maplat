@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Japan GSI tiles for Cesium</title>
+  <link  href="./Cesium/Widgets/widgets.css" rel="stylesheet" />
+  <link  href="./Cesium/Widgets/lighter.css" rel="stylesheet" />
+  <link  href="./bucket.css" rel="stylesheet" />
+  <script src="./Cesium/Cesium.js"></script>
+  <script src="./MaplatImageryProvider.js"></script>
+  <script src="./MaplatTerrainProvider.js"></script>
+ </head>
+ <body>
+ <div id="cesiumContainer" class="fullSize"></div>
+  <script>
+    var camera_start = Cesium.Cartesian3.fromDegrees(135.0, 35.0, 1000);
+    var camera_direction = Cesium.Cartesian3.fromDegrees(-75.0, 70.0, 0);
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        imageryProvider: new Cesium.MaplatImageryProvider({
+            layerLists: ["ort","relief","std"]
+        }),
+        terrainProvider: new Cesium.MaplatTerrainProvider({
+        }),
+        baseLayerPicker: false,
+        mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84)
+    });
+    var scene = viewer.scene;
+    scene.globe.depthTestAgainstTerrain = true;
+    scene.camera.lookAt(camera_start, camera_direction, Cesium.Cartesian3.UNIT_Z);
+  </script>
+ </body>
+</html>
