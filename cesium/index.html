@@ -8,7 +8,7 @@
   <link  href="./bucket.css" rel="stylesheet" />
   <script src="./Cesium/Cesium.js"></script>
   <script src="./MaplatImageryProvider.js"></script>
-  <script src="./MaplatTerrainProvider.js"></script>
+  <!--script src="./MaplatTerrainProvider.js"></script-->
  </head>
  <body>
  <div id="cesiumContainer" class="fullSize"></div>
@@ -20,8 +20,8 @@
         imageryProvider: new Cesium.MaplatImageryProvider({
             layerLists: ["ort","relief","std"]
         }),
-        terrainProvider: new Cesium.MaplatTerrainProvider({
-        }),
+        //terrainProvider: new Cesium.MaplatTerrainProvider({
+        //}),
         baseLayerPicker: false,
         mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84)
     });

@@ -182,13 +182,22 @@
     };
 
     function buildImageUrl(imageryProvider, x, y, level) {
-        var url;
-        if (imageryProvider._layerLists[level]) {
-            var layer = imageryProvider._layerLists[level];
-            url = "../tiles/morioka/" + level + "/" + x + "/" + y + ".jpg";
-        } else {
-            url = imageryProvider._url + level + '/' + x + '/' + y + '.' + imageryProvider._fileExtension;
-        }
+        var width  = 6144;
+        var height = 4096;
+        var deltaz = 7 - level;
+        x = x - Math.pow(2,level) / 2;
+        y = y - Math.pow(2,level) / 2;
+
+        var url = '../tiles/morioka/' + (level-2) + '/' + x + '/' + y + '.jpg';//this._url + level + '/' + x + '/' + y + '.txt';
+
+        if (x * 256 * Math.pow(2,deltaz) > width || y * 256 * Math.pow(2,deltaz) > height ||
+            x < 0 || y < 0 || deltaz > 5 || deltaz < 0)
+            url = 'data:image/png;base64,'+
+                'iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAB3RJTUUH3QgIBToaSbAjlwAAABd0'+
+                'RVh0U29mdHdhcmUAR0xEUE5HIHZlciAzLjRxhaThAAAACHRwTkdHTEQzAAAAAEqAKR8AAAAEZ0FN'+
+                'QQAAsY8L/GEFAAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAAFRJREFUeNrtwQEBAAAAgJD+'+
+                'r+4ICgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'+
+                'AAAAAAAAAAAAABgBDwABHHIJwwAAAABJRU5ErkJggg==';
 
         var proxy = imageryProvider._proxy;
         if (defined(proxy)) {

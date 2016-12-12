@@ -17,7 +17,7 @@ var
 
     var trailingSlashRegex = /\/$/;
     var defaultCredit = new Credit('国土地理院');
-    var GSI_MAX_TERRAIN_LEVEL = 14;
+    var GSI_MAX_TERRAIN_LEVEL = 5;
 
     var MaplatTerrainProvider = function MaplatTerrainProvider(options) {
         options = defaultValue(options, {});
@@ -57,6 +57,8 @@ var
     };
 
     MaplatTerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {
+        var width  = 6144;
+        var height = 4096;
         var orgx = x;
         var orgy = y;
         var shift = 0;
@@ -70,7 +72,14 @@ var
         var shiftx = (orgx % Math.pow(2, shift + 1)) / Math.pow(2, shift + 1);
         var shifty = (orgy % Math.pow(2, shift)) / Math.pow(2, shift);
 
-        var url = this._url + level + '/' + x + '/' + y + '.txt';
+        var deltaz = GSI_MAX_TERRAIN_LEVEL - level + 2;
+        x = x - Math.pow(2,level);
+
+        var url = '../elevs/morioka/' + level + '/' + x + '/' + y + '.txt';//this._url + level + '/' + x + '/' + y + '.txt';
+
+        if (x * 256 * Math.pow(2,deltaz) > width || y * 256 * Math.pow(2,deltaz) > height ||
+            )
+            url = '../elevs/morioka/e.txt';
 
         var proxy = this._proxy;
         if (defined(proxy)) {
