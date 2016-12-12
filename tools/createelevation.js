@@ -47,7 +47,6 @@ if (!outFolder) {
 }
 
 var maxzoom = Math.ceil(Math.log(Math.max(wh[0],wh[1]) / 256) / Math.log(2));
-console.log(maxzoom);
 
 var tin = new Tin({
     points: points,
@@ -59,64 +58,77 @@ var vtxtiles = [
     [wh[0],0],
     [0,wh[1]],
     wh
-].map(function(vtx){
-    var mercxy = tin.transform(vtx, false);
-    var pixxy = [mercxy[0] + MERC_MAX, MERC_MAX - mercxy[1]].map(function (merc) {
-        return Math.pow(2, 14) * 256 * merc / MERC_MAX / 2;
-    });
-    var tilexy = pixxy.map(function (pix) {
-        return Math.floor(pix / 256);
-    });
-    return tilexy;
-});
-
-var vtxxs = vtxtiles.map(function(xy){return xy[0]});
-var vtxys = vtxtiles.map(function(xy){return xy[1]});
-
-var minx = Math.min(vtxxs[0],vtxxs[1],vtxxs[2],vtxxs[3]) - 1;
-var maxx = Math.max(vtxxs[0],vtxxs[1],vtxxs[2],vtxxs[3]) + 1;
-var miny = Math.min(vtxys[0],vtxys[1],vtxys[2],vtxys[3]) - 1;
-var maxy = Math.max(vtxys[0],vtxys[1],vtxys[2],vtxys[3]) + 1;
-
+];
 var promises = [];
-for (var x = minx;x<=maxx;x++) {
-    for (var y = miny;y<=maxy;y++) {
-        promises.push(getElevationByTileXyAsync([x,y],[0,0]));
+
+for (var z=0;z<=maxzoom;z++) {
+    var gsiz = 14 - maxzoom +z;
+    var ztiles = vtxtiles.map(function (vtx) {
+        var mercxy = tin.transform(vtx, false);
+        var pixxy = [mercxy[0] + MERC_MAX, MERC_MAX - mercxy[1]].map(function (merc) {
+            return Math.pow(2, gsiz) * 256 * merc / MERC_MAX / 2;
+        });
+        var tilexy = pixxy.map(function (pix) {
+            return Math.floor(pix / 256);
+        });
+        return tilexy;
+    });
+
+    var vtxxs = ztiles.map(function (xy) {
+        return xy[0]
+    });
+    var vtxys = ztiles.map(function (xy) {
+        return xy[1]
+    });
+
+    var minx = Math.min(vtxxs[0], vtxxs[1], vtxxs[2], vtxxs[3]) - 1;
+    var maxx = Math.max(vtxxs[0], vtxxs[1], vtxxs[2], vtxxs[3]) + 1;
+    var miny = Math.min(vtxys[0], vtxys[1], vtxys[2], vtxys[3]) - 1;
+    var maxy = Math.max(vtxys[0], vtxys[1], vtxys[2], vtxys[3]) + 1;
+
+
+    for (var x = minx; x <= maxx; x++) {
+        for (var y = miny; y <= maxy; y++) {
+            promises.push(getElevationByTileXyAsync(gsiz,[x, y], [0, 0]));
+        }
     }
 }
 Promise.all(promises).then(function(){
-    for (var tx=0;tx<Math.pow(2,maxzoom);tx++) {
-        var dx = tx * 256;
-        if (dx >= wh[0] ) continue;
-        for (var ty=0;ty<Math.pow(2,maxzoom);ty++) {
-            var dy = ty * 256;
-            if (dy >= wh[1] ) continue;
-            var tree = outFolder + "/" + basename +'/' + maxzoom + '/' + tx;
-            fs.mkdirsSync(tree);
-            var file = tree + '/' + ty + '.txt';
-            fs.writeFileSync(file, "");
+    for (var z=0; z<=maxzoom; z++) {
+        var gsiz = 14 - maxzoom +z;
+        for (var tx = 0; tx < Math.pow(2, z); tx++) {
+            var dx = tx * 256;
+            if (dx >= wh[0]) continue;
+            for (var ty = 0; ty < Math.pow(2, z); ty++) {
+                var dy = ty * 256;
+                if (dy >= wh[1]) continue;
+                var tree = outFolder + "/" + basename + '/' + z + '/' + tx;
+                fs.mkdirsSync(tree);
+                var file = tree + '/' + ty + '.txt';
+                fs.writeFileSync(file, "");
 
-            for (var py = 0; py < 256; py++) {
-                var result = [];
-                var y = dy + py + 0.5;
-                for (var px = 0; px < 256; px++) {
-                    var x = dx + px + 0.5;
-                    if (x >= wh[0] || y >= wh[1]) {
-                        result.push("e");
-                    } else {
-                        var mercxy = tin.transform([x, y], false);
-                        var pixxy = [mercxy[0] + MERC_MAX, MERC_MAX - mercxy[1]].map(function (merc) {
-                            return Math.pow(2, 14) * 256 * merc / MERC_MAX / 2;
-                        });
-                        var tilexy = pixxy.map(function (pix) {
-                            var tile = Math.floor(pix / 256);
-                            return [tile, Math.floor(pix - tile * 256)];
-                        });
-                        var ret = getElevationByTileXy([tilexy[0][0], tilexy[1][0]], [tilexy[0][1], tilexy[1][1]]);
-                        result.push(ret);
+                for (var py = 0; py < 256; py++) {
+                    var result = [];
+                    var y = dy + py + 0.5;
+                    for (var px = 0; px < 256; px++) {
+                        var x = dx + px + 0.5;
+                        if (x >= wh[0] || y >= wh[1]) {
+                            result.push("e");
+                        } else {
+                            var mercxy = tin.transform([x, y], false);
+                            var pixxy = [mercxy[0] + MERC_MAX, MERC_MAX - mercxy[1]].map(function (merc) {
+                                return Math.pow(2, gsiz) * 256 * merc / MERC_MAX / 2;
+                            });
+                            var tilexy = pixxy.map(function (pix) {
+                                var tile = Math.floor(pix / 256);
+                                return [tile, Math.floor(pix - tile * 256)];
+                            });
+                            var ret = getElevationByTileXy(gsiz,[tilexy[0][0], tilexy[1][0]], [tilexy[0][1], tilexy[1][1]]);
+                            result.push(ret);
+                        }
                     }
+                    fs.appendFileSync(file, result.join(",") + "\n");
                 }
-                fs.appendFileSync(file, result.join(",") + "\n");
             }
         }
     }
@@ -175,25 +187,27 @@ function stop (message) {
     process.exit(1);
 }
 
-function getElevationByTileXy(txy,lxy) {
-    if (gsi_cache[txy[0]+ "," + txy[1]]) {
-        return gsi_cache[txy[0]+ "," + txy[1]][lxy[1]][lxy[0]];
+function getElevationByTileXy(z, txy,lxy) {
+    var key = z + "," + txy[0]+ "," + txy[1];
+    if (gsi_cache[key]) {
+        return gsi_cache[key][lxy[1]][lxy[0]];
     } else {
         stop("Tile " + txy[0]+ "," + txy[1] + " is not fetched");
     }
 }
 
-function getElevationByTileXyAsync(tilexy,localxy) {
-    return (function(txy,lxy) {
+function getElevationByTileXyAsync(zoom, tilexy,localxy) {
+    return (function(z, txy,lxy) {
         return new Promise(function(res,rej){
-            if (gsi_cache[txy[0]+ "," + txy[1]]) {
-                res(gsi_cache[txy[0]+ "," + txy[1]][lxy[1]][lxy[0]]);
+            var key = z + "," + txy[0]+ "," + txy[1];
+            if (gsi_cache[key]) {
+                res(gsi_cache[key][lxy[1]][lxy[0]]);
             } else {
-                var url = "http://cyberjapandata.gsi.go.jp/xyz/dem/14/" + txy[0] + "/" + txy[1] + ".txt";
+                var url = "http://cyberjapandata.gsi.go.jp/xyz/dem/" + z + "/" + txy[0] + "/" + txy[1] + ".txt";
                 request(url, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         csv.parse(body,function(err, data){
-                            gsi_cache[txy[0]+ "," + txy[1]] = data;
+                            gsi_cache[key] = data;
                             res(data[lxy[1]][lxy[0]]);
                         });
                     } else {
@@ -202,5 +216,5 @@ function getElevationByTileXyAsync(tilexy,localxy) {
                 });
             }
         });
-    })(tilexy,localxy);
+    })(zoom, tilexy,localxy);
 }
