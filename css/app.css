@@ -30,18 +30,6 @@ html,body {
     position: relative;
 }
 
-.controlview {
-    height:50px;
-}
-
-.mainview_2 {
-    height:calc(100% - 110px);
-}
-
-.controlview_2 {
-    height:110px;
-}
-
 .btn-container {
     padding:10px; 
 }

@@ -59,3 +59,12 @@ require.config({
         }
     }
 });
+require(['app'], function(app) {
+    var option = {};
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        option[hash[0]] = hash[1];
+    }
+    app(option);
+});
