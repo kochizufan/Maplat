@@ -142,6 +142,14 @@
       "icon": "parts/jizo.png"
     },
     {
+      "name": "地蔵堂",
+      "lat": 34.671682000000004,
+      "lng": 135.8135,
+      "desc": "大安寺四丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Jizo_in_Daianji4_Nara.jpg/320px-Jizo_in_Daianji4_Nara.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
       "name": "地蔵",
       "lat": 34.676664,
       "lng": 135.829026,
@@ -155,6 +163,102 @@
       "lng": 135.829844,
       "desc": "元興寺町 壁の中",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Jizo_in_Wall_Gangouji-Cho_Nara_Renew.jpg/180px-Jizo_in_Wall_Gangouji-Cho_Nara_Renew.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.683369,
+      "lng": 135.839325,
+      "desc": "春日野町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Jizo_Kasugano_Nara.jpg/320px-Jizo_Kasugano_Nara.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.671076666666664,
+      "lng": 135.83375,
+      "desc": "紀寺町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Jizo_Kidera_Nara_1.jpg/180px-Jizo_Kidera_Nara_1.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.67166233333333,
+      "lng": 135.83357766666666,
+      "desc": "紀寺町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Jizo_Kidera_Nara_2.jpg/180px-Jizo_Kidera_Nara_2.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.671706,
+      "lng": 135.83356500000002,
+      "desc": "紀寺町（内部空）",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Jizo_Kidera_Nara_3.jpg/180px-Jizo_Kidera_Nara_3.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.6694885,
+      "lng": 135.83905,
+      "desc": "南紀寺町三丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Jizo_Minami-Kidera_3_Nara_1.jpg/320px-Jizo_Minami-Kidera_3_Nara_1.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.6693765,
+      "lng": 135.838897,
+      "desc": "南紀寺町三丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Jizo_Minami-Kidera_3_Nara_2.jpg/320px-Jizo_Minami-Kidera_3_Nara_2.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵",
+      "lat": 34.670923333333334,
+      "lng": 135.828981,
+      "desc": "南京終町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Jizo_Minami-Kyobate_Nara_1.jpg/180px-Jizo_Minami-Kyobate_Nara_1.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.685767999999996,
+      "lng": 135.792054,
+      "desc": "二条大路南四丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Jizo_Nijo-Oji-Minami_4_Nara.jpg/180px-Jizo_Nijo-Oji-Minami_4_Nara.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.686261333333334,
+      "lng": 135.78829433333334,
+      "desc": "二条大路南五丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/IJizo_Nijo-oji-Minami_5_Nara_2.jpg/180px-IJizo_Nijo-oji-Minami_5_Nara_2.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵",
+      "lat": 34.68026425,
+      "lng": 135.825314,
+      "desc": "小川町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Jizo_Ogawa-cho_Nara_Body_1.jpg/180px-Jizo_Ogawa-cho_Nara_Body_1.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.683136,
+      "lng": 135.81160275,
+      "desc": "大宮町四丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Jizo_Omiya_4_Nara_%28Body%29.jpg/180px-Jizo_Omiya_4_Nara_%28Body%29.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵堂",
+      "lat": 34.680147500000004,
+      "lng": 135.82533999999998,
+      "desc": "地蔵堂",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Jizo_Teramachi_Nara.jpg/320px-Jizo_Teramachi_Nara.jpg",
       "icon": "parts/jizo.png"
     },
     {
@@ -286,11 +390,43 @@
       "icon": "parts/jizo.png"
     },
     {
+      "name": "地蔵堂",
+      "lat": 34.695025,
+      "lng": 135.780456,
+      "desc": "西大寺小坊町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Jizodo_Saidaiji_Kobo_Nara.jpg/180px-Jizodo_Saidaiji_Kobo_Nara.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
       "name": "地蔵群",
       "lat": 34.670151,
       "lng": 135.816941,
       "desc": "大安寺 墓山古墳内",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hakayama_Kofun_Nara_Big_Jizo.jpg/320px-Hakayama_Kofun_Nara_Big_Jizo.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵群",
+      "lat": 34.682160249999995,
+      "lng": 135.83031125,
+      "desc": "登大路町　興福寺三重塔そば（救世観世音菩薩、出世地蔵尊、延命能師地蔵尊、水子地蔵尊）",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Jizos_near_Kofukuji_NoboriOji-cho_Nara_2.jpg/320px-Jizos_near_Kofukuji_NoboriOji-cho_Nara_2.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵",
+      "lat": 34.6665515,
+      "lng": 135.813424,
+      "desc": "東九条町　八幡神社前北側",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Jizos_near_Yawata_Shrine_Higashikujo_Nara_%28North%29.jpg/320px-Jizos_near_Yawata_Shrine_Higashikujo_Nara_%28North%29.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵",
+      "lat": 34.666771,
+      "lng": 135.81347649999998,
+      "desc": "東九条町　八幡神社前南側",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Jizos_near_Yawata_Shrine_Higashikujo_Nara_%28South%29_Indise.jpg/320px-Jizos_near_Yawata_Shrine_Higashikujo_Nara_%28South%29_Indise.jpg",
       "icon": "parts/jizo.png"
     },
     {
@@ -422,6 +558,22 @@
       "icon": "parts/jizo.png"
     },
     {
+      "name": "子安地蔵尊",
+      "lat": 34.674298500000006,
+      "lng": 135.826232,
+      "desc": "西木辻町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Koyasu_Jizo_NishiKitsuji.jpg/320px-Koyasu_Jizo_NishiKitsuji.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "子安地蔵尊",
+      "lat": 34.695265500000005,
+      "lng": 135.779861,
+      "desc": "西大寺小坊町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Koyasu_Jizo_Saidaiji_Kobo_Nara.jpg/180px-Koyasu_Jizo_Saidaiji_Kobo_Nara.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
       "name": "萬季地蔵尊",
       "lat": 34.69889,
       "lng": 135.834738,
@@ -491,6 +643,14 @@
       "lng": 135.832783,
       "desc": "紀寺町（寶珠寺そば）",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Nara_Jizo_%28Kidera-cho%2C_Near_Hoju-ji%29.jpg/180px-Nara_Jizo_%28Kidera-cho%2C_Near_Hoju-ji%29.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "地蔵",
+      "lat": 34.682118,
+      "lng": 135.832421,
+      "desc": "興福寺南側 菩提堂向付近",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Nara_Kofukuji_South_Jizo_%28Kasako%29.jpg/180px-Nara_Kofukuji_South_Jizo_%28Kasako%29.jpg",
       "icon": "parts/jizo.png"
     },
     {
@@ -630,6 +790,14 @@
       "icon": "parts/jizo.png"
     },
     {
+      "name": "助日限地蔵尊",
+      "lat": 34.696772333333335,
+      "lng": 135.77987700000003,
+      "desc": "西大寺北町一丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Sukehigiri_Jizo_Saidaiji-Kita_1_Nara_Wakiji_1.jpg/180px-Sukehigiri_Jizo_Saidaiji-Kita_1_Nara_Wakiji_1.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
       "name": "地蔵堂",
       "lat": 34.67704,
       "lng": 135.846328,
@@ -659,6 +827,14 @@
       "lng": 135.837417,
       "desc": "高畑町",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Nara_Takabatake_Tsumegaki_Jizo.jpg/180px-Nara_Takabatake_Tsumegaki_Jizo.jpg",
+      "icon": "parts/jizo.png"
+    },
+    {
+      "name": "木造地蔵菩薩立像",
+      "lat": 34.67157725,
+      "lng": 135.8160635,
+      "desc": "大安寺五丁目　指定文化財",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Wooden_Jizo_Daianji5_Nara_Incised_Stupa.jpg/320px-Wooden_Jizo_Daianji5_Nara_Incised_Stupa.jpg",
       "icon": "parts/jizo.png"
     },
     {
@@ -750,10 +926,10 @@
       "icon": "parts/jizo.png"
     },
     {
-      "name": "高畑町、地蔵堂、合同庁舎敷地内",
+      "name": "地蔵堂",
       "lat": 34.67237,
       "lng": 135.843439,
-      "desc": "高畑町、地蔵堂、合同庁舎敷地内",
+      "desc": "高畑町合同庁舎敷地内",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Jizodo_Takabatake-cho_%28Godo_Chosha%29_Nara.jpg/320px-Jizodo_Takabatake-cho_%28Godo_Chosha%29_Nara.jpg",
       "icon": "parts/jizo.png"
     },
@@ -870,43 +1046,11 @@
       "icon": "parts/jizo.png"
     },
     {
-      "name": "地蔵堂",
-      "lat": 34.671108,
-      "lng": 135.833786,
-      "desc": "紀寺町",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nara_Kidera_cho_Jizo_1.jpg/180px-Nara_Kidera_cho_Jizo_1.jpg",
-      "icon": "parts/jizo.png"
-    },
-    {
-      "name": "地蔵堂",
-      "lat": 34.671692,
-      "lng": 135.833633,
-      "desc": "紀寺町",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nara_Kidera_cho_Jizo_2.jpg/180px-Nara_Kidera_cho_Jizo_2.jpg",
-      "icon": "parts/jizo.png"
-    },
-    {
-      "name": "地蔵堂",
-      "lat": 34.671731,
-      "lng": 135.833572,
-      "desc": "紀寺町",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Nara_Kidera_cho_Jizo_3.jpg/320px-Nara_Kidera_cho_Jizo_3.jpg",
-      "icon": "parts/jizo.png"
-    },
-    {
       "name": "地蔵",
       "lat": 34.670836,
       "lng": 135.83455,
       "desc": "紀寺町 マンション基礎内",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Nara_Kidera_Jizo_in_Mansion.jpg/320px-Nara_Kidera_Jizo_in_Mansion.jpg",
-      "icon": "parts/jizo.png"
-    },
-    {
-      "name": "地蔵",
-      "lat": 34.682122,
-      "lng": 135.832414,
-      "desc": "興福寺南側 菩提堂向付近",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Nara_Kofukuji_South_Jizo.jpg/180px-Nara_Kofukuji_South_Jizo.jpg",
       "icon": "parts/jizo.png"
     },
     {
@@ -974,6 +1118,38 @@
       "icon": "parts/hotoke.png"
     },
     {
+      "name": "仏教石碑のお堂",
+      "lat": 34.666542,
+      "lng": 135.813431,
+      "desc": "東九条町　八幡神社前北側",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Buddhism_stone_near_Yawata_Shrine_Higashikujo_Nara.jpg/320px-Buddhism_stone_near_Yawata_Shrine_Higashikujo_Nara.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
+      "name": "仏教石碑",
+      "lat": 34.69391866666667,
+      "lng": 135.78110733333332,
+      "desc": "西大寺南町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Buddhism_stone_Saidaiji_Minami_Nara_%28body%29.jpg/180px-Buddhism_stone_Saidaiji_Minami_Nara_%28body%29.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
+      "name": "五輪塔堂",
+      "lat": 34.669914,
+      "lng": 135.81859550000001,
+      "desc": "大安寺一丁目 団地の中",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Gorinto-Daianji1-Nara.jpg/180px-Gorinto-Daianji1-Nara.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
+      "name": "線刻の五輪塔",
+      "lat": 34.6707635,
+      "lng": 135.8334275,
+      "desc": "紀寺町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Incised_Stupa_Kidera_1.jpg/320px-Incised_Stupa_Kidera_1.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
       "name": "弘法井戸",
       "lat": 34.693929,
       "lng": 135.788661,
@@ -1014,11 +1190,43 @@
       "icon": "parts/hotoke.png"
     },
     {
+      "name": "いくつかの尊像",
+      "lat": 34.69521975,
+      "lng": 135.779878,
+      "desc": "西大寺小坊町（三宝大荒神、大聖不動明王、観世音菩薩、地蔵大菩薩）",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Several_Buddhas_Saidaiji_Kobo_Nara_%28Fudo%29.jpg/180px-Several_Buddhas_Saidaiji_Kobo_Nara_%28Fudo%29.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
       "name": "聖寶理源大師堂",
       "lat": 34.680546,
       "lng": 135.82895,
       "desc": "餅飯殿町",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Mochiidono_Benzaiten_and_Shoho_Rigen_Daishido_%28Nara%29.jpg/320px-Mochiidono_Benzaiten_and_Shoho_Rigen_Daishido_%28Nara%29.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
+      "name": "修行大師尊像",
+      "lat": 34.695294,
+      "lng": 135.779861,
+      "desc": "西大寺小坊町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Shugyo_Daishi_Saidaiji_Kobo_Nara.jpg/180px-Shugyo_Daishi_Saidaiji_Kobo_Nara.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
+      "name": "石碑？のお堂",
+      "lat": 34.668118666666665,
+      "lng": 135.813614,
+      "desc": "大安寺一丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Small_Temple_Daianji1_Nara_Enkyo_3.jpg/180px-Small_Temple_Daianji1_Nara_Enkyo_3.jpg",
+      "icon": "parts/hotoke.png"
+    },
+    {
+      "name": "石造大日如来",
+      "lat": 34.6680264,
+      "lng": 135.8137692,
+      "desc": "大安寺一丁目（推古天皇社脇）",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Kobo-daishi_Koshikake_Ishi_NameStone.jpg/180px-Kobo-daishi_Koshikake_Ishi_NameStone.jpg",
       "icon": "parts/hotoke.png"
     },
     {
@@ -1094,11 +1302,27 @@
       "icon": "parts/jinja.png"
     },
     {
+      "name": "弁財天小祠",
+      "lat": 34.6803415,
+      "lng": 135.825928,
+      "desc": "小川町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Benzaiten_Ogawa-cho_Nara.jpg/180px-Benzaiten_Ogawa-cho_Nara.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
       "name": "冨久神社",
       "lat": 34.678496,
       "lng": 135.824864,
       "desc": "南魚屋町",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Fuku_Shrine_Nara_Honden.jpg/320px-Fuku_Shrine_Nara_Honden.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
+      "name": "御霊神社",
+      "lat": 34.668929000000006,
+      "lng": 135.81385,
+      "desc": "大安寺一丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Goryo_Shrine_Daianji1_Nara_Honden.jpg/320px-Goryo_Shrine_Daianji1_Nara_Honden.jpg",
       "icon": "parts/jinja.png"
     },
     {
@@ -1198,6 +1422,22 @@
       "icon": "parts/jinja.png"
     },
     {
+      "name": "金比羅権現",
+      "lat": 34.66808733333334,
+      "lng": 135.81377133333334,
+      "desc": "大安寺一丁目（推古天皇社脇）",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Kompira_Daianji1_Nara_Hengaku.jpg/180px-Kompira_Daianji1_Nara_Hengaku.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
+      "name": "大和皇神殿",
+      "lat": 34.6799665,
+      "lng": 135.82505,
+      "desc": "寺町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Koshinden_Teramachi_Nara.jpg/320px-Koshinden_Teramachi_Nara.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
       "name": "皇大神宮",
       "lat": 34.678121,
       "lng": 135.829316,
@@ -1262,6 +1502,14 @@
       "icon": "parts/jinja.png"
     },
     {
+      "name": "三條村野神",
+      "lat": 34.681458,
+      "lng": 135.811889,
+      "desc": "三条添川町",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Nogami_Tree_Sanjo-Soekawa_Nara.jpg/180px-Nogami_Tree_Sanjo-Soekawa_Nara.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
       "name": "龍長大神",
       "lat": 34.684867,
       "lng": 135.825473,
@@ -1294,6 +1542,14 @@
       "icon": "parts/jinja.png"
     },
     {
+      "name": "小祠",
+      "lat": 34.666714,
+      "lng": 135.813003,
+      "desc": "東九条町　八幡神社参道",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Small_Shrine_near_Yawata_Shrine_Higashikujo_Nara.jpg/180px-Small_Shrine_near_Yawata_Shrine_Higashikujo_Nara.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
       "name": "杉市大神",
       "lat": 34.678582,
       "lng": 135.823033,
@@ -1307,6 +1563,14 @@
       "lng": 135.82714,
       "desc": "中筋町",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Suihaku_Taishin_Nara_Zoom.jpg/180px-Suihaku_Taishin_Nara_Zoom.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
+      "name": "推古天皇社",
+      "lat": 34.667955666666664,
+      "lng": 135.81366933333334,
+      "desc": "大安寺一丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Suiko_Empress_Shrine_Chozusha.jpg/320px-Suiko_Empress_Shrine_Chozusha.jpg",
       "icon": "parts/jinja.png"
     },
     {
@@ -1339,6 +1603,14 @@
       "lng": 135.85186,
       "desc": "春日野町",
       "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Tsukihiiwa_itself.jpg/320px-Tsukihiiwa_itself.jpg",
+      "icon": "parts/jinja.png"
+    },
+    {
+      "name": "小祠",
+      "lat": 34.669844499999996,
+      "lng": 135.84001949999998,
+      "desc": "南紀寺町三丁目",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Wayside_Shrine_in_Minami-Kidera_3_Nara.jpg/320px-Wayside_Shrine_in_Minami-Kidera_3_Nara.jpg",
       "icon": "parts/jinja.png"
     },
     {
