@@ -7,33 +7,17 @@
     "default_zoom" : 17,
     "sources" : [
         {
-            "era" : "仙石氏在城時代上田城下町図 元禄15年",
-            "attr" : "仙石氏在城時代上田城下町図 上田市マルチメディア情報センター",
             "mapID" : "sanada_genroku15_1702r",
-            "width" : 6164,
-            "height" : 4144,
-            "year" : 1702
+            "label" : 1702
         },{
-            "era" : "仙石氏家臣屋敷割図 元禄15年",
-            "attr" : "仙石氏家臣屋敷割図（写） 上田市マルチメディア情報センター",
             "mapID" : "sanada_genroku15_1702yashikiwari",
-            "width" : 5941,
-            "height" : 4054,
-            "year" : 1703
+            "label" : 1703
         },{
-            "era" : "安政年間上田城下町絵図",
-            "attr" : "安政年間上田城下町絵図 上田市マルチメディア情報センター",
             "mapID" : "sanada_ansei_1855_60",
-            "width" : 8182,
-            "height" : 6368,
-            "year" : 1855
+            "label" : 1855
         },{
-            "era" : "江戸末期 本丸二の丸図",
-            "attr" : "本丸二の丸図（写） 上田市マルチメディア情報センター",
             "mapID" : "sanada_edomakki",
-            "width" : 5516,
-            "height" : 5459,
-            "year" : 1867
+            "label" : 1867
         },
         "gsi",
         "osm"

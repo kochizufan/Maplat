@@ -7,12 +7,8 @@
     "default_zoom" : 17,
     "sources" : [
         {
-            "era" : "江戸寛政年間 龍野城下町",
-            "attr" : "觜崎屋本店",
             "mapID" : "Tatsuno_Hassaki_Kochizu",
-            "width" : 8468,
-            "height" : 5347,
-            "year" : 1795
+            "label" : 1795
         },
         "gsi",
         "osm"
