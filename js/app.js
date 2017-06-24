@@ -1,5 +1,5 @@
-define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bootstrap', 'slick'],
-    function($, Promise, ol, sprintf, i18n, i18nxhr, ji18n) {
+define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'swiper', 'bootstrap'],
+    function($, Promise, ol, sprintf, i18n, i18nxhr, ji18n, swiper) {
     (function() {
         var mapDiv = document.getElementById('map_div');
         var lastTouch = 0;
@@ -69,17 +69,17 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
         var omitMark = '…';
         var omitLine = 2;
         var stringSplit = function(element) {
-            var splitArr = element.text().split('');
+            var splitArr = element.innerText.split('');
             var joinString = '';
             for (var i = 0; i < splitArr.length; i++) {
                 joinString += '<span>' + splitArr[i] + '</span>';
             }
             joinString += '<span class="omit-mark">' + omitMark + '</span>';
-            element.html(joinString);
+            element.innerHTML = joinString;
         };
         var omitCheck = function(element) {
-            var thisSpan = element.children('span');
-            var omitSpan = element.children('.omit-mark');
+            var thisSpan = element.querySelectorAll('span');
+            var omitSpan = element.querySelector('.omit-mark');
             var lineCount = 0;
             var omitCount;
 
@@ -87,19 +87,21 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
                 return;
             }
 
-            thisSpan.hide();
-            thisSpan.eq(0).show();
-            omitSpan.show();
-            var divHeight = element.height();
+            thisSpan[0].style.display = null;
+            for (var i=1; i < thisSpan.length; i++) {
+                thisSpan[i].style.display = 'none';
+            }
+            omitSpan.style.display = null;
+            var divHeight = element.offsetHeight;
             var minimizeFont = false;
             for (var i = 1; i < thisSpan.length - 1; i++) {
-                thisSpan.eq(i).show();
-                if(element.height() > divHeight) {
+                thisSpan[i].style.display = null;
+                if(element.offsetHeight > divHeight) {
                     if (!minimizeFont) {
                         minimizeFont = true;
-                        element.addClass('minimize');
+                        element.classList.add('minimize');
                     } else {
-                        divHeight = element.height();
+                        divHeight = element.offsetHeight;
                         lineCount++;
                     }
                 }
@@ -108,18 +110,19 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
                     break;
                 }
                 if(i >= thisSpan.length - 2) {
-                    omitSpan.hide();
+                    omitSpan.style.display ='none';
                     return;
                 }
             }
             for (var i = omitCount; i < thisSpan.length - 1; i++) {
-                thisSpan.eq(i).hide();
+                thisSpan[i].style.display = 'none';
             }
         };
-        for (var i = 0; i < $('.slick-item div').length; i++) {
-            var element = $('.slick-item div').eq(i);
-            stringSplit(element);
-            omitCheck(element);
+        var swiperItems = document.querySelectorAll('.swiper-slide div');
+        for (var i = 0; i < swiperItems.length; i++) {
+            var swiperItem = swiperItems[i];
+            stringSplit(swiperItem);
+            omitCheck(swiperItem);
         }
     };
     return function(appOption) {
@@ -144,7 +147,7 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
             }
         }
         if (noUI) {
-            $('.slick-box').addClass('hide');
+            document.querySelector('.swiper-container').style.display = 'none';
         }
         var appPromise = mapType ?
             new Promise(function(resolve, reject) {
@@ -195,19 +198,42 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
             var appData = result[1];
             var i18n = result[0][1];
             var t = result[0][0];
+            var swiper;
+            var changeMapCache;
             ol.source.HistMap.setI18n(i18n, t);
 
             $('#all').show();
             if (!noUI) {
                 $('#loadWait').modal();
-                $('.slick-class').slick({
-                    prevArrow: '',
-                    nextArrow: '',
-                    centerMode: true,
-                    focusOnSelect: true,
-                    slidesToScroll: 3,
-                    centerPadding: '40px'
+                var slidesPerView = 2;
+                swiper = new Swiper('.swiper-container', {
+                    slidesPerView: slidesPerView,
+                    centeredSlides: true,
+                    spaceBetween: 10,
+                    loop: true,
+                    onClick: function(sw, e) {
+                        e.preventDefault();
+                        if (!sw.clickedSlide) return;
+                        var slide = sw.clickedSlide;
+                        changeMapCache(false, slide.getAttribute('data'));
+                        sw.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
+                    }
                 });
+                swiper.setSlideIndex = function(index) {
+                    swiper.slideTo(index + slidesPerView); // <= Maybe bug of swiper;
+                    swiper.setSlideIndexAsSelected(index);
+                };
+                swiper.setSlideIndexAsSelected = function(index) {
+                    var sliders = document.querySelectorAll('.swiper-slide');
+                    for (var i=0; i<sliders.length; i++) {
+                        var slider = sliders[i];
+                        if (slider.getAttribute('data-swiper-slide-index') == index) {
+                            slider.classList.add('selected');
+                        } else {
+                            slider.classList.remove('selected');
+                        }
+                    }
+                };
             }
 
             var from;
@@ -298,13 +324,11 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
 
                 var cache = [];
                 var cacheHash = {};
-                var clickAvoid = false;
                 for (var i=0; i<sources.length; i++) {
                     var source = sources[i];
                     if (!noUI) {
-                        $('.slick-class').slick('slickAdd', '<div class="slick-item" data="' + source.sourceID + '">' +
+                        swiper.appendSlide('<div class="swiper-slide" data="' + source.sourceID + '">' +
                             '<img crossorigin="anonymous" src="' + source.thumbnail + '"><div>' + source.label + '</div></div>');
-                        if (i == sources.length - 1) $('.slick-class').slick('slickGoTo', sources.length - 1);
                     }
                     if (mapType) {
                         source.home_position = homePos;
@@ -315,19 +339,9 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
                     cacheHash[source.sourceID] = source;
                 }
                 if (!noUI) {
+                    swiper.on;
+                    swiper.setSlideIndex(sources.length - 1);
                     ellips();
-
-                    $('.slick-item').on('click', function() {
-                        if (!clickAvoid) {
-                            changeMap(false, $(this).attr('data'));
-                        }
-                    });
-                    $('.slick-class').on('beforeChange', function(ev, slick, currentSlide, nextSlide) {
-                        clickAvoid = currentSlide != nextSlide;
-                    });
-                    $('.slick-class').on('afterChange', function(ev, slick, currentSlide) {
-                        clickAvoid = false;
-                    });
                 }
 
                 var initial = cache[cache.length - 1];
@@ -477,6 +491,7 @@ define(['jquery', 'aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'ji18n', 'bo
                         });
                     }
                 }
+                changeMapCache = changeMap;
 
                 function showInfo(data) {
                     if (mobileIF) {
