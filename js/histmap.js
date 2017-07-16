@@ -1,4 +1,35 @@
 define(['ol-custom', 'aigle'], function(ol, Promise) {
+    for (var z = 0; z < 9; z++) {
+        var key = 'ZOOM:' + z;
+        var maxxy = 256 * Math.pow(2, z);
+
+        (function(key, maxxy) {
+            var projection = new ol.proj.Projection({
+                code: key,
+                // The extent is used to determine zoom level 0. Recommended values for a
+                // projection's validity extent can be found at https://epsg.io/.
+                extent: [0.0, 0.0, maxxy, maxxy],
+                units: 'm'
+            });
+            ol.proj.addProjection(projection);
+
+            // We also declare EPSG:21781/EPSG:4326 transform functions. These functions
+            // are necessary for the ScaleLine control and when calling ol.proj.transform
+            // for setting the view's initial center (see below).
+
+            ol.proj.addCoordinateTransforms('EPSG:3857', projection,
+                function(coordinate) {
+                    var x = (coordinate[0] + ol.const.MERC_MAX) * maxxy / (2 * ol.const.MERC_MAX);
+                    var y = (-coordinate[1] + ol.const.MERC_MAX) * maxxy / (2 * ol.const.MERC_MAX);
+                    return [x, y];
+                },
+                function(coordinate) {
+                    var x = coordinate[0] * (2 * ol.const.MERC_MAX) / maxxy - ol.const.MERC_MAX;
+                    var y = -1 * (coordinate[1] * (2 * ol.const.MERC_MAX) / maxxy - ol.const.MERC_MAX);
+                    return [x, y];
+                });
+        })(key, maxxy);
+    }
     // 透明PNG定義
     var transPng = 'data:image/png;base64,'+
         'iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAB3RJTUUH3QgIBToaSbAjlwAAABd0'+
