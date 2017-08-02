@@ -13,6 +13,12 @@
             "label"     : "1895"
         },
         {
+            "mapID"     : "aizu-wakamatsu-taisho-kaitei",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label"     : "1925"
+        },
+        {
             "attr" : "Wakamatsu - Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
             "label" : "1945",
             "mapID" : "jcp_maps_wakamatsu",
