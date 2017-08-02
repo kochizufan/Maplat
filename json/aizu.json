@@ -1,0 +1,33 @@
+{
+    "app_name" : "会津若松市古地図アプリ",
+    "fake_gps" : true,
+    "fake_center" : "会津若松市",
+    "fake_radius" : 10,
+    "home_position" : [139.929796,37.487708],
+    "default_zoom" : 17,
+    "sources" : [
+        {
+            "mapID"     : "aizu-boshin-wakamatsujo-meisaizu",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label"     : "1895"
+        },
+        {
+            "attr" : "Wakamatsu - Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
+            "label" : "1945",
+            "mapID" : "jcp_maps_wakamatsu",
+            "maptype" : "overlay",
+            "url" : "https://t.tilemap.jp/jcp_maps/wakamatsu/{z}/{x}/{-y}.png",
+            "maxZoom": 16
+        },
+        {
+            "mapID"     : "aizuwakamatsu-machinaka-jokamachi",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label" : "2017"
+        },
+        "gsi",
+        "osm"
+    ], 
+    "pois" :[]
+}
