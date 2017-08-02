@@ -162,121 +162,28 @@ var mapedit = {
             focused.webContents.send('saveResult', err);
         });
     },
-    updateTin: function(gcps) {
+    updateTin: function(gcps, strict) {
         tinObject.setPoints(gcps);
-        tinObject.updateTin('strict');
-
-        var tins = JSON.parse(JSON.stringify(tinObject.tins));
-        var kinks = tinObject.kinks;
-
-        if (kinks && kinks.forw) Array.prototype.push.apply(tins.forw.features, kinks.forw.features);
-        if (kinks && kinks.bakw) Array.prototype.push.apply(tins.bakw.features, kinks.bakw.features);
-
-        focused.webContents.send('updatedTin', tins);
+        if (gcps.length < 3) {
+            focused.webContents.send('updatedTin', 'tooLessGcps');
+            return;
+        }
+        tinObject.updateTinAsync(strict)
+            .then(function() {
+                focused.webContents.send('updatedTin', tinObject);
+            }).catch(function(err) {
+                throw err;
+            });
+    },
+    transform: function(srcXy, isBackward) {
+        if (!tinObject.points || tinObject.points.length < 3) {
+            return 'tooLessGcps';
+        }
+        if (tinObject.strict_status == 'strict_error' && !isBackward) {
+            return 'strictError';
+        }
+        return tinObject.transform(srcXy, !isBackward);
     }
 };
-
-function counterTri(tri) {
-    var coordinates = ['a', 'b', 'c', 'a'].map(function(key) {
-        return tri.properties[key].geom;
-    });
-    var cwCheck = isClockwise(coordinates);
-    if (cwCheck) coordinates = ['a', 'c', 'b', 'a'].map(function(key) {
-        return tri.properties[key].geom;
-    });
-    var geoms = tri.geometry.coordinates[0];
-    var props = tri.properties;
-    var properties = !cwCheck ? {
-        a: {geom: geoms[0], index: props['a'].index},
-        b: {geom: geoms[1], index: props['b'].index},
-        c: {geom: geoms[2], index: props['c'].index}
-    } : {
-        a: {geom: geoms[0], index: props['a'].index},
-        b: {geom: geoms[2], index: props['c'].index},
-        c: {geom: geoms[1], index: props['b'].index}
-    };
-    return turf.polygon([coordinates], properties);
-}
-
-function overlapCheck(searchIndex) {
-    return Object.keys(searchIndex).reduce(function(prev, key) {
-        var searchResult = searchIndex[key];
-        if (searchResult.length < 2) return prev;
-        ['forw', 'bakw'].map(function(dir) {
-            var result = turf.intersect(searchResult[0][dir], searchResult[1][dir]);
-            if (!result || result.geometry.type == 'Point' || result.geometry.type == 'LineString') return;
-            if (!prev[dir]) prev[dir] = {};
-            try {
-                var diff1 = turf.difference(searchResult[0][dir], result);
-                var diff2 = turf.difference(searchResult[1][dir], result);
-                if (!diff1 || !diff2) {
-                    prev[dir][key] = 'Include case';
-                } else {
-                    prev[dir][key] = 'Not include case';
-                }
-            } catch(e) {
-                prev[dir][key] = 'Not include case';
-            }
-        });
-        return prev;
-    }, {});
-}
-
-function insertSearchIndex(searchIndex, tris, tins) {
-    var keys = calcSearchKeys(tris.forw);
-    var bakKeys = calcSearchKeys(tris.bakw);
-    if (JSON.stringify(keys) != JSON.stringify(bakKeys))
-        throw JSON.stringify(tris, null, 2) + '\n' + JSON.stringify(keys) + '\n' + JSON.stringify(bakKeys);
-
-    for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        if (!searchIndex[key]) searchIndex[key] = [];
-        searchIndex[key].push(tris);
-    }
-    if (tins) {
-        tins.forw.features.push(tris.forw);
-        tins.bakw.features.push(tris.bakw);
-    }
-}
-
-function removeSearchIndex(searchIndex, tris, tins) {
-    var keys = calcSearchKeys(tris.forw);
-    var bakKeys = calcSearchKeys(tris.bakw);
-    if (JSON.stringify(keys) != JSON.stringify(bakKeys))
-        throw JSON.stringify(tris, null, 2) + '\n' + JSON.stringify(keys) + '\n' + JSON.stringify(bakKeys);
-
-    for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        var newArray = searchIndex[key].filter(function(eachTris) {
-            return eachTris.forw != tris.forw;
-        });
-        if (newArray.length == 0) delete searchIndex[key];
-        else searchIndex[key] = newArray;
-    }
-    if (tins) {
-        var newArray = tins.forw.features.filter(function(eachTri) {
-            return eachTri != tris.forw;
-        });
-        tins.forw.features = newArray;
-        newArray = tins.bakw.features.filter(function(eachTri) {
-            return eachTri != tris.bakw;
-        });
-        tins.bakw.features = newArray;
-    }
-}
-
-function calcSearchKeys(tri) {
-    var vtx = ['a', 'b', 'c'].map(function(key) {
-        return tri.properties[key].index;
-    });
-    return [[0, 1], [0, 2], [1, 2], [0, 1, 2]].map(function(set) {
-        var index = set.map(function(i) {
-            return vtx[i];
-        }).sort(function(a, b) {
-            return a - b;
-        }).join('-');
-        return index;
-    }).sort();
-}
 
 module.exports = mapedit;
