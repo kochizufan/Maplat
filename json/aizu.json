@@ -30,7 +30,13 @@
             "mapID"     : "aizuwakamatsu-machinaka-jokamachi",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label" : "2017"
+            "label" : "まちなか"
+        },
+        {
+            "mapID"     : "aizu-wakamatsu-shigaizu-aibase",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label" : "市街図"
         },
         "gsi",
         "osm"
