@@ -57,6 +57,14 @@
             "label" : "Sight seeing"
         },
         "gsi",
+        {
+            "mapID"     : "gsi_ortho",
+            "label"     : "GSI Ortho",
+            "attr"      : "The Geospatial Information Authority of Japan",
+            "maptype"   : "base",
+            "url"       : "https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
+            "maxZoom"   : 18
+      },
         "osm"
     ], 
     "pois" :[
@@ -65,7 +73,7 @@
             "lng": 139.958679,
             "address": "Aza-Hakayama, Oaza-Ishiyama, Higashiyama-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes walk from \"Innai\" bus stop)",
             "name": "Garveyard of the Matsudaira family",
-            "desc": "<b>A vast historical site on the mountainside where the successive lords of the Matsudaira family sleep</b>\n\"Graveyard of the Aizu lord owner Matsudaira family\" is the general name of two sites, one is on Mt.Innai in Aizuwakamatsu city and the other is on Mt.Mine in Inawashiro town. They were designated as a national historic site in May 1982. The graveyard on Mt.Innai is commonly called \"Innai Mausoleum\", and its area is about 150,000 square meters. In the middle of the graveyard, there are gardens called west garden and middle garden. Above stone stairways from these gardens, there is the other garden called \"Nyubu graveyard\". The first load Masayuki Hoshina, who entered Aizu in 1643, was enshrined in Hanitsu shrine at Inawashiro. In the shrine, there are also tombs of succesive lords - from 2nd lord Masatsune to 9th lord Katamori. Many sightseekers visit here in fresh green summer period and in red leaves autumn period.",
+            "desc": "<b>A vast historical site on the mountainside where the successive lords of the Matsudaira family sleep</b>\n\"Graveyard of the Aizu Lord owner Matsudaira family\" is the general name of two sites, one is on Mt.Innai in Aizuwakamatsu city and the other is on Mt.Mine in Inawashiro town. They were designated as a national historic site in May 1982. The graveyard on Mt.Innai is commonly called \"Innai Mausoleum\", and its area is about 150,000 square meters. In the middle of the graveyard, there are gardens called west garden and middle garden. Above stone stairways from these gardens, there is the other garden called \"Nyubu graveyard\". The first load Masayuki Hoshina, who entered Aizu in 1643, was enshrined in Hanitsu shrine at Inawashiro. In the shrine, there are also tombs of succesive lords - from 2nd lord Masatsune to 9th lord Katamori. Many sightseekers visit here in fresh green summer period and in red leaves autumn period.",
             "image": ""
         },
         {
@@ -73,7 +81,7 @@
             "lng": 139.921076,
             "address": "8, Hakouma-machi, Aizuwakamatsu, FUKUSHIMA",
             "name": "Tomb of Hideyuki Gamo",
-            "desc": "<b>Prefecture Designated Building, Tomb of Hideyuki Gamo</b>\nUjisato Gamo could be said as the founder of Aizu, and Hideyuki, who sleep in this tomb was his eldest son. Hideyuki was born in 1583, between Ujisato and daughter of Nobunaga Oda. He has succeeded Aizu area, because Ujisato suddenly died in 1595. After that, he was transferred to Utsunomiya area, which was lower-valued territory than Aizu, according to Hideyoshi Toyotomi's order. His achievements in the battle of Sekigahara were highly appreciated by Ieyasu Tokugawa, so he could be back to Aizu in 1601.In May 1612, He was died at the young age of 30, and he sleep here. This site was becoming a prefecture-designated building, and a city-designated historic site.",
+            "desc": "<b>Prefecture Designated Building, Tomb of Hideyuki Gamo</b>\nUjisato Gamo could be said as the founder of Aizu, and Hideyuki, who sleep in this tomb was his eldest son. Hideyuki was born in 1583, between Ujisato and daughter of Nobunaga Oda. He has succeeded Aizu area, because Ujisato suddenly died in 1595. After that, he was transferred to the Utsunomiya clan, which was lower-valued territory than Aizu, according to Hideyoshi Toyotomi's order. His achievements in the battle of Sekigahara were highly appreciated by Ieyasu Tokugawa, so he could be back to the Aizu clan in 1601.In May 1612, He was died at the young age of 30, and he sleep here. This site was becoming a prefecture-designated building, and a city-designated historic site.",
             "image": ""
         },
         {
@@ -81,7 +89,7 @@
             "lng": 139.913627,
             "address": "2-2, Zaimoku-machi, Aizuwakamatsu, FUKUSHIMA",
             "name": "Schnell's House ruins",
-            "desc": "<b>House ruins of Henry Schnell, who dealed with weapons and ammunitions at Schnell's company</b>\nHenry Schnell was Prussian millitary advisor (hunnery guidance) of Aizu clan at Boshin war period. While Schnell was a foreigner, he had a mansion just below of the Wakamatsu castle, he made his hair style as Samurai style, and he called himself as Japanese name \"Buhei Hiramatsu\". He originally worked at the Dutch Embassy, then moved to Niigata and established a company dealing with weapons called Schnell company with his younger brother Edwald. They also sold weapons to Tsugunosuke Kawai, who were chief retainer of Nagaoka clan at the end of the Tokugawa period. After that, Tsugunosuke introduced them to Aizu clan and Aizu clan also purchased weapons / ammunitions from Schnell company, so Henry became to live in Aizu. Aizu lord Katamori trusted him very much, he had deep connection with Aizu clan.",
+            "desc": "<b>House ruins of Henry Schnell, who dealed with weapons and ammunitions at Schnell's company</b>\nHenry Schnell was Prussian millitary advisor (gunnery guidance) of the Aizu clan at the Boshin war period. While Schnell was a foreigner, he had a mansion just below of the Wakamatsu castle, he made his hair style as Samurai style, and he called himself as Japanese name \"Buhe Hiramatsu\". He originally worked at the Dutch Embassy, then moved to Niigata and established a company dealing with weapons called Schnell company with his younger brother Edwald. They also sold weapons to Tsugunosuke Kawai, who were chief retainer of Nagaoka clan at the end of the Tokugawa period. After that, Tsugunosuke introduced them to the Aizu clan and the Aizu clan also purchased weapons / ammunitions from Schnell company, so Henry became to live in Aizu. The Aizu Lord Katamori trusted him very much, he had deep connection with the Aizu clan.",
             "image": ""
         },
         {
@@ -89,7 +97,7 @@
             "lng": 139.948719,
             "address": "78, Yahata-Boryo, Ikki-machi, Aizuwakamatsu, FUKUSHIMA",
             "name": "Myokokuji temple",
-            "desc": "<b>Temporary burial place of Byakko-tai warriors</b>\nIn Boshin war, youth warriors unit \"Byakko-tai\" suicided on Mt.Iimori. Their remains were prohibited to be buried by west army. But Isoji Yoshida in Takizawa village thought it pitifully, so he buried their remains temporary in this temple with secret. This temple is also famous with the fact that Aizu lord Katamori Matsudaira and his son were confined one month here. There are some cultural assets, Mandala drawn by holy priest Nichiju, picture of Buddha Nirvana (embroidery), or so on.",
+            "desc": "<b>Temporary burial place of Byakko-tai warriors</b>\nIn the Boshin War, youth warriors unit \"Byakko-tai\" suicided on Mt.Iimori. Their remains were prohibited to be buried by the West Army (the Imperial Army). But Isoji Yoshida in Takizawa village thought it pitifully, so he buried their remains temporary in this temple with secret. This temple is also famous with the fact that the Aizu Lord Katamori Matsudaira and his son were confined one month here. There are some cultural assets, Mandala drawn by holy priest Nichiju, picture of Buddha Nirvana (embroidery), or so on.",
             "image": ""
         },
         {
@@ -108,30 +116,30 @@
             "desc": "<b>The whole area of ​​the mound tomb is a national historic site</b>\nThis keyhole-shaped tomb with total length of 114 meters is located on the Mt.Otsukayama peak. It boasts the second size in Fukushima Prefecture. The whole area of ​​the tomb has become a national historic site, so all excavated goods from the tomb were also designated as an mational important cultural assets. The constructed period is said to be the first half of the 4th century. Many excavated burial goods were excavated for the first time or only here in Tohoku area. In the exhibition room inside Wakamatsu castle, you can see some of the excavated burial goods.",
             "image": ""
         },
-  {
-    "lat": 37.486827,
-    "lng": 139.933891,
-    "address": "福島県会津若松市城東町",
-    "name": "佐川官兵衛顕彰碑(サガワカンベエケンショウヒ)",
-    "desc": "<b>戊辰戦争を戦い抜き、その戦いぶりから「鬼官兵衛」の異名をとった会津藩士</b>\n佐川官兵衛は天保2年（1831年）生まれ。明治10年（1877)没。文武両道に秀で、会津藩京都守護職時代には学校奉行・別選組隊長・諸生組隊長を兼ね、「鬼佐川」「鬼官兵衛と呼ばれていました。鳥羽伏見の戦いで奮戦、戊辰戦争の北越戦では会津軍指揮として、長岡藩河井継之助らと共に各地に転戦。戦後明治7年に警視庁の巡査に応募、明治10年の西南戦争には警視隊隊長として参戦し黒川村で戦死しました。この顕彰碑は平成13年に建立。西南戦争で佐川官兵衛が戦死した地である、熊本県南阿蘇村よりゆかりの大石を譲り受けて建立されたものです。\n\n<a href=\"http://www.aizukanko.com/spot/43/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.502121,
-    "lng": 139.927765,
-    "address": "福島県会津若松市大町2-1-5",
-    "name": "西軍墓地(セイグンボチ)",
-    "desc": "<b>薩摩、長州兵など150基の墓</b>\n大町の東明寺墓地にあり、戊辰戦争で会津に攻めてきた西軍のうち若松付近で戦死した将兵を埋葬しています。薩摩、長州兵など150基の墓が建っています。1868年の戊辰戦争では、会津藩だけでなく、会津に来攻した西軍にも多くの犠牲者がでました。この墓地は、西軍のうち会津若松付近で戦死した将兵の墓群で、戦争で亡くなった薩摩、長州、大垣、肥州、備州など当時西軍だった人々が静かに眠っています。会津藩にとっては敵であった藩士150名を埋葬した墓地ということを考えると、これも会津藩士の心意気ということができるのではないでしょうか。\n\n<a href=\"http://www.aizukanko.com/spot/45/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.504219,
-    "lng": 139.954652,
-    "address": "福島県会津若松市一箕町八幡弁天下 (ハイカラさん・あかべぇ「飯盛山下」下車、徒歩５分磐越自動車道：会津若松ＩＣより約15分)",
-    "name": "白虎隊十九士の墓(ビャッコタイジュウクシノハカ)",
-    "desc": "<b>幕末の大きな時代の流れの中で戊辰に散った白虎隊の霊が眠る</b>\n\"戊辰戦争のおり、16〜17歳の少年たちで編成された白虎士中二番隊20人が戸の口原合戦場から退却し、滝沢峠の間道を通り、戸の口堰の洞門をくぐり飯盛山に辿り着くと、鶴ヶ城の天守閣は黒煙の中に見え隠れして、「城は陥落したか、今は主君のために殉じよう」と、全員が自決しました。20名のなかで1人だけ生き残った 飯沼貞吉 によって、白虎隊の忠義と悲運の物語は広く人々に知られるところとなりました。春と秋の年2回行われる<a href=http://www.aizukanko.com/event/110/\"\">慰霊祭では、白虎隊を偲びその霊を慰める剣舞が奉納されます。\"\"\"\n\n<a href=\"http://www.aizukanko.com/spot/137/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
+        {
+            "lat": 37.486827,
+            "lng": 139.933891,
+            "address": "Joto-machi, Aizuwakamatsu, FUKUSHIMA",
+            "name": "Honoring monument of Kanbe Sagawa",
+            "desc": "<b>Aizu samurai, who fought the the Boshin War and took the honor of \"Brave Kanbe\" from the fight</b>\nKanbe Sagawa was born in Edo period 1831, died in Meiji period 1877. He was excellent both in learning and martial arts. When the Aizu clan was at the time of Kyoto guardian occupation, he was worked as so many key positions, like school magistrate, captains of various warrior units or so, then he was called as \"Brave Sagawa\" or \"Brave Kanbe\". He fought bravely in the Battle of Toba Fushimi(Kyoto), and in the Boshin War, he fought in various battlefields with the Aizu Army and friendly troops like the Nagaoka Army. After the Boshin War, he applied for police job in 1874, and died in the Seinan War as chief of police troops, at Kurokawa village in Kumamoto. This monument was erected in 2001, the big stone of the monument was brought from Kumamoto, his dead place.",
+            "image": ""
+        },
+        {
+            "lat": 37.502121,
+            "lng": 139.927765,
+            "address": "2-1-5, O-machi, Aizuwakamatsu, FUKUSHIMA",
+            "name": "Cemetry of the West Army",
+            "desc": "<b>150 tombs including Satsuma, Choshu's imperial warriors</b>\nThis cemetry is inside of Tomyoji cemetry in Omachi. It is buried officers or warriors of the West Army (the Imperial Army), who attacked Aizu during the Boshin War and died near Wakamatsu area. There are 150 tombs such as Satsuma and Choshu warriors. In the Boshin War of 1868, there were too many victims of war not only in the Aizu clan warriors but also in the West Army warriors, who attacked Aizu. This cemetry is for such the West Army warriors who came from West Japan such as Chochu, Satsuma, Ogaki, Hishu, Bishu or so on, and died near Wakamatsu. These 150 victims were enemies of the Aizu clan, but Aizu people buried them kindly...Is this show the kindness of Aizu people?",
+            "image": ""
+        },
+        {
+            "lat": 37.504219,
+            "lng": 139.954652,
+            "address": "Yahata-Bentenshita, Ikki-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes walk from \"Imori-yama shita\" bus stop of \"Haikara-san\" or \"Akabe\")",
+            "name": "Tombs of 19 warriors of \"Byakko-tai\"",
+            "desc": "<b>The warriors of \"Byakko-tai\", who lived through the end of Edo - the ever-changing and turbulent period, sleeps peacefully here</b>\nIn the Boshin War, 20 warriors of \"Byakko-tai 2nd unit\" organized by youth aged 16 to 17 withdrew from Tonokuchi-hara battlefield. They retreated through Takizawa-toge path, crawled through Tonokuchi-seki cave, and arrived at Mt.Imori. They looked down the Wakamatsu city area from Mt.Imori, but the city was concealed by the smoke of war and the state of the castle was not well understood. They believed the castle fell, and all committed suicide to show their loyalty to the lord. Only Sadakichi Inuma survived as a result, he told this story and \"Byakko-tai\"'s story of loyalty and tragedy became widely known to people. \"Byakko-tai\" memorial ceremories are held twice a year in spring and autumn, in the ceremony, swordsman dance is held to comfort the spirits of \"Byakko-tai\".",
+            "image": ""
+        },
   {
     "lat": 37.479754,
     "lng": 139.940903,
