@@ -10,23 +10,35 @@
             "mapID"     : "aizu-jonai-kato-period",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "Kato family period"
+            "label"     : "Kato family (1627)"
+        },
+        {
+            "mapID"     : "aizu-jonai-hoshina-period",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label"     : "Hoshina family (1643)"
+        },
+        {
+            "mapID"     : "aizu-jonai-bakumatsu-period",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label"     : "End of Edo (Castle)"
         },
         {
             "mapID"     : "aizu-boshin-wakamatsujo-meisaizu",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "Boshin war period"
+            "label"     : "End of Edo (City)"
         },
         {
             "mapID"     : "aizu-wakamatsu-taisho-kaitei",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "Taisho period"
+            "label"     : "Taisho (1914)"
         },
         {
             "attr" : "Wakamatsu - Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
-            "label" : "After WW II",
+            "label" : "After WW II (1946)",
             "mapID" : "jcp_maps_wakamatsu",
             "maptype" : "overlay",
             "url" : "https://t.tilemap.jp/jcp_maps/wakamatsu/{z}/{x}/{-y}.png",
@@ -80,22 +92,22 @@
             "desc": "<b>Temporary burial place of Byakko-tai warriors</b>\nIn Boshin war, youth warriors unit \"Byakko-tai\" suicided on Mt.Iimori. Their remains were prohibited to be buried by west army. But Isoji Yoshida in Takizawa village thought it pitifully, so he buried their remains temporary in this temple with secret. This temple is also famous with the fact that Aizu lord Katamori Matsudaira and his son were confined one month here. There are some cultural assets, Mandala drawn by holy priest Nichiju, picture of Buddha Nirvana (embroidery), or so on.",
             "image": ""
         },
-  {
-    "lat": 37.504687,
-    "lng": 139.939041,
-    "address": "福島県会津若松市蚕養町2-1",
-    "name": "蚕養国神社(コガイクニジンジャ)",
-    "desc": "<b>養蚕守護の神。紅葉の名所。</b>\n御神徳養蚕守護の神として広く知られ、農、工、商、諸業繁栄、交通安全守神として信仰されています。境内の紅葉は、秋になるととても鮮やかな朱色に染まり、参拝に来た観光客の心を奪います。入口から歩いて進むと石の鳥居が立っており、さらに参道の途中にも赤い鳥居があります。またその奥にも寛弘七年（1010年）に植えられたと伝えられる御神木の峰張桜があり、観光客の記念撮影スポットになっています。\n\n<a href=\"http://www.aizukanko.com/spot/40/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.513028,
-    "lng": 139.944105,
-    "address": "福島県会津若松市一箕町八幡北滝沢228 ",
-    "name": "大塚山古墳(オオツカヤマコフン)",
-    "desc": "<b>古墳全域が国の史跡</b>\n大塚山山頂に立地する全長114メートルの前方後円墳。福島県内2番目の大きさを誇っています。古墳全域が国の史跡になっており、出土品も一括して国の重要文化財に指定されています。完成時期は四世紀前半と言われています。発掘された副葬品は、東北で初めて出土されたものが多く、現在でも東北では会津大塚山古墳でしか出土していないものもあります。鶴ヶ城内の展示室では、その副葬品の一部を見ることができます。\n\n<a href=\"http://www.aizukanko.com/spot/41/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
+        {
+            "lat": 37.504687,
+            "lng": 139.939041,
+            "address": "2-1, Kogai-machi, Aizuwakamatsu, FUKUSHIMA",
+            "name": "Kogaikuni Shrine",
+            "desc": "<b>The guardian of sericulture. The good place for seeing autumn leaves.</b>\nIt is widely believed that this shrine is the guardian god of sericulture, and is also believed to be a god of agriculture, industry, commerce, business prosperity, traffic safety, etc. The maple leaves in the precincts are dyed in a vivid vermillion in autumn. As you walk from the entrance, a stone torii-gate stands and there is also another red torii-gate in the middle of the approach. The object enshrined of this shrine is Minehari-sakura cherry tree, which was planted in 1010. This cherry tree is very good place to take memorial photograph.",
+            "image": ""
+        },
+        {
+            "lat": 37.513028,
+            "lng": 139.944105,
+            "address": "228, Yahata-KitaTakizawa, Ikki-cho, Aizuwakamatsu, FUKUSHIMA",
+            "name": "Otsuka-yama mound tomb",
+            "desc": "<b>The whole area of ​​the mound tomb is a national historic site</b>\nThis keyhole-shaped tomb with total length of 114 meters is located on the Mt.Otsukayama peak. It boasts the second size in Fukushima Prefecture. The whole area of ​​the tomb has become a national historic site, so all excavated goods from the tomb were also designated as an mational important cultural assets. The constructed period is said to be the first half of the 4th century. Many excavated burial goods were excavated for the first time or only here in Tohoku area. In the exhibition room inside Wakamatsu castle, you can see some of the excavated burial goods.",
+            "image": ""
+        },
   {
     "lat": 37.486827,
     "lng": 139.933891,
