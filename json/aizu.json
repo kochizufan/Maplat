@@ -22,13 +22,13 @@
             "mapID"     : "aizu-jonai-bakumatsu-period",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "幕末期(城内)"
+            "label"     : "享保期"
         },
         {
             "mapID"     : "aizu-boshin-wakamatsujo-meisaizu",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "幕末期(城下)"
+            "label"     : "戊辰戦期"
         },
         {
             "mapID"     : "aizu-wakamatsu-taisho-kaitei",

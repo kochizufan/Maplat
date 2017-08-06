@@ -22,13 +22,13 @@
             "mapID"     : "aizu-jonai-bakumatsu-period",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "End of Edo (Castle)"
+            "label"     : "Mid of Edo (1734)"
         },
         {
             "mapID"     : "aizu-boshin-wakamatsujo-meisaizu",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "End of Edo (City)"
+            "label"     : "Boshin War (1868)"
         },
         {
             "mapID"     : "aizu-wakamatsu-taisho-kaitei",
