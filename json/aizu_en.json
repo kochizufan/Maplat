@@ -140,14 +140,14 @@
             "desc": "<b>The warriors of \"Byakko-tai\", who lived through the end of Edo - the ever-changing and turbulent period, sleeps peacefully here</b>\nIn the Boshin War, 20 warriors of \"Byakko-tai 2nd unit\" organized by youth aged 16 to 17 withdrew from Tonokuchi-hara battlefield. They retreated through Takizawa-toge path, crawled through Tonokuchi-seki cave, and arrived at Mt.Imori. They looked down the Wakamatsu city area from Mt.Imori, but the city was concealed by the smoke of war and the state of the castle was not well understood. They believed the castle fell, and all committed suicide to show their loyalty to the lord. Only Sadakichi Inuma survived as a result, he told this story and \"Byakko-tai\"'s story of loyalty and tragedy became widely known to people. \"Byakko-tai\" memorial ceremories are held twice a year in spring and autumn, in the ceremony, swordsman dance is held to comfort the spirits of \"Byakko-tai\".",
             "image": ""
         },
-  {
-    "lat": 37.479754,
-    "lng": 139.940903,
-    "address": "福島県会津若松市北青木13-3 (路線バス「青木」から徒歩10分)",
-    "name": "善龍寺・奈与竹の碑(ゼンリュウジ・ナヨタケノヒ)",
-    "desc": "<b>戊辰戦争で花と散った会津婦女子の精神</b>\n会津藩主・保科正之の会津入部とともに建立され、保科家の元祖筑前守正則の霊を守る保科家の菩提所として発展してきた寺です。家老西郷頼母の妻千重子の;なよたけの風にまかする身ながらもたわまぬ節はありとこそきけ;戊辰戦争で花と散った会津婦道の精神を示すこの有名な辞世を昭和３年、｢なよたけの碑｣として善龍寺に建立されました。碑陰には戊辰戦争で散った２３３名の会津藩の婦人名が刻まれています。　毎年５月１日に奈与竹墓前祭がおこなわれます。奥にある墓地には西郷頼母夫妻の墓や西郷邸で自決した「二十一人の墓」があります。\n\n<a href=\"http://www.aizukanko.com/spot/140/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
+        {
+            "lat": 37.479754,
+            "lng": 139.940903,
+            "address": "13-3, Kita-Aoki, Aizuwakamatsu, FUKUSHIMA (10 minutes walk from \"Aoki\" bus stop)",
+            "name": "The Monument of Nayotake at Zenryuji temple",
+            "desc": "<b>The spirit of Aizu women, who scattered like a flower during the Boshin War</b>\nThis temple was built together with the Aizu entrance of the Aizu Lord Masayuki Hoshina. Masanori Hoshina, who is oldest ancestor of Masayuki, enshrined here. In the Boshin War, Chieko, who was the wife of Tanomo Saigo (Chief retainer of Aizu), composed a farewell poem \"Nayotakeno Kazenimakasuru Minagaramo Tawamanufushiwa Aritokosokike\" means \"Even my life is like weak bamboo which bends easily with a gentle breeze, but there are strong clauses that can not easily break.\" The Monument of Nayotake was built in 1928 at Zenryuji temple, to commemorate this wellknown poem, which shows Aizu women's brave spirit in the Boshin War. The names of 233 Aizu women who lost their lives in the Boshin War are engraved on the monument. Nayotake memorial ceremony is held here every May 1st. There are tombs of 21 persons who suicided in Tanomo Saigo's house, including him, his wife, his families and his servants at the cemetry in the back of the monument.",
+            "image": ""
+        },
   {
     "lat": 37.48201,
     "lng": 139.944406,
