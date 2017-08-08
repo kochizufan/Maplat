@@ -228,14 +228,14 @@
             "desc": "<b>Shinsen-gumi troops commanded by Hajime Saito fought a fierce battle here</b>\nAfter the defeat at the Battle of the Bonari Pass, the \"Shinsen-gumi\" troops divided into 2 units - Toshizo Hijikata's unit which were heading north, and Hajime Saito's unit which stayed in Aizu. At that time, Hajime insisted, \"It is not justice to abandon the companions who are about to perish\", and he remained in Aizu with his consenting comrades. On September 4th 1868, the West Army advanced into the castle, and fought a fierce battle with the \"Shinsen-gumi\" at Nyorai-Do temple. It is said that all \"Shinsen-gumi\" were dead here, but in fact, several people including Hajime Saito survived.",
             "image": ""
         },
-  {
-    "lat": 37.511858,
-    "lng": 139.906237,
-    "address": "福島県会津若松市神指町大字黒川街道西250付近 (路線バス「黒川」下車、徒歩3分)",
-    "name": "中野竹子殉節碑(ナカノタケコジュンセツヒ)",
-    "desc": "<b>戊辰に散った娘子隊軍隊長中野竹子の碑</b>\n戊辰戦争で、柳橋付近で奮戦し戦死した娘子隊軍隊長中野竹子の碑。;昭和１３年に会津若松市神指町黒川の湯川橋に建てられました。 出陣の際に薙刀に結び付けていたという辞世の句「武士（もののふ）の猛き心にくらぶれば数にも入らぬ我が身ながらも」が刻まれています。\n\n<a href=\"http://www.aizukanko.com/spot/158/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
+        {
+            "lat": 37.511858,
+            "lng": 139.906237,
+            "address": "Around 250, Oaza-KurokawaKaidoNishi, Kozashi-machi, Aizuwakamatsu, FUKUSHIMA (3 minutes walk from \"Kurokawa\" bus stop)",
+            "name": "Memorial monument of Takeko Nakano's loyalty in death",
+            "desc": "<b>Memorial monument of Takeko Nakano, who was the commanderess of \"Joshi-tai\" (Women troops) and died in the Boshin War</b>\nThis is the memorial monument of Takeko Nakano, who was the commanderess of the \"Joshi-tai\" (Women troops) and died in a fierce battle aroud Yanagi-bridge. It was built in 1938, at the side of the Yukawa-biridge in Kurokawa, Kozashi-machi. Her farewell poem, saying \"Mononofuno TakekiKokoroni Kurabureba KazunimoIranu Wagaminagaramo\" means \"Compared to the brave spirit of the Samurai, my spirit is not a big deal, but I still want to fight as much as I can\", is engraved on the monument. When she was in fight, she bounded the fabric on which this poem was written to her halberd.",
+            "image": ""
+        },
   {
     "lat": 37.53385,
     "lng": 139.931982,
