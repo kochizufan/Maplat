@@ -37,6 +37,12 @@
             "label"     : "Taisho (1914)"
         },
         {
+            "mapID"     : "aizuwakamatsu-annai-showa5",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label"     : "Showa (1930)"
+        },
+        {
             "attr" : "Wakamatsu - Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
             "label" : "After WW II (1946)",
             "mapID" : "jcp_maps_wakamatsu",
@@ -54,7 +60,7 @@
             "mapID"     : "aizu-wakamatsu-shigaizu-aibase",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label" : "Sight seeing"
+            "label" : "Sightseeing"
         },
         "gsi",
         {
@@ -64,7 +70,7 @@
             "maptype"   : "base",
             "url"       : "https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
             "maxZoom"   : 18
-      },
+        },
         "osm"
     ], 
     "pois" :[

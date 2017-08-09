@@ -37,6 +37,12 @@
             "label"     : "大正期"
         },
         {
+            "mapID"     : "aizuwakamatsu-annai-showa5",
+            "maptype"   : "maplat",
+            "algorythm" : "tin",
+            "label"     : "昭和初期"
+        },
+        {
             "attr" : "Wakamatsu - Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
             "label" : "戦後",
             "mapID" : "jcp_maps_wakamatsu",
