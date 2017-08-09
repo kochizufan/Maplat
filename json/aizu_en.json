@@ -110,7 +110,7 @@
             "lat": 37.504687,
             "lng": 139.939041,
             "address": "2-1, Kogai-machi, Aizuwakamatsu, FUKUSHIMA",
-            "name": "Kogaikuni Shrine",
+            "name": "Kogaikuni shrine",
             "desc": "<b>The guardian of sericulture. The good place for seeing autumn leaves.</b>\nIt is widely believed that this shrine is the guardian god of sericulture, and is also believed to be a god of agriculture, industry, commerce, business prosperity, traffic safety, etc. The maple leaves in the precincts are dyed in a vivid vermillion in autumn. As you walk from the entrance, a stone torii-gate stands and there is also another red torii-gate in the middle of the approach. The object enshrined of this shrine is Minehari-sakura cherry tree, which was planted in 1010. This cherry tree is very good place to take memorial photograph.",
             "image": ""
         },
@@ -119,7 +119,7 @@
             "lng": 139.944105,
             "address": "228, Yahata-KitaTakizawa, Ikki-cho, Aizuwakamatsu, FUKUSHIMA",
             "name": "Otsuka-yama mound tomb",
-            "desc": "<b>The whole area of ​​the mound tomb is a national historic site</b>\nThis keyhole-shaped tomb with total length of 114 meters is located on the Mt.Otsukayama peak. It boasts the second size in Fukushima Prefecture. The whole area of ​​the tomb has become a national historic site, so all excavated goods from the tomb were also designated as an national important cultural assets. The constructed period is said to be the first half of the 4th century. Many excavated burial goods were excavated for the first time or only here in Tohoku area. In the exhibition room inside the Tsuru-ga Castle (Wakamatsu Castle), you can see some of the excavated burial goods.",
+            "desc": "<b>The whole area of ​​the mound tomb is a national historic site</b>\nThis keyhole-shaped tomb with total length of 114 meters is located on the Mt.Otsukayama peak. It boasts the second size in Fukushima Prefecture. The whole area of ​​the tomb has become a national historic site, so all excavated goods from the tomb were also designated as a National important cultural asset. The constructed period is said to be the first half of the 4th century. Many excavated burial goods were excavated for the first time or only here in Tohoku area. In the exhibition room inside the Tsuru-ga Castle (Wakamatsu Castle), you can see some of the excavated burial goods.",
             "image": ""
         },
         {
@@ -242,22 +242,22 @@
             "desc": "<b>Memorial monument of Takeko Nakano, who was the commanderess of \"Joshi-tai\" (Women troops) and died in the Boshin War</b>\nThis is the memorial monument of Takeko Nakano, who was the commanderess of the \"Joshi-tai\" (Women troops) and died in a fierce battle aroud Yanagi-bridge. It was built in 1938, at the side of the Yukawa-biridge in Kurokawa, Kozashi-machi. Her farewell poem, saying \"Mononofuno TakekiKokoroni Kurabureba KazunimoIranu Wagaminagaramo\" means \"Compared to the brave spirit of the Samurai, my spirit is not a big deal, but I still want to fight as much as I can\", is engraved on the monument. When she was in fight, she bounded the fabric on which this poem was written to her halberd.",
             "image": ""
         },
-  {
-    "lat": 37.53385,
-    "lng": 139.931982,
-    "address": "福島県会津若松市河東町倉橋字藤倉160-2 (磐越自動車道　会津若松ICから車で５分)",
-    "name": "延命寺地蔵堂(エンメイジジゾウドウ)",
-    "desc": "<b>徳一大師が建てたと伝えられる国指定重要文化財・建造物 </b>\n市内河東町の西南・藤倉集落にあり、この建物の屋根は唐様の重層建築で周囲に円柱で支えた裳階がつけられ二階建てのように見えるため、「藤倉二階堂」と親しまれています。徳一大師が建てたと伝えられて現在の建造物は、室町初期から中期の作といわれています。 昭和２５年国指定重要文化財・建造物に指定。\n\n<a href=\"http://www.aizukanko.com/spot/159/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.562637,
-    "lng": 139.933089,
-    "address": "福島県会津若松市河東町広野冬木沢 (電車：ＪＲ磐越西線広田駅下車、タクシー５分、又は徒歩約１５分車：磐越自動車道・磐梯河東ＩＣを降り、国道４９号線経由約１０分)",
-    "name": "八葉寺(ハチヨウジ)",
-    "desc": "<b>会津高野山とも呼ばれる由緒あるお寺。会津高野山参りや空也念仏踊りで有名</b>\n会津高野山とも呼ばれる由緒あるお寺で、中央にある阿弥陀堂は昭和２５年に国指定重要文化財・建造物に指定されました。空也上人により康保元年（964）に建立されたと伝えられ、文禄年間に再建されました。この地方には、古くから通称「木製五輪塔」と呼ばれる小さな塔に、亡くなられた親族の遺品などを入れて奉納し供養する、という今では全国でここだけに残る風習があり､一万四千点を超える五輪塔は、境内の舎利殿に納められています。８月の会津の高野山参り（会津地方に古く伝わる盆迎えの御参り）や空也念仏踊り（県重要無形民俗文化財指定）が有名です。\n\n<a href=\"http://www.aizukanko.com/spot/161/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
+        {
+            "lat": 37.53385,
+            "lng": 139.931982,
+            "address": "160-2, Aza-Fujikura, Kurahashi, KawaHigashi-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes by car from Aizuwakamatsu IC, Banetsu Highway",
+            "name": "Jizodo (The Hall of Kshitigarbha), Enmeiji Temple",
+            "desc": "<b>National important cultural asset/building, which is told built by the Master Priest Tokuitsu</b>\nThis Hall is located on Fujikura settlement, south-west most area of KawaHigashi-machi. The roof of the hall is Chinese-style and multi-storied, and the pent roof supported by circular pillars is installed around the hall, therefore it looks like a two-story building although it is actually a one-story. So, it is called \"Fujikura Nikai-do (Fujikura Two Story Hall)\". It is told built by the Master Priest Tokuitsu, around 14th or 15th century.In 1950, It was designated as Natural important cultural asset/building.",
+            "image": ""
+        },
+        {
+            "lat": 37.562637,
+            "lng": 139.933089,
+            "address": "HironoFuyukizawa, KawaHigashi-machi, Aizuwakamatsu, FUKUSHIMA (15 minutes walk from Hirota station, JR Banetsu-Sai Line)",
+            "name": "Hachiyoji temple",
+            "desc": "<b>A historic temple also called as Aizu Koyasan. Famous for Aizu Koyasan pilgrimage and Kuya dancing prayer to Amitabha</b>\nIt is a historic temple also called as Aizu Koyasan. The Amidado (The Hall of Amitabha) at the center of the temple, was designated as National important cultural asset/building in 1950. It is told that it was erected in 964 by the Priest Kuya, and was rebuilt around 1590s. In Aizu area, there is a mysterious custom that people in this area enshrined wooden pagoda, which stores the remains of the deceased family, to this temple. There are over 14,000 wooden pagodas enshirined in Shari-den building of this temple. It is famous for Aizu Koyasan pilgrimage in August (Welcome ceremony of the ancestors' spirits who returns from the heaven) or Kuya dancing prayer to Amitabha (Prefecture-designated important intangible folk cultural asset).",
+            "image": ""
+        },
   {
     "lat": 37.533212,
     "lng": 139.935694,
