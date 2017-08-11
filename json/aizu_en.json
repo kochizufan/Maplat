@@ -95,7 +95,7 @@
             "lng": 139.913627,
             "address": "2-2, Zaimoku-machi, Aizuwakamatsu, FUKUSHIMA",
             "name": "Schnell's House ruins",
-            "desc": "<b>House ruins of Henry Schnell, who dealed with weapons and ammunitions at Schnell's company</b>\nHenry Schnell was Prussian millitary advisor (gunnery guidance) of the Aizu clan at the Boshin war period. While Schnell was a foreigner, he had a mansion just below of the Tsuru-ga Castle (Wakamatsu Castle), he made his hair style as Samurai style, and he called himself as Japanese name \"Buhe Hiramatsu\". He originally worked at the Dutch Embassy, then moved to Niigata and established a company dealing with weapons called Schnell company with his younger brother Edwald. They also sold weapons to Tsugunosuke Kawai, who were chief retainer of Nagaoka clan at the end of the Tokugawa period. After that, Tsugunosuke introduced them to the Aizu clan and the Aizu clan also purchased weapons / ammunitions from Schnell company, so Henry became to live in Aizu. The Aizu Lord Katamori trusted him very much, he had deep connection with the Aizu clan.",
+            "desc": "<b>House ruins of Henry Schnell, who dealed with weapons and ammunitions at Schnell's company</b>\nHenry Schnell was Prussian military advisor (gunnery guidance) of the Aizu clan at the Boshin war period. While Schnell was a foreigner, he had a mansion just below of the Tsuru-ga Castle (Wakamatsu Castle), he made his hair style as Samurai style, and he called himself as Japanese name \"Buhe Hiramatsu\". He originally worked at the Dutch Embassy, then moved to Niigata and established a company dealing with weapons called Schnell company with his younger brother Edwald. They also sold weapons to Tsugunosuke Kawai, who were chief retainer of Nagaoka clan at the end of the Tokugawa period. After that, Tsugunosuke introduced them to the Aizu clan and the Aizu clan also purchased weapons / ammunitions from Schnell company, so Henry became to live in Aizu. The Aizu Lord Katamori trusted him very much, he had deep connection with the Aizu clan.",
             "image": ""
         },
         {
@@ -245,7 +245,7 @@
         {
             "lat": 37.53385,
             "lng": 139.931982,
-            "address": "160-2, Aza-Fujikura, Kurahashi, KawaHigashi-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes by car from Aizuwakamatsu IC, Banetsu Highway",
+            "address": "160-2, Aza-Fujikura, Kurahashi, KawaHigashi-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes by car from Aizuwakamatsu IC, Banetsu Highway)",
             "name": "Jizodo (The Hall of Kshitigarbha), Enmeiji Temple",
             "desc": "<b>National important cultural asset/building, which is told built by the Master Priest Tokuitsu</b>\nThis Hall is located on Fujikura settlement, south-west most area of KawaHigashi-machi. The roof of the hall is Chinese-style and multi-storied, and the pent roof supported by circular pillars is installed around the hall, therefore it looks like a two-story building although it is actually a one-story. So, it is called \"Fujikura Nikai-do (Fujikura Two Story Hall)\". It is told built by the Master Priest Tokuitsu, around 14th or 15th century.In 1950, It was designated as Natural important cultural asset/building.",
             "image": ""
@@ -258,109 +258,109 @@
             "desc": "<b>A historic temple also called as Aizu Koyasan. Famous for Aizu Koyasan pilgrimage and Kuya dancing prayer to Amitabha</b>\nIt is a historic temple also called as Aizu Koyasan. The Amidado (The Hall of Amitabha) at the center of the temple, was designated as National important cultural asset/building in 1950. It is told that it was erected in 964 by the Priest Kuya, and was rebuilt around 1590s. In Aizu area, there is a mysterious custom that people in this area enshrined wooden pagoda, which stores the remains of the deceased family, to this temple. There are over 14,000 wooden pagodas enshirined in Shari-den building of this temple. It is famous for Aizu Koyasan pilgrimage in August (Welcome ceremony of the ancestors' spirits who returns from the heaven) or Kuya dancing prayer to Amitabha (Prefecture-designated important intangible folk cultural asset).",
             "image": ""
         },
-  {
-    "lat": 37.533212,
-    "lng": 139.935694,
-    "address": "福島県会津若松市河東町倉橋字藤倉 (集落の東側) (磐越自動車道　会津若松ＩＣより車で10分 )",
-    "name": "皆鶴姫の碑(ミナヅルヒメノヒ)",
-    "desc": "<b>源義経と皆鶴姫の悲恋を今に伝えます・・・</b>\n市内河東町藤倉集落の東に、源義経と皆鶴姫の悲恋物語を伝える碑があります。平家打倒を願う義経は、鬼一法眼の兵法書を学ぶために、義理の娘皆鶴姫に近づき恋仲になり、義経は兵法書をひそかに写し取ることに成功しますが、平清盛に気づかれ奥州へ逃げます。姫は、義経の後を慕って藤倉まで来ますが、追いつけないと知り、難波池に身を投げてしまいます。義経は、磐梯町の大寺でこれを知り姫を池のほとりに葬って墓を築いたとされます。;義経に再会できず空しいままなくなった皆鶴姫は、他の人にはこのような別離の気持ちを味合わせたくないとして、参詣する人に良縁を授けると今日でも信じられています。\n\n<a href=\"http://www.aizukanko.com/spot/163/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.52147,
-    "lng": 139.859433,
-    "address": "福島県会津若松市北会津町田村山字塚越 (会津若松駅から車で20分磐越自動車道新鶴スマートICより5分)",
-    "name": "田村山古墳(タムラヤマコフン)",
-    "desc": "<b>「古事記」に掲載された東北唯−の地名。多くの謎を秘めています！</b>\n田村山古墳は全長24.85m、高さ2.15m程の前方後円墳です。1200年以上前に築かれ、東北では珍しい内行花文鏡、直刀などが出土しました。直刀は、県の重要文化財に指定されています。「古事記」に掲載された東北唯−の地名で、四道将軍伝説や坂上田村麻呂にまつわる伝説など、多くの謎を秘めています。\n\n<a href=\"http://www.aizukanko.com/spot/165/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.479882,
-    "lng": 139.944111,
-    "address": "福島県会津若松市花見ヶ丘三丁目 (路線バス「花見ヶ丘」下車、徒歩20分)",
-    "name": "田中玄宰の墓(タナカハルナカノハカ)",
-    "desc": "<b>会津藩家老で三代の藩主に仕えた名宰相が眠ります・・・</b>\n会津藩家老で三代の藩主に仕えた名宰相。34歳で家老に任じられた際、会津藩は天明の大飢饉でした。玄宰は藩主容頌に領民の救済と藩政の改革を願い出たが受け入れられず、一時病と称して辞職。その間兵学や経済について研究し、一年後復権の際に藩政の大改革「天明の改革」を提言し大きな成果をあげました。また、藩校「日新館」を創設、会津藩が文武ともに天下の雄藩となる基礎を築きました。会津藩樺太出兵の最中、61歳でこの世を去りました。「わが骨は鶴ヶ城と日新館の見えるところに埋めよ」と遺言し、墓はそれらの見渡せる小田山の山頂にあります。\n\n<a href=\"http://www.aizukanko.com/spot/205/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.494937,
-    "lng": 139.950671,
-    "address": "福島県会津若松市慶山2-7-23 (ハイカラさん・あかべぇ「慶山」下車 徒歩15分  )",
-    "name": "大龍寺(ダイリュウジ)",
-    "desc": "<b>藩祖保科正之によって開かれた由緒あるお寺。本堂には幽霊の足跡が・・</b>\n宝雲山と号し、保科正之が会津に転封となった時会津に移転してきた「お供寺」の一つです。当時は慶山寺という無住の寺で、そこに山形より正之に従って会津入りした機外禅師が入って開山した由緒あるお寺です。礼法小笠原の祖、小笠原長時などの墓や本堂には幽霊の足跡があります。京都高尾・嵐山より移植した「大龍寺のかえで」や、目黒浄定作の庭園も見事です。\n\n<a href=\"http://www.aizukanko.com/spot/206/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.490221,
-    "lng": 139.95315,
-    "address": "福島県会津若松市東山町石山天寧208 (ハイカラさん・あかべぇ「奴郎ヶ前」下車、徒歩15分)",
-    "name": "天寧寺・近藤勇の墓(テンネイジ・コンドウイサミノハカ)",
-    "desc": "<b>11代葦名盛信の建立により創設。裏手の墓地には新選組の近藤勇の墓があります</b>\n応永28年（1422）、会津にきた傑堂禅師が11代芦名盛信の建立により創立した寺。かつては会津曹洞宗の僧録司で、末寺33カ寺、12の寺院をかぞえました。のちに伊達氏の侵攻にあって焼けたため、芦名氏の菩提寺としての面影は、本堂の礎石にわずかに残るのみです。　天寧寺の裏手の墓地には新選組の近藤勇の墓があります。土方歳三が遺髪などを持っていて会津戦の折、ここに仮埋葬したといいます。４月２５日の近藤勇の命日には、墓前祭りが開催されます。また、藩主松平容保が京都守護職にあった際の国家老で、戊辰戦争の責任者となり明治2年に切腹した萱野権兵衛と、その次男郡長正の墓もあります。\n\n<a href=\"http://www.aizukanko.com/spot/207/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.498951,
-    "lng": 139.926086,
-    "address": "福島県会津若松市大町一丁目1-38 (ハイカラさん・あかべぇ「七日町白木屋」下車すぐ)",
-    "name": "清水屋旅館跡(シミズヤリョカンアト)",
-    "desc": "<b>新選組副長土方歳三や吉田松陰等が宿泊した宿の跡</b>\n新選組副長土方歳三が滞在した宿。宇都宮城をめぐる攻防で足を負傷した土方歳三は、会津藩士秋月登之助が手配した当時格式の高かったこの宿屋に宿泊し、治療しました。このほか、1852年に吉田松陰が東北紀行の途中に宿泊しています。現在は大東銀行会津支店となっています。\n\n<a href=\"http://www.aizukanko.com/spot/209/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.475948,
-    "lng": 139.882414,
-    "address": "福島県会津若松市北会津町両堂字宮の下 ((バス)ピカリン号「両堂前」下車( 車 )磐越自動車道、会津若松ＩＣから約２５分)",
-    "name": "両堂不動尊(リョウドウフドウソン)",
-    "desc": "<b>眼病に霊験あらたか。日本三所の不動明王と伝えられています。</b>\n古くは、不動堂と太子堂が並んでいたので 二堂村といわれています。 両堂の地名もこの二つの堂に由来しています。日本三所の不動明王と伝えられていますが、創建年代、 開山については定かでなく、 眼病に霊験あらたかで、伝説なども多く残っています。9月3日の例大祭には、夜店が並び賑わいを見せており、かつては、お籠り堂で願かけ籠りをしたり、玄如節のかけ合いなどをしたといいます。\n\n<a href=\"http://www.aizukanko.com/spot/213/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.490319,
-    "lng": 139.867287,
-    "address": "福島県会津若松市北会津町寺堀字四百苅 ((車)磐越自動車道、会津若松ＩＣから約２５分)",
-    "name": "多門院毘沙門天像 (タモンインビシャモンテンゾウ)",
-    "desc": "<b>洪水で流れついたと伝えられる毘沙門天像</b>\n洪水のとき流れつき、昆沙門洞の湧水にうかびあがっていたのを多門院中興の僧本行が拾いあげ、本堂に安置したものと伝えられています。 高さは1m程の寄木造りで、布張に漆をかけ、金箔をおいた極彩色のこの像は、江戸時代の作と推定されています。\n\n<a href=\"http://www.aizukanko.com/spot/215/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.490577,
-    "lng": 139.926564,
-    "address": "福島県会津若松市山鹿町1-25 (路線バス「鶴ヶ城西口」下車、徒歩3分ハイカラさん・あかべぇ「鶴ヶ城入口」下車、徒歩10分)",
-    "name": "直江兼続屋敷跡・山鹿素行生誕地(ナオエカネツグヤシキアト・ヤマガソコウタンジョウノチ)",
-    "desc": "<b>上杉景勝の執政「直江兼続」と江戸時代の代表的兵学者「山鹿素行」ゆかりの地</b>\n蒲生時代からの一等地で、上杉景勝の執政 直江兼続もここに住まいしていました。関ヶ原の戦い後、上杉家は米沢に移されました。また、後に江戸時代の代表的兵学者、山鹿素行が生まれた場所でもあります。素行の誕生地を記念した碑石は地元の自然石で「山鹿素行誕生地　大正15年春　元帥伯爵東郷平八郎書」と雄渾な文字が刻まれています。素行は幕末の思想家達に与えた影響も大きく、また討ち入りで有名な赤穂義士を教育した人物でもあります。\n\n<a href=\"http://www.aizukanko.com/spot/224/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.474875,
-    "lng": 139.904623,
-    "address": "福島県会津若松市門田町飯寺村東 (路線バス「飯寺」下車、徒歩5分 )",
-    "name": "長岡藩士殉節の碑(ナガオカハンシジュンセツノヒ)",
-    "desc": "<b>戊辰戦争で戦死した長岡藩藩士山本帯刀隊長以下44名を弔う殉節の碑</b>\n戊辰戦争時、長岡城落城後、長岡藩藩士山本帯刀を隊長とする一隊は八十里峠の難関を越えて会津に入り奮戦しました。しかし早朝の濃霧の中飯寺河原で新政府軍に包囲され、隊長以下44名が戦死しました。明治23年村民が供養の碑を建てて霊を弔いましたが、その後昭和31年会津史談会が新たに殉節の碑を建てて供養しました。長岡藩士殉節のある本光寺は来迎山と号し、天平12年（740）開基、開山は行基菩薩と伝えられています。\n\n<a href=\"http://www.aizukanko.com/spot/225/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.500636,
-    "lng": 139.919,
-    "address": "福島県会津若松市七日町4-20 (ハイカラさん・あかべぇ「七日町駅前」下車すぐ )",
-    "name": "阿弥陀寺・御三階(アミダジ・オサンガイ)",
-    "desc": "<b>かつては鶴ヶ城本丸内にあり密議の場所として使われた建物。</b>\n御三階はかつては鶴ヶ城本丸内にあった建物です。外観上は三階ですが、内部が四層になっており密議の場所として使用されたといわれています。明治3年本丸にあった鶴ヶ城御三階は阿弥陀寺にうつされ、仮本堂として使用されました。また阿弥陀寺には、戊辰戦争戦死者が埋葬されており、斉藤一の墓、萱野権兵衛遥拝碑もあります。\n\n<a href=\"http://www.aizukanko.com/spot/226/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.490549,
-    "lng": 139.930072,
-    "address": "福島県会津若松市追手町6-6 (ハイカラさん・あかべぇ「鶴ヶ城入口」下車、徒歩3分)",
-    "name": "白露庭(ハクロテイ)",
-    "desc": "<b>遠州流庭園としても名高い会津藩家老・内藤家の屋敷跡</b>\n会津藩家老・内藤家の屋敷跡で遠州流庭園としても名高い。明治以後は裁判所の前庭となっているが、昔の家老邸の名庭だった面影をとどめている。ヒマラヤスギ、トウカエデの高木、ゴヨウマツ、キャラボク、ツツジ等の多種の中低木で構成されている。鶴ヶ城玄関口の歴史的にも貴重な緑地である。\n\n<a href=\"http://www.aizukanko.com/spot/237/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  },
-  {
-    "lat": 37.475454,
-    "lng": 139.982386,
-    "address": "福島県会津若松市",
-    "name": "おけいの墓(オケイノハカ)",
-    "desc": "<b>日本人女性初のアメリカ移民「おけい」の墓</b>\nおけいは、会津藩軍事顧問のプロシア人、ヘンリー・スネル家の子守役でした。戊辰戦争後、スネルをリーダーとする会津藩士らとともにカリフォルニアに入植しましたが、開拓に失敗、移民団は離散してしまいました。残されたおけいは、アメリカ人に引き取られましたが、熱病にかかり、19歳の短い生涯を終えました。カリフォルニア州ゴールドヒルと同様の墓が背あぶり山にたてられています。\n\n<a href=\"http://www.aizukanko.com/spot/473/\" target=\"_blank\">会津観光内解説ページ</a>",
-    "image": ""
-  }
-]
+        {
+            "lat": 37.533212,
+            "lng": 139.935694,
+            "address": "Aza-Fujikura, Kurahashi, KawaHigashi-machi, Aizuwakamatsu, FUKUSHIMA (10 minutes by car from Aizuwakamatsu IC, Banetsu Highway)",
+            "name": "Monument of Princess Minazuru",
+            "desc": "<b>This monument tells the the sad love story of Yoshitsune Minamoto and Princess Minazuru</b>\nAt the east edge of Fujikura settlement, there is a monument which tells the sad love story of Yoshitsune Minamoto and Princess Minazuru. To overthrow the Heike clan, Yoshitsune must learn art of war from Hogen Kiichi. Therefore he approached to and fell in love with Hogen's daughter, Princess Minazuru. At last, Yoshitsune succeeded to copy the book of art of war from Hogen, but Kiyomori Taira, the chief of the Heike clan noticed his existence, so he escaped to Tohoku region. The Princess chased him and  came up to Tohoku, but she realized she couldn't catching him up, so she threw herself into Namba-pond. Yoshitsune noticed her death later, so he buried her near the pond and built her tomb. Because the Princess Minazuru know well the sad feelings of those who can not meet loved ones, so if people pray to her spirit, she is said to give that person a good love affair.",
+            "image": ""
+        },
+        {
+            "lat": 37.52147,
+            "lng": 139.859433,
+            "address": "Aza-Tsukagoe, Tamurayama, KitaAizu-machi, Aizuwakamatsu, FUKUSHIMA (10 minutes by car from Aizuwakamatsu station)",
+            "name": "Tamura-yama mound tomb",
+            "desc": "<b>Mysterious old mound tomb, which is the only named place in Tohoku written in \"Kojiki (the history book in 8 century)\"</b>\nTamura-yama mound tomb is the Key-hole shaped mound tomb, which length is 24.85m and height is 2.15m. It was erected over 1200 years ago, the flower pattern copper mirror,  the straight sword or so were found as burial goods. These burial goods are very rare in the Tohoku region, the straight sword was designated as Prefecture's important cultural asset. This mound tomb's name was only named place in Tohoku region which found in \"Kojiki (the history book in 8 century)\", there are some mysterious legends of the four Generals of Conquerors or the General Tamuramaro Sakanoue",
+            "image": ""
+        },
+        {
+            "lat": 37.479882,
+            "lng": 139.944111,
+            "address": "HanamigaOka 3 chome, Aizuwakamatsu, FUKUSHIMA (20 minutes walk from \"HanamigaOka\" bus stop)",
+            "name": "Tomb of Harunaka Tanaka",
+            "desc": "<b>The chief retainer who served to 3 successive Aizu Lords sleeps here</b>\nHarunaka Tanaka was the chief retainer who served to 3 successive Aizu Lords. When he was appointed to the position of the chief retainer, the Aizu area was under the Great famine at the Tenmei period. Harunaka advocated to the the Aizu Load Katanobu both assistance to the people and political reform, but these were rejected. Therefore, he insisted that he became sick and resigned temporarily due to that reason. He studied economics and strategies during the period of leave, and when he returned to work one year later, he carried out political reforms and left significant results. He built a new school \"Nisshinkan\", and thanks to that, the Aizu clan became a powerful clan in both politics and military affairs. He died at the age of 61 during the subjugation to Sakhalin of the Aizu clan. He said \"I want my tomb to be made in the place where the Tsuru-ga Castle (Wakamatsu Castle) and the Nisshinkan school can be seen\", and according to it, his tomb is at the top of Odayama.",
+            "image": ""
+        },
+        {
+            "lat": 37.494937,
+            "lng": 139.950671,
+            "address": "2-7-23 Keizan, Aizuwakamatsu, FUKUSHIMA (15 minutes walk from \"Keizan\" bus stop of \"Haikara-san\" or \"Akabe\")",
+            "name": "Dairyuji temple",
+            "desc": "<b>The historical temple built by the first load Masayuki Hoshina. The footprint of Ghost is in Main Hall</b>\nDairyuji temple is one of the temples which were moved to Aizu together when Masayuki moved to Aizu. Prefixed name of this temple is \"Houn-zan\". At that time, it was a temple of non-residence called Keizanji, then the Zen master Kigai, who entered Aizu according to Masayuki from Yamagata, rebuilt and renamed the temple. Tomb of Nagatoki Ogasawara, who is known as the founder of Ogasawara-style etiquette is here, and the footprint of the ghost is on the Main Hall. \"Dairyuji Maple\" which was moved from Kyoto Arashiyama is very famous, and the garden created by Jotei Meguro is excellent.",
+            "image": ""
+        },
+        {
+            "lat": 37.490221,
+            "lng": 139.95315,
+            "address": "208 Tennei, Ishiyama, Higashiyama-machi, Aizuwakamatsu, FUKUSHIMA (15 minutes walk from \"Yarogamae\" bus stop of \"Haikara-san\" or \"Akabe\")",
+            "name": "Tenneiji temple and tomb of Isami Kondo",
+            "desc": "<b>11th Load Moriuji Ashina built the temple. tomb of Isami Kondo, the chief of \"Shinsen-gumi\" troops, is at the cemetry</b>\nAccording to the 11th Aizu Lord Morinobu Ashina's request, this temple was built by the Zen Master Ketsudo in 1422. Once before the temple was the headquarter of the Aizu Soto sect, which had 12 branch temples and 33 local temples. During Date family's invasion to Aizu, the temple was burned, so only ruin of Ashina period we can see today is, the stone foundation of the temple. In the cemetry in the back of Tenneiji temple, there is a tomb of Isami Kondo, the chief of \"Shinsen-gumi\" troops. The sub leader Toshizo Hijikata brought his deceased hair to Aizu, and buried it here. The memorial service is held every April 25th, the dead day of Isami. There are also tombs of Gonbe Kayano, who was the chief retainer of Aizu and suicided by Harakiri to take responsibility for the Boshin War, and of his son, Nagamasa Kori.",
+            "image": ""
+        },
+        {
+            "lat": 37.498951,
+            "lng": 139.926086,
+            "address": "1-38 O-machi 1 chome, Aizuwakamatsu, FUKUSHIMA (Near from \"Nanokamachi Shirakiya\" bus stop of \"Haikara-san\" or \"Akabe\")",
+            "name": "Ruins of the Shimizuya Inn",
+            "desc": "<b>The ruins of the inn, in which Shoin Yoshida or Toshizo Hijikata stayed</b>\nThe inn in which Toshizo Hijikata, who was the sub leader of \"Shinsen-gumi\" troops, stayed. Toshizo was wounded by leg at the battle of the Utsunomiya Castle, so Aizu officer Noborinosuke Aikizuki reserved this luxury inn for Toshizo. He stayed at the inn and received treatment. As other topics, Shoin Yoshida, who are known as philosopher in the end of Edo era, stayed at this inn in 1852, during his Tohoku trip. In today, Daito bank Aizu branch is here.",
+            "image": ""
+        },
+        {
+            "lat": 37.475948,
+            "lng": 139.882414,
+            "address": "Aza-Miyanoshita, Ryodo, KitaAizu-machi, Aizuwakamatsu, FUKUSHIMA (Around \"Ryodo Mae\" bus stop of \"Pikarin-go\")",
+            "name": "Ryodo Fudoson temple",
+            "desc": "<b>Temple with mysterious power to heal eye diseases. One of the three famous Acala in Japan.</b>\nOnce before this settlement was called \"Nido Village (Village of two halls)\", because there were two temple halls, \"Fudo-do (Hall of Acala)\" and \"Taishi-do (Hall of Prince)\". The current settlement name \"Ryodo\" also came from these two halls. It is said this temple's statue of Acala is one of the three famous Acala in Japan. But, it is unclear when the temple was built. It is said this temple has mysterious power to heal eye decease, and there are some legends of healing the eye. Regular celemony is held every September 3rd, and during the celemony, the night fair with many food carts is open.",
+            "image": ""
+        },
+        {
+            "lat": 37.490319,
+            "lng": 139.867287,
+            "address": "Aza-Yonhyakugari, Terahori, KitaAizu-machi, Aizuwakamatsu, FUKUSHIMA (25 minutes by car from Aizuwakamatsu IC, Banetsu Highway)",
+            "name": "Statue of Vaisravana at Tamonin temple",
+            "desc": "<b>The statue of Vaisravana, which had flowed here during the flood</b>\nAt the time of the flood, it is said that this statue of Vaisravana had flowed here and floated above the pond in the cave. The monk named Hongyo found it and set it at the main hall of this temple. The height of the statue is about 1m, made by several wooden parts, wrapped by cloth, painted by lacquer and gilded. It is presumed to be a work in the Edo period.",
+            "image": ""
+        },
+        {
+            "lat": 37.490577,
+            "lng": 139.926564,
+            "address": "1-25 Yamaga-machi, Aizuwakamatsu, FUKUSHIMA (3 minutes walk from \"Tsuru-ga Jo Nishiguchi\" bus stop)",
+            "name": "Ruins of the House of Kanetsugu Naoe / Born place of Soko Yamaga",
+            "desc": "<b>The place which was related with Kanetsugu Naoe, who served to Kagekatsu Uesugi as consul, and Soko Yamaga, who was the scholar of the art of war in Edo era</b>\nThis place is the prime location even from Gamo family period, Kanetsugu Naoe, who served to Kagekatsu Uesugi as consul, lived here in his Aizu days. After the battle of Sekigahara, Uesugi family left Aizu and moved to Yonezawa. Later, in Edo era, Soko Yamaga, who is known as the great scholar of the art of war, was borned here. The memorial monument of Soko is made by natual stone of Aizu, the message \"The born place of Soko Yamaga: Written by Count Heihaciro Togo, the Marshall of the Army, in Spring 1926\" is engraved on it. Soko had large influence for the philosophers in the end of Edo era, and also, he educated famous \"Ako Gishi (Ako warriors of loyalty)\".",
+            "image": ""
+        },
+        {
+            "lat": 37.474875,
+            "lng": 139.904623,
+            "address": "MuraHigashi, Niidera, Monden-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes walk from \"Niidera\" bus stop)",
+            "name": "Memorial monument of the Nagaoka clan warriors' loyalty in death",
+            "desc": "<b>Memorial monument of loyalty, of the Nagaoka clan's 44 warriors dead in the Boshin War, including the Chief Tatewaki Yamomoto</b>\nAfter the fall of the Nagaoka Castle in the Boshin War, the unit of the Nagaoka clan warriors commanded by Tatewaki Yamamoto ran through the Hachijuri Pass and got into Aizu. However, they were surrounded by the West Army in the early morning thick fog at Niidera Kawara, 44 warriors including Tatewaki died in the battle. In Meiji period, 1890, the villagers built a cenotaph here, and in 1898, the Aizu historic association built a new monument of loyalty for the Nagaoka clan warriors. This monument is at Hongoji temple, which prefixed name is \"Raigo-san\" and was erected in 740 by the High Priest Gyoki.",
+            "image": ""
+        },
+        {
+            "lat": 37.500636,
+            "lng": 139.919,
+            "address": "4-20 Nanoka-machi, Aizuwakamatsu, FUKUSHIMA (Near from \"Nanokamachi Ekimae\" bus stop of \"Haikara-san\" or \"Akabe\")",
+            "name": "Osangai (3 floors) at Amidaji temple",
+            "desc": "<b>This building was once at the inside of the Tsuru-ga Castle (Wakamatsu Castle), and used for secret conference</b>\nOsangai (3 floors) is the building which was once at the inside of the Tsuru-ga Castle (Wakamatsu Castle). It looks having 3 floors from outside, but actually it has 4 floors, the secret floor was used for secret conference. In 1870, the building was moved from the castle to Amidaji temple, and used as temporal main hall. Many victims of the Boshin War are buried in Amidaji temple, there are tomb of Hajime Saito or the memorial monument of Gonbe Kayano.",
+            "image": ""
+        },
+        {
+            "lat": 37.490549,
+            "lng": 139.930072,
+            "address": "6-6 Ote-machi, Aizuwakamatsu, FUKUSHIMA (3 minutes walk from \"Tsuru-ga Jo Iriguchi\" bus stop of \"Haikara-san\" or \"Akabe\")",
+            "name": "Hakuro-tei garden",
+            "desc": "<b>This garden is ruins of Naito family (the chief retainer family of Aizu) House and is famous as Onshu-style garden</b>\nThis garden is ruins of Naito family (the chief retainer family of Aizu) House and is famous as Onshu-style garden. It become the front yard of the Court after Meiji peiod, but you can find the traces that was part of the Samurai residence even in today. There are several botanical species - the high trees like Himalayan cedar or Acer Buergerianum, the low trees like Japanese white pine, Taxus cuspidata or Azalea. This garden is precious green area in the front of the Tsuru-ga Castle.",
+            "image": ""
+        },
+        {
+            "lat": 37.475454,
+            "lng": 139.982386,
+            "address": "Aizuwakamatsu, FUKUSHIMA",
+            "name": "Tomb of Okei",
+            "desc": "<b>Tomb of Okei, who is known as the first female Japanese immigrant to USA</b>\nOkei was worked at the House of Henry Schell (Prussian military advisor of the Aizu clan) as babysitter. After the Boshin War, She went to California as immigrant, with Aizu officers including Henry Schell as the leader. But the development failed and the immigrants broke up. Okei was adopted by an American family, but she suffered from a fever and died at the age of 19. Her tombs in same style are in both GoldHill in California and Mt.Seaburi in Aizu.",
+            "image": ""
+        }
+    ]
 }
