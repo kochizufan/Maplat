@@ -156,7 +156,6 @@ define(['ol3', 'aigle'], function(ol, Promise) {
         ol.control.Control.prototype.disposeInternal.call(this);
     };
 
-
     /**
      * The enum for available directions.
      *
@@ -227,11 +226,6 @@ define(['ol3', 'aigle'], function(ol, Promise) {
         if (!this.sliderInitialized_) {
             this.initSlider_();
         }
-        /* var res = mapEvent.frameState.viewState.resolution;
-        if (res !== this.currentResolution_) {
-            this.currentResolution_ = res;
-            this.setThumbPosition_(res);
-        }*/
     };
 
 
@@ -240,8 +234,6 @@ define(['ol3', 'aigle'], function(ol, Promise) {
      * @private
      */
     ol.control.SliderCommon.prototype.handleContainerClick_ = function(event) {
-        var view = this.getMap().getView();
-
         var relativePosition = this.getRelativePosition_(
             event.offsetX - this.thumbSize_[0] / 2,
             event.offsetY - this.thumbSize_[1] / 2);
@@ -255,14 +247,14 @@ define(['ol3', 'aigle'], function(ol, Promise) {
      * @private
      */
     ol.control.SliderCommon.prototype.handleDraggerStart_ = function(event) {
-        if (!this.dragging_ && event.originalEvent.target === this.element.firstElementChild) {
+        if (!this.dragging_ && event.originalEvent.target === this.element.firstElementChild &&
+            !this.element.classList.contains('disable')) {
             this.getMap().getView().setHint(ol.ViewHint.INTERACTING, 1);
             this.previousX_ = event.clientX;
             this.previousY_ = event.clientY;
             this.dragging_ = true;
         }
     };
-
 
     /**
      * Handle dragger drag events.
@@ -281,7 +273,6 @@ define(['ol3', 'aigle'], function(ol, Promise) {
             this.previousY_ = event.clientY;
         }
     };
-
 
     /**
      * Handle dragger end events.
@@ -312,7 +303,6 @@ define(['ol3', 'aigle'], function(ol, Promise) {
      * @private
      */
     ol.control.SliderCommon.prototype.setThumbPosition_ = function(res) {
-        console.log(res);
         var thumb = this.element.firstElementChild;
 
         if (this.direction_ == ol.control.SliderCommon.Direction_.HORIZONTAL) {
@@ -320,8 +310,8 @@ define(['ol3', 'aigle'], function(ol, Promise) {
         } else {
             thumb.style.top = this.heightLimit_ * res + 'px';
         }
+        this.set('slidervalue', res);
     };
-
 
     /**
      * Calculates the relative position of the thumb given x and y offsets.  The
@@ -341,6 +331,19 @@ define(['ol3', 'aigle'], function(ol, Promise) {
             amount = y / this.heightLimit_;
         }
         return ol.math.clamp(amount, 0, 1);
+    };
+
+    ol.control.SliderCommon.prototype.setValue = function(res) {
+        this.setThumbPosition_(res);
+    };
+
+    ol.control.SliderCommon.prototype.setEnable = function(cond) {
+        var elem = this.element;
+        if (cond) {
+            elem.classList.remove('disable');
+        } else {
+            elem.classList.add('disable');
+        }
     };
 
     ol.control.CustomControl = function(optOptions) {
@@ -763,6 +766,7 @@ define(['ol3', 'aigle'], function(ol, Promise) {
         var overlayLayer = this._overlay_group = new ol.layer.Group();
         overlayLayer.set('name', 'overlay');
 
+        this.sliderCommon = new ol.control.SliderCommon();
         var controls = optOptions.controls ? optOptions.controls :
             optOptions.off_control ? [] :
             [
@@ -771,7 +775,7 @@ define(['ol3', 'aigle'], function(ol, Promise) {
                 new ol.control.Zoom(),
                 new ol.control.SetGPS(),
                 new ol.control.GoHome(),
-                new ol.control.SliderCommon()
+                this.sliderCommon
             ];
 
         var options = {

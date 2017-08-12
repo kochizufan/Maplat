@@ -302,6 +302,9 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 off_control: noUI ? true : false,
                 off_rotation: noRotate ? true : false
             });
+            var sliderCommon = mapObject.sliderCommon;
+            sliderCommon.setEnable(false);
+
             var backDiv = null;
             if (overlay) {
                 backDiv = mapDiv + '_back';
@@ -494,14 +497,17 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                                     backMap.exchangeSource();
                                 }
                                 if (!(to instanceof ol.source.NowMap) || to instanceof ol.source.TmsMap) {
+                                    sliderCommon.setEnable(true);
                                     document.querySelector('.opacity-slider input').removeAttribute('disabled');
                                 } else {
+                                    sliderCommon.setEnable(false);
                                     document.querySelector('.opacity-slider input').setAttribute('disabled', true);
                                 }
                             }
                             if (to instanceof ol.source.TmsMap) {
                                 mapObject.setLayer(to);
                                 if (!(from instanceof ol.source.NowMap)) mapObject.exchangeSource(backSrc || now);
+                                sliderCommon.setEnable(true);
                                 document.querySelector('.opacity-slider input').removeAttribute('disabled');
                             } else {
                                 mapObject.setLayer();
@@ -513,6 +519,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                             from = to;
 
                             var opacity = document.querySelector('.opacity-slider input').value;
+                            opacity = sliderCommon.get('slidervalue') * 100;
                             mapObject.setOpacity(opacity);
                             var view = mapObject.getView();
                             if (to.insideCheckHistMapCoords(size[0])) {
@@ -655,6 +662,12 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 };
                 slider.addEventListener('input', opacityChange);
                 slider.addEventListener('change', opacityChange);
+
+                sliderCommon.on('propertychange', function(evt) {
+                    if (evt.key === 'slidervalue') {
+                        mapObject.setOpacity(sliderCommon.get(evt.key) * 100);
+                    }
+                });
 
                 if (mobileIF) return {
                     'setMarker': function(dataStr) {

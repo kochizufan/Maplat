@@ -228,10 +228,6 @@ html,body {
     /*border-radius: 20px;*/
 }
 
-/*.ol-slidercommon:hover {
-    /*background-color: rgba(255,69,0,0.3);* /
-}*/
-
 .ol-slidercommon-thumb {
     height: 15px;
     width: 15px;
@@ -240,6 +236,8 @@ html,body {
     /*background-color: rgba(255,69,0,0.6);*/
     /*border-radius: 20px;*/
 }
-a.ol-slidercommon-handle:hover {
-    /*background-color: rgba(255,69,0,0.7);* /
-}*/
+
+.ol-slidercommon.disable button {
+    color: rgba(255,255,255,.7);
+    background-color: rgba(0,60,136,.2);
+}
