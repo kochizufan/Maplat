@@ -314,14 +314,15 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 });
             }
             if (!noUI) {
+                var shown = false;
                 mapObject.on('gps_request', function() {
+                    shown = true;
                     var gwModalElm = document.getElementById('gpsWait');
                     var gwModal = new bsn.Modal(gwModalElm);
                     gwModal.show();
                 });
                 mapObject.on('gps_result', function(evt) {
                     var gwElm = document.querySelector('#gpsWait.in');
-                    var shown = gwElm ? true : false;
                     var result = evt.frameState;
                     if (result && result.error) {
                         currentPosition = null;
@@ -339,6 +340,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                         currentPosition = result;
                     }
                     if (shown) {
+                        shown = false;
                         var gwModalElm = document.getElementById('gpsWait');
                         var gwModal = new bsn.Modal(gwModalElm);
                         gwModal.hide();
@@ -375,7 +377,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 if (!noUI) {
                     var lwModalElm = document.getElementById('loadWait');
                     var lwModal = new bsn.Modal(lwModalElm);
-                    lwModal.hide();
+                    setTimeout(function() { lwModal.hide(); }, 1);
                 }
 
                 if (mapType) {
