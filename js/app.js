@@ -176,10 +176,6 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
         var noRotate = appOption.no_rotate || false;
         if (overlay) {
             document.querySelector('body').classList.add('with-opacity');
-            if (!noUI) {
-                document.querySelector('.opacity-slider').classList.remove('hide');
-                document.querySelector('.opacity-slider input').setAttribute('disabled', true);
-            }
         }
         if (noUI) {
             document.querySelector('.swiper-container').style.display = 'none';
@@ -498,17 +494,14 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                                 }
                                 if (!(to instanceof ol.source.NowMap) || to instanceof ol.source.TmsMap) {
                                     sliderCommon.setEnable(true);
-                                    document.querySelector('.opacity-slider input').removeAttribute('disabled');
                                 } else {
                                     sliderCommon.setEnable(false);
-                                    document.querySelector('.opacity-slider input').setAttribute('disabled', true);
                                 }
                             }
                             if (to instanceof ol.source.TmsMap) {
                                 mapObject.setLayer(to);
                                 if (!(from instanceof ol.source.NowMap)) mapObject.exchangeSource(backSrc || now);
                                 sliderCommon.setEnable(true);
-                                document.querySelector('.opacity-slider input').removeAttribute('disabled');
                             } else {
                                 mapObject.setLayer();
                                 mapObject.exchangeSource(to);
@@ -518,8 +511,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                             // and Changing "from" content must be finished before "postrender" event
                             from = to;
 
-                            var opacity = document.querySelector('.opacity-slider input').value;
-                            opacity = sliderCommon.get('slidervalue') * 100;
+                            var opacity = sliderCommon.get('slidervalue') * 100;
                             mapObject.setOpacity(opacity);
                             var view = mapObject.getView();
                             if (to.insideCheckHistMapCoords(size[0])) {
@@ -655,13 +647,6 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                     }
                 };
                 mapObject.on('postrender', backMapMove);
-
-                var slider = document.querySelector('.opacity-slider input');
-                var opacityChange = function() {
-                    mapObject.setOpacity(slider.value);
-                };
-                slider.addEventListener('input', opacityChange);
-                slider.addEventListener('change', opacityChange);
 
                 sliderCommon.on('propertychange', function(evt) {
                     if (evt.key === 'slidervalue') {
