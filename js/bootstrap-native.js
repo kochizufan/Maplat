@@ -1181,7 +1181,11 @@
   
       // we elegantly hide any opened modal
       var currentOpen = getElementsByClassName(document,component+' in')[0];
-      currentOpen && currentOpen !== modal && currentOpen.modalTrigger[stringModal].hide(); 
+      try {
+          currentOpen && currentOpen !== modal && currentOpen.modalTrigger[stringModal].hide();
+      } catch (e) {
+          currentOpen.classList.remove('in');
+      }
   
       if ( this[backdrop] ) {
         createOverlay();

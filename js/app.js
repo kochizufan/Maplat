@@ -329,14 +329,12 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                             shown = false;
                             var gwModalElm = document.getElementById('gpsWait');
                             var gwModal = new bsn.Modal(gwModalElm);
-                            setTimeout(function() {
-                                gwModal.hide();
-                                document.querySelector('#gpsDialogTitle').innerText = t('app.out_of_map');
-                                document.querySelector('#gpsDialogBody').innerText = t('app.out_of_map_desc');
-                                var gdModalElm = document.getElementById('gpsDialog');
-                                var gdModal = new bsn.Modal(gdModalElm);
-                                gdModal.show();
-                            }, 100);
+                            gwModal.hide();
+                            document.querySelector('#gpsDialogTitle').innerText = t('app.out_of_map');
+                            document.querySelector('#gpsDialogBody').innerText = t('app.out_of_map_desc');
+                            var gdModalElm = document.getElementById('gpsDialog');
+                            var gdModal = new bsn.Modal(gdModalElm);
+                            gdModal.show();
                         }
                     } else {
                         currentPosition = result;
@@ -345,7 +343,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                         shown = false;
                         var gwModalElm = document.getElementById('gpsWait');
                         var gwModal = new bsn.Modal(gwModalElm);
-                        setTimeout(function() { gwModal.hide(); }, 100);
+                        gwModal.hide();
                     }
                 });
                 if (fakeGps) {
