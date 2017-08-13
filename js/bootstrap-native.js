@@ -1136,13 +1136,13 @@
         open = self.open = false;
         element && (setFocus(element));
         bootstrapCustomEvent.call(modal, hiddenEvent, component);
-        setTimeout(function(){
-          if (!getElementsByClassName(document,component+' '+inClass)[0]) {
+        setTimeout(function() {
+          // if (!getElementsByClassName(document, component+' '+inClass)[0]) {
             resetAdjustments();
             resetScrollbar();
-            removeOverlay(); 
-          }
-          removeClass(body,component+'-open');
+            removeClass(body, component+'-open');
+            removeOverlay();
+          // }
         }, 100);
       },    
       // handlers
