@@ -327,9 +327,10 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                     if (result && result.error) {
                         currentPosition = null;
                         if (result.error == 'gps_out' && shown) {
+                            shown = false;
                             var gwModalElm = document.getElementById('gpsWait');
                             var gwModal = new bsn.Modal(gwModalElm);
-                            gwModal.hide();
+                            setTimeout(function() { gwModal.hide(); }, 1);
                             document.querySelector('#gpsDialogTitle').innerText = t('app.out_of_map');
                             document.querySelector('#gpsDialogBody').innerText = t('app.out_of_map_desc');
                             var gdModalElm = document.getElementById('gpsDialog');
@@ -343,7 +344,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                         shown = false;
                         var gwModalElm = document.getElementById('gpsWait');
                         var gwModal = new bsn.Modal(gwModalElm);
-                        gwModal.hide();
+                        setTimeout(function() { gwModal.hide(); }, 1);
                     }
                 });
                 if (fakeGps) {
