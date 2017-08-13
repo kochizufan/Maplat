@@ -133,8 +133,6 @@ define(['ol3', 'aigle'], function(ol, Promise) {
         ol.events.listen(this.dragger_, ol.pointer.EventType.POINTERUP,
             this.handleDraggerEnd_, this);
 
-        ol.events.listen(containerElement, ol.events.EventType.CLICK,
-            this.handleContainerClick_, this);
         ol.events.listen(thumbElement, ol.events.EventType.CLICK,
             ol.events.Event.stopPropagation);
 
@@ -144,6 +142,8 @@ define(['ol3', 'aigle'], function(ol, Promise) {
             element: containerElement,
             render: render
         });
+        ol.events.listen(this.element, ol.events.EventType.MOUSEOUT,
+            this.handleDraggerEnd_, this);
     };
     ol.inherits(ol.control.SliderCommon, ol.control.Control);
 

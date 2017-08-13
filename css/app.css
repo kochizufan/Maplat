@@ -95,12 +95,12 @@ html,body {
     bottom: .5em;
     left: calc(50% - 90px);
     width: 180px;
-    height: 10px;
+    height: 30px;
 }
 
 .opacity-slider input {
-    margin-top: 10px;
-    height: 15px;
+    margin-top: 20px;
+    height: 30px;
 }
 
 .swiper-container {
@@ -202,30 +202,17 @@ html,body {
 }
 
 .ol-slidercommon {
-    top: 4.5em;
-    left: .5em;
-    height: 200px;
-}
-.ol-slidercommon button {
-    position: relative;
-    width: 10px;
-    height: 25px;
-}
-
-.ol-touch .ol-slidercommon {
-    top: 5.5em;
-}
-
-.ol-slidercommon {
     top: 8px;
-    left: auto;
-    right: 8px;
-    /*background-color: rgba(255,69,0,0.2);*/
+    left: calc(50% - 100px);
     width: 200px;
     height: 25px;
     padding: 0;
-    /*box-shadow: 0 0 5px rgb(255,69,0);*/
-    /*border-radius: 20px;*/
+}
+
+.ol-slidercommon button {
+    position: relative;
+    width: 20px;
+    height: 25px;
 }
 
 .ol-slidercommon-thumb {
@@ -233,8 +220,6 @@ html,body {
     width: 15px;
     margin: 0;
     filter: none;
-    /*background-color: rgba(255,69,0,0.6);*/
-    /*border-radius: 20px;*/
 }
 
 .ol-slidercommon.disable button {
