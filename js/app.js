@@ -337,7 +337,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                                 var gdModalElm = document.getElementById('gpsDialog');
                                 var gdModal = new bsn.Modal(gdModalElm);
                                 gdModal.show();
-                                }, 1);
+                                }, 100);
                         }
                     } else {
                         currentPosition = result;
@@ -346,7 +346,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                         shown = false;
                         var gwModalElm = document.getElementById('gpsWait');
                         var gwModal = new bsn.Modal(gwModalElm);
-                        setTimeout(function() { gwModal.hide(); }, 1);
+                        setTimeout(function() { gwModal.hide(); }, 100);
                     }
                 });
                 if (fakeGps) {
@@ -380,7 +380,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 if (!noUI) {
                     var lwModalElm = document.getElementById('loadWait');
                     var lwModal = new bsn.Modal(lwModalElm);
-                    setTimeout(function() { lwModal.hide(); }, 1);
+                    setTimeout(function() { lwModal.hide(); }, 100);
                 }
 
                 if (mapType) {
