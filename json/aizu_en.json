@@ -75,6 +75,18 @@
     ], 
     "pois" :[
         {
+            "lat": 37.487717,
+            "lng": 139.929786,
+            "name": "Wakamatsu Castle",
+            "url": "https://en.m.wikipedia.org/wiki/Aizuwakamatsu_Castle"
+        },
+        {
+            "lat": 37.491,
+            "lng": 139.944111,
+            "name": "Oyaku-en Garden",
+            "url": "https://en.m.wikipedia.org/wiki/Aizu_Matsudaira%27s_Royal_Garden"
+        },
+        {
             "lat": 37.485126,
             "lng": 139.958679,
             "address": "Aza-Hakayama, Oaza-Ishiyama, Higashiyama-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes walk from \"Innai\" bus stop)",
@@ -248,7 +260,7 @@
             "address": "160-2, Aza-Fujikura, Kurahashi, KawaHigashi-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes by car from Aizuwakamatsu IC, Banetsu Highway)",
             "name": "Jizodo (The Hall of Kshitigarbha), Enmeiji Temple",
             "desc": "<b>National important cultural asset/building, which is told built by the Master Priest Tokuitsu</b>\nThis Hall is located on Fujikura settlement, south-west most area of KawaHigashi-machi. The roof of the hall is Chinese-style and multi-storied, and the pent roof supported by circular pillars is installed around the hall, therefore it looks like a two-story building although it is actually a one-story. So, it is called \"Fujikura Nikai-do (Fujikura Two Story Hall)\". It is told built by the Master Priest Tokuitsu, around 14th or 15th century.In 1950, It was designated as Natural important cultural asset/building.",
-            "image": ""
+            "image": "enmeiji_jizodo.jpg"
         },
         {
             "lat": 37.562637,
