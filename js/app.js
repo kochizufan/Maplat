@@ -582,6 +582,10 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                             }
                             mapObject.updateSize();
                             mapObject.renderSync();
+
+                            var title = to.officialTitle || to.title || to.label;
+                            document.querySelector('.map-title span').innerText = title;
+
                             if (init == true) {
                                 to.goHome();
                             } else if (backMap && backTo) {
@@ -642,6 +646,42 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                     }
                 };
                 mapObject.on('click', clickHandler);
+
+                // MapUI on off
+                var timer;
+                mapObject.on('click', function() {
+                    if (timer) {
+                        clearTimeout(timer);
+                        delete timer;
+                    }
+                    var ctls = document.querySelectorAll('.ol-control');
+                    for (var i = 0; i < ctls.length; i++) {
+                        ctls[i].classList.remove('fade');
+                    }
+                });
+                mapObject.on('pointerdrag', function() {
+                    if (timer) {
+                        clearTimeout(timer);
+                        delete timer;
+                    }
+                    var ctls = document.querySelectorAll('.ol-control');
+                    for (var i = 0; i < ctls.length; i++) {
+                        ctls[i].classList.add('fade');
+                    }
+                });
+                mapObject.on('moveend', function() {
+                    if (timer) {
+                        clearTimeout(timer);
+                        delete timer;
+                    }
+                    timer = setTimeout(function() {
+                        delete timer;
+                        var ctls = document.querySelectorAll('.ol-control');
+                        for (var i = 0; i < ctls.length; i++) {
+                            ctls[i].classList.remove('fade');
+                        }
+                    }, 3000);
+                });
 
                 // change mouse cursor when over marker
                 var moveHandler = function(evt) {

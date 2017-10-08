@@ -94,6 +94,32 @@ html,body {
     vertical-align: middle;/*IE7*/
 }
 
+.map-title {
+    top: .5em;
+    width: 500px;
+    left: calc(50% - 250px);
+    background-color: rgba(32,32,32,0.5);
+    color: white;
+    margin: auto;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 18px;
+}
+
+@media screen and (max-width: 600px) {
+    .map-title {
+        width: calc(100% - 100px);
+        left: 50px;
+    }
+
+    .ol-touch .map-title {
+        width: calc(100% - 130px);
+        left: 65px;
+    }
+}
+
 .swiper-container {
     position: absolute;
     bottom: .5em;
@@ -210,6 +236,14 @@ html,body {
     -webkit-transform: rotate(-33deg);
     -o-transform: rotate(-33deg);
     transform: rotate(-33deg);
+}
+
+.ol-control {
+    opacity: 1;
+}
+
+.ol-control.fade {
+    opacity: 0;
 }
 
 .ol-control.no_rotation button {
