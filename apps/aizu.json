@@ -125,15 +125,30 @@
         {
             "lat": 37.491,
             "lng": 139.944111,
-            "name": "御薬園(オヤクエン)",
-            "url": "https://ja.m.wikipedia.org/wiki/%E5%BE%A1%E8%96%AC%E5%9C%92"
+            "name": {
+                "ja" : "御薬園(オヤクエン)",
+                "en" : "Oyaku-en Garden"
+            },
+            "url": {
+                "ja" : "https://ja.m.wikipedia.org/wiki/%E5%BE%A1%E8%96%AC%E5%9C%92",
+                "en" : "https://en.m.wikipedia.org/wiki/Aizu_Matsudaira%27s_Royal_Garden"
+            }
         },
         {
             "lat": 37.485126,
             "lng": 139.958679,
-            "address": "福島県会津若松市東山町大字石山字墓山 (バス停「院内」から徒歩５分駐車場無し)",
-            "name": "松平家墓所(マツダイラケボショ)",
-            "desc": "<b>松平家の歴代藩主が眠る、山腹の広大な史跡</b>\n「会津藩主松平家墓所」は、会津若松市の院内山と猪苗代町の見禰山（みねやま）の二カ所の総称で昭和62年5月に国の史跡として指定を受けています。院内山の墓所は通称「院内御廟」と呼ばれ親しまれていますが、その面積は約15万平方メートルと広大で、墓域の中腹には西の御庭、中の御庭と呼ばれる墓所があり、さらに石段を上ったところを入峰墓所と呼んでいます。寛永20年（1643）に会津に入封した初代の保科正之公は、猪苗代の土津（はにつ）神社に祀られ、ここには、二代保科正経公から幕末の九代容保公までの墓があります。新緑の時期や紅葉の時期に、散策をかねてのお参りをする人も多いスポットです。\n\n<a href=\"http://www.aizukanko.com/spot/27/\" target=\"_blank\">会津観光内解説ページ</a>\n出展: 会津若松市内の観光情報 CC BY-ND 2.1\n写真: Wikimedia Commonsより",
+            "address": {
+                "ja" : "福島県会津若松市東山町大字石山字墓山 (バス停「院内」から徒歩５分駐車場無し)",
+                "en" : "Aza-Hakayama, Oaza-Ishiyama, Higashiyama-machi, Aizuwakamatsu, FUKUSHIMA (5 minutes walk from \"Innai\" bus stop)"
+            },
+            "name": {
+                "ja" : "松平家墓所(マツダイラケボショ)",
+                "en" : "Graveyard of the Matsudaira family"
+            },
+            "desc": {
+                "ja": "<b>松平家の歴代藩主が眠る、山腹の広大な史跡</b>\n「会津藩主松平家墓所」は、会津若松市の院内山と猪苗代町の見禰山（みねやま）の二カ所の総称で昭和62年5月に国の史跡として指定を受けています。院内山の墓所は通称「院内御廟」と呼ばれ親しまれていますが、その面積は約15万平方メートルと広大で、墓域の中腹には西の御庭、中の御庭と呼ばれる墓所があり、さらに石段を上ったところを入峰墓所と呼んでいます。寛永20年（1643）に会津に入封した初代の保科正之公は、猪苗代の土津（はにつ）神社に祀られ、ここには、二代保科正経公から幕末の九代容保公までの墓があります。新緑の時期や紅葉の時期に、散策をかねてのお参りをする人も多いスポットです。\n\n<a href=\"http://www.aizukanko.com/spot/27/\" target=\"_blank\">会津観光内解説ページ</a>\n出展: 会津若松市内の観光情報 CC BY-ND 2.1\n写真: Wikimedia Commonsより",
+                "en": "<b>A vast historical site on the mountainside where the successive lords of the Matsudaira family lie</b>\n\"Graveyard of the Aizu Lord owner Matsudaira family\" is the general name of two sites, one is on Mt.Innai in Aizuwakamatsu city and the other is on Mt.Mine in Inawashiro town. They were designated as a national historic site in May 1982. The graveyard on Mt.Innai is commonly called \"Innai Mausoleum\", and its area is about 150,000 square meters. In the middle of the graveyard, there are gardens called west garden and middle garden. Above stone stairways from these gardens, there is the other garden called \"Nyubu graveyard\". The first Lord Masayuki Hoshina, who entered Aizu in 1643, was enshrined in Hanitsu shrine at Inawashiro. In the shrine, there are also tombs of succesive lords - from 2nd lord Masatsune to 9th lord Katamori. Many sightseekers visit here for fresh green summer period and in red leaves autumn period.\nPHOTO: From Wikimedia Commons"
+            },
             "image": "innai_gobyo.jpg"
         },
         {
