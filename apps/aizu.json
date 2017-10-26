@@ -1,7 +1,13 @@
 {
-    "app_name" : "会津若松市古地図アプリ",
+    "app_name" : {
+        "ja" : "会津若松市古地図アプリ",
+        "en" : "Aizuwakamatsu Historical Map App"
+    },
     "fake_gps" : true,
-    "fake_center" : "会津若松市",
+    "fake_center" : {
+        "ja" : "会津若松市",
+        "en" : "Aizuwakamatsu"
+    },
     "fake_radius" : 10,
     "home_position" : [139.929796,37.487708],
     "default_zoom" : 17,
@@ -10,41 +16,62 @@
             "mapID"     : "aizu-jonai-kato-period",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "加藤家期"
+            "label"     : {
+                "ja" : "加藤家期",
+                "en" : "Kato family (1627)"
+            }
         },
         {
             "mapID"     : "aizu-jonai-hoshina-period",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "保科家期"
+            "label"     : {
+                "ja" : "保科家期",
+                "en" : "Hoshina family (1643)"
+            }
         },
         {
             "mapID"     : "aizu-jonai-bakumatsu-period",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "享保期"
+            "label"     : {
+                "ja" : "享保期",
+                "en" : "Mid of Edo (1734)"
+            }
         },
         {
             "mapID"     : "aizu-boshin-wakamatsujo-meisaizu",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "戊辰戦期"
+            "label"     : {
+                "ja" : "戊辰戦期",
+                "en" : "Boshin War (1868)"
+            }
         },
         {
             "mapID"     : "aizu-wakamatsu-taisho-kaitei",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "大正期"
+            "label"     : {
+                "ja" : "大正期",
+                "en" : "Taisho (1914)"
+            }
         },
         {
             "mapID"     : "aizuwakamatsu-annai-showa5",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label"     : "昭和初期"
+            "label"     : {
+                "ja" : "昭和初期",
+                "en" : "Showa (1930)"
+            }
         },
         {
-            "attr" : "Wakamatsu - Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
-            "label" : "戦後",
+            "attr" : "Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
+            "label" : {
+                "ja" : "戦後",
+                "en" : "After WW II (1946)"
+            },
             "mapID" : "jcp_maps_wakamatsu",
             "maptype" : "overlay",
             "url" : "https://t.tilemap.jp/jcp_maps/wakamatsu/{z}/{x}/{-y}.png",
@@ -54,18 +81,27 @@
             "mapID"     : "aizuwakamatsu-machinaka-jokamachi",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label" : "まちなか"
+            "label" : {
+                "ja" : "まちなか",
+                "en" : "City center"
+            }
         },
         {
             "mapID"     : "aizu-wakamatsu-shigaizu-aibase",
             "maptype"   : "maplat",
             "algorythm" : "tin",
-            "label" : "市街図"
+            "label" : {
+                "ja" : "市街図",
+                "en" : "Sightseeing"
+            }
         },
         "gsi",
         {
             "mapID"     : "gsi_ortho",
-            "label"     : "地理院オルソ",
+            "label"     : {
+                "ja" : "地理院オルソ",
+                "en" : "GSI Ortho"
+            },
             "attr"      : "The Geospatial Information Authority of Japan",
             "maptype"   : "base",
             "url"       : "https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
@@ -77,8 +113,14 @@
         {
             "lat": 37.487717,
             "lng": 139.929786,
-            "name": "若松城(ワカマツジョウ)",
-            "url": "https://ja.m.wikipedia.org/wiki/%E8%8B%A5%E6%9D%BE%E5%9F%8E"
+            "name": {
+                "ja" : "若松城(ワカマツジョウ)",
+                "en" : "Wakamatsu Castle"
+            },
+            "url": {
+                "ja" : "https://ja.m.wikipedia.org/wiki/%E8%8B%A5%E6%9D%BE%E5%9F%8E",
+                "en" : "https://en.m.wikipedia.org/wiki/Aizuwakamatsu_Castle"
+            }
         },
         {
             "lat": 37.491,
