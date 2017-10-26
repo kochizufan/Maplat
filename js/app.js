@@ -168,9 +168,6 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
         var lang = appOption.lang;
         if (!lang) {
             lang = browserLanguage();
-            if (lang != 'ja') {
-                lang = 'en';
-            }
         }
 
         // Add UI HTML Element
@@ -355,7 +352,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
         var promises = Promise.all([i18nPromise, appPromise]);
 
         app.waitReady = promises.then(function(result) {
-            var appData = result[1];
+            app.appData = result[1];
             app.i18n = result[0][1];
             app.t = result[0][0];
             var baseSwiper, overlaySwiper;
@@ -420,12 +417,13 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
             }
 
             app.mercBuffer = null;
-            var homePos = appData.home_position;
-            var defZoom = appData.default_zoom;
-            var appName = appData.app_name;
-            var fakeGps = appOption.fake ? appData.fake_gps : false;
-            var fakeCenter = appOption.fake ? appData.fake_center : false;
-            var fakeRadius = appOption.fake ? appData.fake_radius : false;
+            var homePos = app.appData.home_position;
+            var defZoom = app.appData.default_zoom;
+            var appName = app.appData.app_name;
+            var fakeGps = appOption.fake ? app.appData.fake_gps : false;
+            var fakeCenter = appOption.fake ? app.appData.fake_center : false;
+            var fakeRadius = appOption.fake ? app.appData.fake_radius : false;
+            app.appLang = app.appData.lang || 'ja';
             app.currentPosition = null;
             app.backMap = null;
             app.__init = true;
@@ -486,7 +484,7 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                     }
                 });
                 if (fakeGps) {
-                    var newElem = createElement(sprintf(app.t('app.fake_explanation'), fakeCenter, fakeRadius))[0];
+                    var newElem = createElement(sprintf(app.t('app.fake_explanation'), app.translate(fakeCenter), fakeRadius))[0];
                     var elem = app.mapDivDocument.querySelector('#gps_etc');
                     elem.appendChild(newElem);
                 } else {
@@ -495,11 +493,11 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                     elem.appendChild(newElem);
                 }
             }
-            app.pois = appData.pois;
+            app.pois = app.appData.pois;
 
-            document.querySelector('title').innerHTML = appName;
+            document.querySelector('title').innerHTML = app.translate(appName);
 
-            var dataSource = appData.sources;
+            var dataSource = app.appData.sources;
 
             var sourcePromise = [];
             var commonOption = {
@@ -567,12 +565,12 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 function showInfo(data) {
                     app.dispatchEvent(new CustomEvent('clickPoi', data));
                     if (!app.mobileIF) {
-                        app.mapDivDocument.querySelector('#poi_name').innerText = data.name;
+                        app.mapDivDocument.querySelector('#poi_name').innerText = app.translate(data.name);
                         if (data.url) {
                             app.mapDivDocument.querySelector('#poi_web').classList.remove('hide');
                             app.mapDivDocument.querySelector('#poi_data').classList.add('hide');
 
-                            app.mapDivDocument.querySelector('#poi_iframe').setAttribute('src', data.url);
+                            app.mapDivDocument.querySelector('#poi_iframe').setAttribute('src', app.translate(data.url));
                         } else {
                             app.mapDivDocument.querySelector('#poi_data').classList.remove('hide');
                             app.mapDivDocument.querySelector('#poi_web').classList.add('hide');
@@ -583,8 +581,8 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                             } else {
                                 app.mapDivDocument.querySelector('#poi_img').setAttribute('src', 'parts/no_image.png');
                             }
-                            app.mapDivDocument.querySelector('#poi_address').innerText = data.address;
-                            app.mapDivDocument.querySelector('#poi_desc').innerHTML = data.desc.replace(/\n/g, '<br>');
+                            app.mapDivDocument.querySelector('#poi_address').innerText = app.translate(data.address);
+                            app.mapDivDocument.querySelector('#poi_desc').innerHTML = app.translate(data.desc).replace(/\n/g, '<br>');
                         }
                         var piModalElm = app.mapDivDocument.querySelector('#poi_info');
                         var piModal = new bsn.Modal(piModalElm);
@@ -895,6 +893,27 @@ define(['aigle', 'histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap']
                 callback(size);
             });
         });
+    };
+
+    MaplatApp.prototype.translate = function(dataFragment) {
+        var app = this;
+        if (!dataFragment || typeof dataFragment != 'object') return dataFragment;
+        var langs = Object.keys(dataFragment);
+        var key = langs.reduce(function(prev, curr, idx, arr) {
+            if (curr == app.appLang) {
+                prev = [dataFragment[curr], true];
+            } else if (!prev || (curr == 'en' && !prev[1])) {
+                prev = [dataFragment[curr], false];
+            }
+            if (idx == arr.length - 1) return prev[0];
+            return prev;
+        }, null);
+        if (app.i18n.exists(key)) return app.t(key);
+        for (var i = 0; i < langs.length; i++) {
+            var lang = langs[i];
+            app.i18n.addResource(lang, 'translation', key, dataFragment[lang]);
+        }
+        return app.t(key);
     };
 
     MaplatApp.prototype.ellips = function() {

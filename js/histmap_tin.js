@@ -11,16 +11,6 @@ define(['histmap', 'tin', 'aigle'], function(ol, Tin, Promise) {
     ol.inherits(ol.source.HistMap_tin, ol.source.HistMap);
 
     ol.source.HistMap_tin.createAsync = function(options) {
-        if (options.noload) {
-            if (options.attr && !options.attributions) {
-                options.attributions = [
-                    new ol.Attribution({
-                        html: options.attr
-                    })
-                ];
-            }
-            return Promise.resolve(new ol.source.HistMap_tin(options));
-        }
         return new Promise(function(resolve, reject) {
             var url = options.setting_file || 'maps/' + options.mapID + '.json';
             var xhr = new XMLHttpRequest();
@@ -33,13 +23,13 @@ define(['histmap', 'tin', 'aigle'], function(ol, Tin, Promise) {
                         var resp = this.response;
                         for (var i = 0; i < ol.source.HistMap.META_KEYS.length; i++) {
                             var key = ol.source.HistMap.META_KEYS[i];
-                            options[key] = options[key] || resp[key];
+                            options[key] = ol.source.HistMap.translate(options[key] || resp[key]);
                         }
                         options.width = options.width || resp.width;
                         options.height = options.height || resp.height;
                         options.urls = options.urls || resp.urls;
                         options.url = options.url || resp.url;
-                        options.label = options.label || resp.label || resp.year;
+                        options.label = ol.source.HistMap.translate(options.label || resp.label || resp.year);
                         if (options.attr && !options.attributions) {
                             options.attributions = [
                                 new ol.Attribution({
