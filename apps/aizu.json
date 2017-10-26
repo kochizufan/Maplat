@@ -3,6 +3,7 @@
         "ja" : "会津若松市古地図アプリ",
         "en" : "Aizuwakamatsu Historical Map App"
     },
+    "lang" : "ja",
     "fake_gps" : true,
     "fake_center" : {
         "ja" : "会津若松市",
@@ -154,9 +155,18 @@
         {
             "lat": 37.48068,
             "lng": 139.921076,
-            "address": "福島県会津若松市館馬町8",
-            "name": "蒲生秀行廟(ガモウヒデユキビョウ)",
-            "desc": "<b>県指定建造物、蒲生秀行の墓</b>\n今日に至る会津の姿の創設者ともいえる会津領主 蒲生氏郷 の嫡男、蒲生秀行の墓料です。蒲生秀行は蒲生氏郷と織田信長の娘とのあいだに1583年に生まれ、文禄4年（1595年）、父・氏郷が急死したために会津92万石を継いでいます。その後、豊臣秀吉の命令で宇都宮に18万石で移封されていますが、関ヶ原の合戦での功績などが徳川家康に評価されて、慶長3年（1601）再び会津60万石に復帰しています。慶長17年（1612）5月、30歳の若さでこの世を去り、この地に眠っています。県指定建造物、市指定史跡にもなっています。\n\n<a href=\"http://www.aizukanko.com/spot/35/\" target=\"_blank\">会津観光内解説ページ</a>\n出展: 会津若松市内の観光情報 CC BY-ND 2.1\n写真: 会津若松観光ビューロー提供",
+            "address": {
+                "ja" : "福島県会津若松市館馬町8",
+                "en" : "8, Hakouma-machi, Aizuwakamatsu, FUKUSHIMA"
+            },
+            "name": {
+                "ja" : "蒲生秀行廟(ガモウヒデユキビョウ)",
+                "en" : "Tomb of Hideyuki Gamo"
+            },
+            "desc": {
+                "ja" : "<b>県指定建造物、蒲生秀行の墓</b>\n今日に至る会津の姿の創設者ともいえる会津領主 蒲生氏郷 の嫡男、蒲生秀行の墓料です。蒲生秀行は蒲生氏郷と織田信長の娘とのあいだに1583年に生まれ、文禄4年（1595年）、父・氏郷が急死したために会津92万石を継いでいます。その後、豊臣秀吉の命令で宇都宮に18万石で移封されていますが、関ヶ原の合戦での功績などが徳川家康に評価されて、慶長3年（1601）再び会津60万石に復帰しています。慶長17年（1612）5月、30歳の若さでこの世を去り、この地に眠っています。県指定建造物、市指定史跡にもなっています。\n\n<a href=\"http://www.aizukanko.com/spot/35/\" target=\"_blank\">会津観光内解説ページ</a>\n出展: 会津若松市内の観光情報 CC BY-ND 2.1\n写真: 会津若松観光ビューロー提供",
+                "en" : "<b>Prefecture Designated Building, Tomb of Hideyuki Gamo</b>\nUjisato Gamo could be considered as the founder of Aizu and Hideyuki, who lies in this tomb, was his eldest son. Hideyuki was born in 1583, between Ujisato and daughter of Nobunaga Oda. He has succeeded Aizu area, because Ujisato suddenly died in 1595. After that, he was transferred to Utsunomiya clan, which was a lower-valued territory than Aizu, according to Hideyoshi Toyotomi's order. His achievements in the battle of Sekigahara were highly appreciated by Ieyasu Tokugawa, so he could be back to the Aizu clan in 1601.In May 1612, He died at the young age of 30 and he laid to rest here. This site has become a prefecture-designated building and a city-designated historic site.\nPHOTO: Aizuwakamatsu Tourist Bureau"
+            },
             "image": "hideyuki_gamo.jpg"
         },
         {
