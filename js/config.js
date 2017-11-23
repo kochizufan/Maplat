@@ -4,13 +4,13 @@ require.config({
         'i18nxhr': 'i18nextXHRBackend.min',
         'ol3': 'ol-debug',
         'ol-custom': 'ol-custom',
-        'tps': 'thinplatespline',
         'i18n': 'i18next.min', //8.4.2
         'turf': 'turf_maplat.min', //4.7.3
         'swiper': 'swiper.min', //3.4.2
         'bootstrap': 'bootstrap-native',
         'aigle': 'aigle-es5.min',
-        'mapshaper': 'mapshaper_maplat'
+        'mapshaper': 'mapshaper_maplat',
+        'resize': 'detect-element-resize'
     },
     shim: {
         'i18nxhr': {
@@ -22,8 +22,8 @@ require.config({
         'aigle': {
             exports: 'Promise'
         },
-        'tps': {
-            exports: 'ThinPlateSpline'
+        'resize': {
+            exports: 'addResizeListener'
         }
     }
 });
