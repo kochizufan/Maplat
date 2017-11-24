@@ -1,0 +1,43 @@
+{
+    "app_name": {
+        "ja": "いわき市古地図アプリ",
+        "en": "Iwaki Historical Map App"
+    },
+    "lang": "ja",
+    "fake_gps": true,
+    "fake_center": {
+        "ja": "いわき市",
+        "en": "Iwaki"
+    },
+    "fake_radius": 10,
+    "home_position": [
+        140.890889,
+        37.059067
+    ],
+    "default_zoom": 17,
+    "sources": [
+        {
+            "mapID": "boshinshiki_tairajo",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "戊辰平城",
+                "en": "Taira castle (1868)"
+            }
+        },
+        "gsi",
+        {
+            "mapID": "gsi_ortho",
+            "label": {
+                "ja": "地理院オルソ",
+                "en": "GSI Ortho"
+            },
+            "attr": "The Geospatial Information Authority of Japan",
+            "maptype": "base",
+            "url": "https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
+            "maxZoom": 18
+        },
+        "osm"
+    ],
+    "pois": []
+}
