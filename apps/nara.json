@@ -14,6 +14,14 @@
             "mapID" : "NaraOldMap1",
             "label" : 1868
         },
+        {
+            "mapID" : "naramachi_omoshiro_part1",
+            "label" : "ならまち初心者"
+        },
+        {
+            "mapID" : "kyobate_kaiwai_map",
+            "label" : "京終界隈"
+        },
         "gsi",
         "osm"
     ], 
