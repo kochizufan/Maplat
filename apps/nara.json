@@ -14,6 +14,10 @@
             "mapID" : "NaraOldMap1",
             "label" : 1868
         },
+        {
+            "mapID" : "kyobate_kaiwai_map",
+            "label" : "京終界隈"
+        },
         "gsi",
         "osm"
     ], 
