@@ -25,6 +25,15 @@
                 "en": "Taira castle (1868)"
             }
         },
+        {
+            "mapID": "iwaki_taira_shigai_1954",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "平市街(1954)",
+                "en": "Taira (1954)"
+            }
+        },
         "gsi",
         {
             "mapID": "gsi_ortho",
