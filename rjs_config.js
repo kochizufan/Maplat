@@ -1,7 +1,7 @@
 ({
     baseUrl: 'js',
     name: 'config',
-    out: 'js/maplat.js',
+    out: 'js/maplat_withoutpromise.js',
     include: ['require.min'],
     paths: {
         'i18n': 'i18next.min',
@@ -11,7 +11,6 @@
         'ol3': 'ol-debug',
         'ol-custom': 'ol-custom',
         'bootstrap': 'bootstrap-native',
-        'aigle': 'aigle-es5.min',
         'mapshaper': 'mapshaper_maplat',
         'resize': 'detect-element-resize'
     },
@@ -21,9 +20,6 @@
         },
         'turf': {
             exports: 'turf'
-        },
-        'aigle': {
-            exports: 'Promise'
         },
         'resize': {
             exports: 'addResizeListener'
