@@ -34,6 +34,15 @@
                 "en": "Taira (1954)"
             }
         },
+        {
+            "mapID": "iwaki_taira_shigai_1961",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "平市街(1961)",
+                "en": "Taira (1961)"
+            }
+        },
         "gsi",
         {
             "mapID": "gsi_ortho",
