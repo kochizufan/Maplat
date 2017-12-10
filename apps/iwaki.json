@@ -44,6 +44,15 @@
             }
         },
         {
+            "mapID": "iwaki_taira_shigai_1961",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "平市街(1961)",
+                "en": "Taira (1961)"
+            }
+        },
+        {
             "mapID": "iwaki_machinaka_map",
             "maptype": "maplat",
             "algorythm": "tin",
