@@ -17,6 +17,15 @@
     "default_zoom": 17,
     "sources": [
         {
+            "mapID": "iwaki_taira_genna",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "元和平城",
+                "en": "Taira castle (1622)"
+            }
+        },
+        {
             "mapID": "boshinshiki_tairajo",
             "maptype": "maplat",
             "algorythm": "tin",
