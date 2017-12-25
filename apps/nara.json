@@ -15,6 +15,18 @@
             "label" : 1868
         },
         {
+            "mapID" : "naramachi_omoshiro_part1",
+            "label" : "ならまち初心者"
+        },
+        {
+            "mapID" : "naramachi_omoshiro_part2",
+            "label" : "ならまち中級"
+        },
+        {
+            "mapID" : "naramachi_omoshiro_part3",
+            "label" : "ならまち上級"
+        },
+        {
             "mapID" : "kyobate_kaiwai_map",
             "label" : "京終界隈"
         },
