@@ -7,6 +7,10 @@
     "default_zoom" : 17,
     "sources" : [
         {
+            "mapID" : "narapreflib_138073_gangoji",
+            "label" : "元興寺"
+        },
+        {
             "mapID" : "nara_ezuya",
             "label" : 1844
         },
