@@ -35,7 +35,7 @@
             }
         },
         {
-            "mapID": "aizu-jonai-bakumatsu-period",
+            "mapID": "aizu-jonai-kyoho-period",
             "maptype": "maplat",
             "algorythm": "tin",
             "label": {
