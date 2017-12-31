@@ -16,7 +16,11 @@
         },
         {
             "mapID" : "NaraOldMap1",
-            "label" : 1868
+            "label" : "明治期"
+        },
+        {
+            "mapID" : "narapreflib_138174_nara",
+            "label" : 1917
         },
         {
             "mapID" : "naramachi_omoshiro_part1",
