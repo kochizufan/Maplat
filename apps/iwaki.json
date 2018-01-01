@@ -52,15 +52,6 @@
                 "en": "Taira (1961)"
             }
         },
-        {
-            "mapID": "iwaki_machinaka_map",
-            "maptype": "maplat",
-            "algorythm": "tin",
-            "label": {
-                "ja": "散歩地図",
-                "en": "Walking Map"
-            }
-        },
         "gsi",
         {
             "mapID": "gsi_ortho",
