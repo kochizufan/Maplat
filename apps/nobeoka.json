@@ -26,6 +26,15 @@
             }
         },
         {
+            "mapID": "1953_nobeoka",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "明細図 (1953)",
+                "en": "Urban Map (1953)"
+            }
+        },
+        {
             "title": "Nobeoka - Japan City Plans",
             "contributor": "University of Texas Libraries",
             "createdAt": "1945-1946",
