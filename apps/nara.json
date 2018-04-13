@@ -1,5 +1,6 @@
 {
     "app_name" : "ぷらっと奈良",
+    "splash" : "nara_splash.png",
     "fake_gps" : true,
     "fake_center" : "興福寺",
     "fake_radius" : 10,
