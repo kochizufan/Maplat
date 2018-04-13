@@ -1,4 +1,4 @@
-// Native Javascript for Bootstrap 3 v2.0.12 | © dnp_theme | MIT-License
+// Native Javascript for Bootstrap 3 v2.0.23 | © dnp_theme | MIT-License
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD support:
@@ -25,10 +25,15 @@
   
   /* Native Javascript for Bootstrap 3 | Internal Utility Functions
   ----------------------------------------------------------------*/
+  "use strict";
   
   // globals
   var globalObject = typeof global !== 'undefined' ? global : this||window,
-    doc = document.documentElement, body = document.body,
+    DOC = document, HTML = DOC.documentElement, body = 'body', // allow the library to be used in <head>
+  
+    // Native Javascript for Bootstrap Global Object
+    BSN = globalObject.BSN = {},
+    supports = BSN.supports = [],
   
     // function toggle attributes
     dataToggle    = 'data-toggle',
@@ -56,6 +61,7 @@
     dataInterval      = 'data-interval',
     dataHeight        = 'data-height',
     dataPause         = 'data-pause',
+    dataTitle         = 'data-title',  
     dataOriginalTitle = 'data-original-title',
     dataOriginalText  = 'data-original-text',
     dataDismissible   = 'data-dismissible',
@@ -71,7 +77,7 @@
     backdrop = 'backdrop', keyboard = 'keyboard', delay = 'delay',
     content = 'content', target = 'target', 
     interval = 'interval', pause = 'pause', animation = 'animation',
-    placement = 'placement', container = 'container', 
+    placement = 'placement', container = 'container', root = 'root',
   
     // box model
     offsetTop    = 'offsetTop',      offsetBottom   = 'offsetBottom',
@@ -90,6 +96,7 @@
     clickEvent    = 'click',
     hoverEvent    = 'hover',
     keydownEvent  = 'keydown',
+    keyupEvent    = 'keyup',  
     resizeEvent   = 'resize',
     scrollEvent   = 'scroll',
     // originalEvents
@@ -104,12 +111,16 @@
     changeEvent   = 'change',
   
     // other
-    getAttribute         = 'getAttribute',
-    setAttribute         = 'setAttribute',
-    hasAttribute         = 'hasAttribute',
-    getElementsByTagName = 'getElementsByTagName',
-    getBoundingClientRect= 'getBoundingClientRect',
-    querySelectorAll     = 'querySelectorAll',
+    getAttribute           = 'getAttribute',
+    setAttribute           = 'setAttribute',
+    hasAttribute           = 'hasAttribute',
+    createElement          = 'createElement',
+    appendChild            = 'appendChild',
+    innerHTML              = 'innerHTML',
+    getElementsByTagName   = 'getElementsByTagName',
+    preventDefault         = 'preventDefault',
+    getBoundingClientRect  = 'getBoundingClientRect',
+    querySelectorAll       = 'querySelectorAll',
     getElementsByCLASSNAME = 'getElementsByClassName',
   
     indexOf      = 'indexOf',
@@ -119,6 +130,9 @@
     Transition   = 'Transition',
     Webkit       = 'Webkit',
     style        = 'style',
+    push         = 'push',
+    tabindex     = 'tabindex',
+    contains     = 'contains',  
     
     active     = 'active',
     inClass    = 'in',
@@ -131,17 +145,20 @@
     bottom     = 'bottom',
   
     // IE8 browser detect
-    isIE8 = !('opacity' in body[style]),
+    isIE8 = !('opacity' in HTML[style]),
   
     // tooltip / popover
+    mouseHover = ('onmouseleave' in DOC) ? [ 'mouseenter', 'mouseleave'] : [ 'mouseover', 'mouseout' ],
+    tipPositions = /\b(top|bottom|left|right)+/,
+    
+    // modal
+    modalOverlay = 0,
     fixedTop = 'navbar-fixed-top',
     fixedBottom = 'navbar-fixed-bottom',  
-    mouseHover = ('onmouseleave' in document) ? [ 'mouseenter', 'mouseleave'] : [ 'mouseover', 'mouseout' ],
-    tipPositions = /\b(top|bottom|left|top)+/,
-  
+    
     // transitionEnd since 2.0.4
-    supportTransitions = Webkit+Transition in doc[style] || Transition[toLowerCase]() in doc[style],
-    transitionEndEvent = Webkit+Transition in doc[style] ? Webkit[toLowerCase]()+Transition+'End' : Transition[toLowerCase]()+'end',  
+    supportTransitions = Webkit+Transition in HTML[style] || Transition[toLowerCase]() in HTML[style],
+    transitionEndEvent = Webkit+Transition in HTML[style] ? Webkit[toLowerCase]()+Transition+'End' : Transition[toLowerCase]()+'end',
   
     // set new focus element since 2.0.3
     setFocus = function(element){
@@ -156,12 +173,12 @@
       element.classList.remove(classNAME);
     },
     hasClass = function(element,classNAME){ // since 2.0.0
-      return element.classList.contains(classNAME);
+      return element.classList[contains](classNAME);
     },
   
     // selection methods
     nodeListToArray = function(nodeList){
-      var childItems = []; for (var i = 0, nll = nodeList[length]; i<nll; i++) { childItems.push( nodeList[i] ) }
+      var childItems = []; for (var i = 0, nll = nodeList[length]; i<nll; i++) { childItems[push]( nodeList[i] ) }
       return childItems;
     },
     getElementsByClassName = function(element,classNAME) { // getElementsByClassName IE8+
@@ -169,17 +186,19 @@
       return nodeListToArray(element[selectionMethod]( isIE8 ? '.' + classNAME.replace(/\s(?=[a-z])/g,'.') : classNAME ));
     },
     queryElement = function (selector, parent) {
-      var lookUp = parent ? parent : document;
+      var lookUp = parent ? parent : DOC;
       return typeof selector === 'object' ? selector : lookUp.querySelector(selector);
     },
     getClosest = function (element, selector) { //element is the element and selector is for the closest parent element to find
-    // source http://gomakethings.com/climbing-up-and-down-the-dom-tree-with-vanilla-javascript/
-      var firstChar = selector.charAt(0);
-      for ( ; element && element !== document; element = element[parentNode] ) {// Get closest match
-        if ( firstChar === '.' ) {// If selector is a class
-          if ( queryElement(selector,element[parentNode]) !== null && hasClass(element,selector.replace('.','')) ) { return element; }
-        } else if ( firstChar === '#' ) { // If selector is an ID
-          if ( element.id === selector.substr(1) ) { return element; }
+      // source http://gomakethings.com/climbing-up-and-down-the-dom-tree-with-vanilla-javascript/
+      var firstChar = selector.charAt(0), selectorSubstring = selector.substr(1);
+      if ( firstChar === '.' ) {// If selector is a class
+        for ( ; element && element !== DOC; element = element[parentNode] ) { // Get closest match
+          if ( queryElement(selector,element[parentNode]) !== null && hasClass(element,selectorSubstring) ) { return element; }
+        }
+      } else if ( firstChar === '#' ) { // If selector is an ID
+        for ( ; element && element !== DOC; element = element[parentNode] ) { // Get closest match
+          if ( element.id === selectorSubstring ) { return element; }
         }
       }
       return false;
@@ -208,85 +227,86 @@
       this.dispatchEvent(OriginalCustomEvent);
     },
   
-    // reference a live collection of the DOM
-    AllDOMElements = document[getElementsByTagName]('*'),
-  
-    // Init DATA API
-    initializeDataAPI = function( component, constructor, dataAttribute, collection ){
-      var lookUp = collection && collection[length] ? collection : AllDOMElements;
-      for (var i=0; i < lookUp[length]; i++) {
-        var attrValue = lookUp[i][getAttribute](dataAttribute), expectedAttrValue = component.replace(/spy/i,'')[toLowerCase]();
-        if ( attrValue && component === stringButton && ( attrValue[indexOf](expectedAttrValue) > -1 ) // data-toggle="buttons"
-            || attrValue === expectedAttrValue ) { // all other components
-          new constructor(lookUp[i]);
-        }
-      }
-    },  
-  
-    // tab / collapse stuff
-    targetsReg = /^\#(.)+$/,
-    getOuterHeight = function (child) {
-      var childStyle = child && (child.currentStyle || globalObject.getComputedStyle(child)), 
-        btp = /px/.test(childStyle.borderTopWidth) ? Math.round(childStyle.borderTopWidth.replace('px','')) : 0,
-        btb = /px/.test(childStyle.borderBottomWidth) ? Math.round(childStyle.borderBottomWidth.replace('px','')) : 0,
-        mtp = /px/.test(childStyle.marginTop) ? Math.round(childStyle.marginTop.replace('px','')) : 0,
-        mbp = /px/.test(childStyle.marginBottom) ? Math.round(childStyle.marginBottom.replace('px','')) : 0;
-      return child[clientHeight] + parseInt( btp ) + parseInt( btb ) + parseInt( mtp ) + parseInt( mbp );
-    },
-    getMaxHeight = function(parent) { // get collapse trueHeight and border
-      var parentHeight = 0;
-      for (var k = 0, ll = parent.children[length]; k < ll; k++) {
-        parentHeight += getOuterHeight(parent.children[k]);
-      }
-      return parentHeight;
-    },
-  
     // tooltip / popover stuff
-    isElementInViewport = function(element) { // check if this.tooltip is in viewport
-      var rect = element[getBoundingClientRect]();
-      return ( rect[top] >= 0 && rect[left] >= 0 &&
-        rect[bottom] <= (globalObject[innerHeight] || doc[clientHeight]) &&
-        rect[right] <= (globalObject[innerWidth] || doc[clientWidth]) )
-    },
     getScroll = function() { // also Affix and ScrollSpy uses it
       return {
-        y : globalObject.pageYOffset || doc[scrollTop],
-        x : globalObject.pageXOffset || doc[scrollLeft]
+        y : globalObject.pageYOffset || HTML[scrollTop],
+        x : globalObject.pageXOffset || HTML[scrollLeft]
       }
     },
-    styleTip = function(link,element,position,parent) { // both popovers and tooltips
-      var rect = link[getBoundingClientRect](), 
-          scroll = parent === body ? getScroll() : { x: parent[offsetLeft] + parent[scrollLeft], y: parent[offsetTop] + parent[scrollTop] },
+    styleTip = function(link,element,position,parent) { // both popovers and tooltips (target,tooltip/popover,placement,elementToAppendTo)
+      var elementDimensions = { w : element[offsetWidth], h: element[offsetHeight] },
+          windowWidth = (HTML[clientWidth] || DOC[body][clientWidth]),
+          windowHeight = (HTML[clientHeight] || DOC[body][clientHeight]),
+          rect = link[getBoundingClientRect](), 
+          scroll = parent === DOC[body] ? getScroll() : { x: parent[offsetLeft] + parent[scrollLeft], y: parent[offsetTop] + parent[scrollTop] },
           linkDimensions = { w: rect[right] - rect[left], h: rect[bottom] - rect[top] },
-          elementDimensions = { w : element[offsetWidth], h: element[offsetHeight] };
+          arrow = queryElement('[class*="arrow"]',element),
+          topPosition, leftPosition, arrowTop, arrowLeft,
   
+          halfTopExceed = rect[top] + linkDimensions.h/2 - elementDimensions.h/2 < 0,
+          halfLeftExceed = rect[left] + linkDimensions.w/2 - elementDimensions.w/2 < 0,
+          halfRightExceed = rect[left] + elementDimensions.w/2 + linkDimensions.w/2 >= windowWidth,
+          halfBottomExceed = rect[top] + elementDimensions.h/2 + linkDimensions.h/2 >= windowHeight,
+          topExceed = rect[top] - elementDimensions.h < 0,
+          leftExceed = rect[left] - elementDimensions.w < 0,
+          bottomExceed = rect[top] + elementDimensions.h + linkDimensions.h >= windowHeight,
+          rightExceed = rect[left] + elementDimensions.w + linkDimensions.w >= windowWidth;
+  
+      // recompute position
+      position = (position === left || position === right) && leftExceed && rightExceed ? top : position; // first, when both left and right limits are exceeded, we fall back to top|bottom
+      position = position === top && topExceed ? bottom : position;
+      position = position === bottom && bottomExceed ? top : position;
+      position = position === left && leftExceed ? right : position;
+      position = position === right && rightExceed ? left : position;
+      
       // apply styling to tooltip or popover
-      if ( position === top ) { // TOP
-        element[style][top] = rect[top] + scroll.y - elementDimensions.h + 'px';
-        element[style][left] = rect[left] + scroll.x - elementDimensions.w/2 + linkDimensions.w/2 + 'px'
+      if ( position === left || position === right ) { // secondary|side positions
+        if ( position === left ) { // LEFT
+          leftPosition = rect[left] + scroll.x - elementDimensions.w;
+        } else { // RIGHT
+          leftPosition = rect[left] + scroll.x + linkDimensions.w;
+        }
   
-      } else if ( position === bottom ) { // BOTTOM
-        element[style][top] = rect[top] + scroll.y + linkDimensions.h + 'px';
-        element[style][left] = rect[left] + scroll.x - elementDimensions.w/2 + linkDimensions.w/2 + 'px';
-  
-      } else if ( position === left ) { // LEFT
-        element[style][top] = rect[top] + scroll.y - elementDimensions.h/2 + linkDimensions.h/2 + 'px';
-        element[style][left] = rect[left] + scroll.x - elementDimensions.w + 'px';
-  
-      } else if ( position === right ) { // RIGHT
-        element[style][top] = rect[top] + scroll.y - elementDimensions.h/2 + linkDimensions.h/2 + 'px';
-        element[style][left] = rect[left] + scroll.x + linkDimensions.w + 'px';
+        // adjust top and arrow
+        if (halfTopExceed) {
+          topPosition = rect[top] + scroll.y;
+          arrowTop = linkDimensions.h/2;
+        } else if (halfBottomExceed) {
+          topPosition = rect[top] + scroll.y - elementDimensions.h + linkDimensions.h;
+          arrowTop = elementDimensions.h - linkDimensions.h/2;
+        } else {
+          topPosition = rect[top] + scroll.y - elementDimensions.h/2 + linkDimensions.h/2;
+        }
+      } else if ( position === top || position === bottom ) { // primary|vertical positions
+        if ( position === top) { // TOP
+          topPosition =  rect[top] + scroll.y - elementDimensions.h;
+        } else { // BOTTOM
+          topPosition = rect[top] + scroll.y + linkDimensions.h;
+        }
+        // adjust left | right and also the arrow
+        if (halfLeftExceed) {
+          leftPosition = 0;
+          arrowLeft = rect[left] + linkDimensions.w/2;
+        } else if (halfRightExceed) {
+          leftPosition = windowWidth - elementDimensions.w*1.01;
+          arrowLeft = elementDimensions.w - ( windowWidth - rect[left] ) + linkDimensions.w/2;
+        } else {
+          leftPosition = rect[left] + scroll.x - elementDimensions.w/2 + linkDimensions.w/2;
+        }
       }
+  
+      // apply style to tooltip/popover and it's arrow
+      element[style][top] = topPosition + 'px';
+      element[style][left] = leftPosition + 'px';
+  
+      arrowTop && (arrow[style][top] = arrowTop + 'px');
+      arrowLeft && (arrow[style][left] = arrowLeft + 'px');
+  
       element.className[indexOf](position) === -1 && (element.className = element.className.replace(tipPositions,position));
-    },
-    updatePlacement = function(position) {
-      return position === top ? bottom : // top
-             position === bottom ? top : // bottom
-             position === left ? right : // left
-             position === right ? left : position; // right
     };
   
-  
+  BSN.version = '2.0.23';
   
   /* Native Javascript for Bootstrap 3 | Affix
   -------------------------------------------*/
@@ -320,13 +340,12 @@
     var self = this,
   
       // constants
-      resizeDelay = !supportTransitions ? 500 : 50, // for legacy browsers we try to limit the interval for updating the Affix
       pinOffsetTop, pinOffsetBottom, maxScroll, scrollY, pinnedTop, pinnedBottom,
       affixedToTop = false, affixedToBottom = false,
       
       // private methods 
       getMaxScroll = function(){
-        return Math.max( body[scrollHeight], body[offsetHeight], doc[clientHeight], doc[scrollHeight], doc[offsetHeight] );
+        return Math.max( DOC[body][scrollHeight], DOC[body][offsetHeight], HTML[clientHeight], HTML[scrollHeight], HTML[offsetHeight] );
       },
       getOffsetTop = function () {
         if ( self[target] !== null ) {
@@ -399,17 +418,18 @@
   
     // init
     if ( !(stringAffix in element ) ) { // prevent adding event handlers twice
-      on( globalObject, scrollEvent, this[update] );
-      on( globalObject, resizeEvent, function() { setTimeout(function(){ self[update](); }, resizeDelay); });
+      on( globalObject, scrollEvent, self[update] );
+      !isIE8 && on( globalObject, resizeEvent, self[update] );
     }
-    element[stringAffix] = this;
+    element[stringAffix] = self;
   
-    this[update]();
+    self[update]();
   };
   
   // AFFIX DATA API
   // =================
-  initializeDataAPI( stringAffix, Affix, dataSpy );
+  supports[push]([stringAffix, Affix, '['+dataSpy+'="affix"]']);
+  
   
   
   /* Native Javascript for Bootstrap 3 | Alert
@@ -428,13 +448,9 @@
       triggerHandler = function(){ hasClass(alert,'fade') ? emulateTransitionEnd(alert,transitionEndHandler) : transitionEndHandler(); },
       // handlers
       clickHandler = function(e){
-        var eventTarget = e[target];
-        eventTarget = eventTarget[hasAttribute](dataDismiss) ? eventTarget : eventTarget[parentNode];
-        if (eventTarget && eventTarget[hasAttribute](dataDismiss)) { // we double check the data attribute, it's important
-          alert = getClosest(eventTarget,'.'+component);
-          element = queryElement('['+dataDismiss+'="'+component+'"]',alert);
-          (element === eventTarget || element === eventTarget[parentNode]) && alert && self.close();
-        }
+        alert = getClosest(e[target],'.'+component);
+        element = queryElement('['+dataDismiss+'="'+component+'"]',alert);
+        element && alert && (element === e[target] || element[contains](e[target])) && self.close();
       },
       transitionEndHandler = function(){
         bootstrapCustomEvent.call(alert, closedEvent, component);
@@ -455,12 +471,13 @@
     if ( !(stringAlert in element ) ) { // prevent adding event handlers twice
       on(element, clickEvent, clickHandler);
     }
-    element[stringAlert] = this;
+    element[stringAlert] = self;
   };
   
   // ALERT DATA API
   // ==============
-  initializeDataAPI ( stringAlert, Alert, dataDismiss );
+  supports[push]([stringAlert, Alert, '['+dataDismiss+'="alert"]']);
+  
   
   
   /* Native Javascript for Bootstrap 3 | Button
@@ -492,9 +509,9 @@
           if ( option === loading ) {
             addClass(element,disabled);
             element[setAttribute](disabled,disabled);
+            element[setAttribute](dataOriginalText, element[innerHTML].trim()); // trim the text
           }
-          element[setAttribute](dataOriginalText, element.innerHTML.replace(/^\s+|\s+$/g, '')); // trim the text
-          element.innerHTML = element[getAttribute]('data-'+option+'-text');
+          element[innerHTML] = element[getAttribute]('data-'+option+'-text');
         }
       },
       resetState = function() {
@@ -503,17 +520,24 @@
             removeClass(element,disabled);
             element.removeAttribute(disabled);
           }
-          element.innerHTML = element[getAttribute](dataOriginalText);
+          element[innerHTML] = element[getAttribute](dataOriginalText);
         }
       },
+      keyHandler = function(e){ 
+        var key = e.which || e.keyCode;
+        key === 32 && e[target] === DOC.activeElement && toggle(e);
+      },
+      preventScroll = function(e){ 
+        var key = e.which || e.keyCode;
+        key === 32 && e[preventDefault]();
+      },    
       toggle = function(e) {
-        var parent = e[target][parentNode],
-          label = e[target].tagName === LABEL ? e[target] : parent.tagName === LABEL ? parent : null; // the .btn label
-  
+        var label = e[target].tagName === LABEL ? e[target] : e[target][parentNode].tagName === LABEL ? e[target][parentNode] : null; // the .btn label
+        
         if ( !label ) return; //react if a label or its immediate child is clicked
   
-        var eventTarget = this, // the button group, the target of the handler function
-          labels = getElementsByClassName(eventTarget,'btn'), // all the button group buttons
+        var eventTarget = e[target], // the button itself, the target of the handler function
+          labels = getElementsByClassName(eventTarget[parentNode],'btn'), // all the button group buttons
           input = label[getElementsByTagName](INPUT)[0];
   
         if ( !input ) return; //return if no input found
@@ -568,10 +592,19 @@
         if ( option !== reset ) { setState(); } 
         else { resetState(); }
       }
-    }
-    if ( hasClass(element,'btn-group') ) {
+    } else { // if ( hasClass(element,'btn-group') ) // we allow the script to work outside btn-group component
+      
       if ( !( stringButton in element ) ) { // prevent adding event handlers twice
         on( element, clickEvent, toggle );
+        queryElement('['+tabindex+']',element) && on( element, keyupEvent, keyHandler ), 
+                                                  on( element, keydownEvent, preventScroll );
+      }
+  
+      // activate items on load
+      var labelsToACtivate = getElementsByClassName(element, 'btn'), lbll = labelsToACtivate[length];
+      for (var i=0; i<lbll; i++) {
+        !hasClass(labelsToACtivate[i],active) && queryElement('input',labelsToACtivate[i])[getAttribute](checked)
+                                              && addClass(labelsToACtivate[i],active);
       }
       element[stringButton] = this;
     }
@@ -579,7 +612,7 @@
   
   // BUTTON DATA API
   // =================
-  initializeDataAPI( stringButton, Button, dataToggle );
+  supports[push]( [ stringButton, Button, '['+dataToggle+'="buttons"]' ] );
   
   
   /* Native Javascript for Bootstrap 3 | Carousel
@@ -596,7 +629,9 @@
     options = options || {};
   
     // DATA API
-    var intervalData = element[getAttribute](dataInterval) === 'false' ? false : parseInt(element[getAttribute](dataInterval)) || 5000, // bootstrap carousel default interval
+    var intervalAttribute = element[getAttribute](dataInterval),
+        intervalOption = options[interval],
+        intervalData = intervalAttribute === 'false' ? 0 : parseInt(intervalAttribute),  
         pauseData = element[getAttribute](dataPause) === hoverEvent || false,
         keyboardData = element[getAttribute](dataKeyboard) === 'true' || false,
       
@@ -609,11 +644,9 @@
     this[keyboard] = options[keyboard] === true || keyboardData;
     this[pause] = (options[pause] === hoverEvent || pauseData) ? hoverEvent : false; // false / hover
   
-    if ( !( options[interval] || intervalData ) ) { // determine slide interval
-      this[interval] = false;
-    } else {
-      this[interval] = parseInt(options[interval]) || intervalData; // default slide interval
-    }
+    this[interval] = typeof intervalOption === 'number' ? intervalOption
+                   : intervalData === 0 || intervalData === false ? 0
+                   : 5000; // bootstrap carousel default interval
   
     // bind, event targets
     var self = this, index = element.index = 0, timer = element.timer = 0, 
@@ -640,48 +673,27 @@
         }
       },
       indicatorHandler = function(e) {
-        e.preventDefault();
+        e[preventDefault]();
         if (isSliding) return;
   
-        var eventTarget = e[target], activeIndicator = self.getActiveIndex(); // event target | the current active item
+        var eventTarget = e[target]; // event target | the current active item
   
         if ( eventTarget && !hasClass(eventTarget,active) && eventTarget[getAttribute](dataSlideTo) ) {
           index = parseInt( eventTarget[getAttribute](dataSlideTo), 10 );
-  
-          //determine direction first
-          if  ( (activeIndicator < index ) || (activeIndicator === 0 && index === total -1 ) ) {
-            slideDirection = self[direction] = left; // next
-          } else if  ( (activeIndicator > index) || (activeIndicator === total - 1 && index === 0 ) ) {
-            slideDirection = self[direction] = right; // prev
-          }
         } else { return false; }
   
         self.slideTo( index ); //Do the slide
       },
       controlsHandler = function (e) {
-        e.preventDefault();
+        e[preventDefault]();
         if (isSliding) return;
   
         var eventTarget = e.currentTarget || e.srcElement;
   
         if ( eventTarget === rightArrow ) {
           index++;
-          slideDirection = self[direction] = left; //set direction first
-  
-          if( index === total - 1 ) {
-            index = total - 1;
-          } else if ( index === total ){
-            index = 0;
-          }
         } else if ( eventTarget === leftArrow ) {
           index--;
-          slideDirection = self[direction] = right; //set direction first
-  
-          if( index === 0 ) {
-            index = 0;
-          } else if ( index < 0 ){
-            index = total - 1
-          }
         }
   
         self.slideTo( index ); //Do the slide
@@ -691,21 +703,20 @@
         switch (e.which) {
           case 39:
             index++;
-            slideDirection = self[direction] = left;
-            if( index == total - 1 ) { index = total - 1; } else
-            if ( index == total ){ index = 0 }
             break;
           case 37:
             index--;
-            slideDirection = self[direction] = right;
-            if ( index == 0 ) { index = 0; } else
-            if ( index < 0 ) { index = total - 1 }
             break;
           default: return;
         }
         self.slideTo( index ); //Do the slide
       },
       // private methods
+      isElementInScrollRange = function () {
+        var rect = element[getBoundingClientRect](),
+          viewportHeight = globalObject[innerHeight] || HTML[clientHeight]
+        return rect[top] <= viewportHeight && rect[bottom] >= 0; // bottom && top
+      },  
       setActivePage = function( pageIndex ) { //indicators
         for ( var i = 0, icl = indicators[length]; i < icl; i++ ) {
           removeClass(indicators[i],active);
@@ -716,21 +727,33 @@
   
     // public methods
     this.cycle = function() {
-      slideDirection = this[direction] = left; // make sure to always come back to default slideDirection
       timer = setInterval(function() {
-        index++;
-  
-        index = index === total ? 0 : index;
-        self.slideTo( index );
+        isElementInScrollRange() && (index++, self.slideTo( index ) );
       }, this[interval]);
     };
     this.slideTo = function( next ) {
+      if (isSliding) return; // when controled via methods, make sure to check again    
       var activeItem = this.getActiveIndex(), // the current active
-          orientation = slideDirection === left ? 'next' : 'prev'; //determine type
+          orientation;
+      
+      // determine slideDirection first
+      if  ( (activeItem < next ) || (activeItem === 0 && next === total -1 ) ) {
+        slideDirection = self[direction] = left; // next
+      } else if  ( (activeItem > next) || (activeItem === total - 1 && next === 0 ) ) {
+        slideDirection = self[direction] = right; // prev
+      }
   
+      // find the right next index 
+      if ( next < 0 ) { next = total - 1; } 
+      else if ( next === total ){ next = 0; }
+  
+      // update index
+      index = next;
+      
+      orientation = slideDirection === left ? 'next' : 'prev'; //determine type
       bootstrapCustomEvent.call(element, slideEvent, component, slides[next]); // here we go with the slide
   
-      isSliding = this.isSliding = true;
+      isSliding = true;
       clearInterval(timer);
       setActivePage( next );
   
@@ -744,7 +767,7 @@
         one(slides[activeItem], transitionEndEvent, function(e) {
           var timeout = e[target] !== slides[activeItem] ? e.elapsedTime*1000 : 0;
           setTimeout(function(){
-            isSliding = self.isSliding = false;
+            isSliding = false;
   
             addClass(slides[next],active);
             removeClass(slides[activeItem],active);
@@ -758,7 +781,7 @@
             if ( self[interval] && !hasClass(element,paused) ) {
               self.cycle();
             }
-          },timeout);
+          },timeout+100);
         });
   
       } else {
@@ -781,7 +804,7 @@
     // init
     if ( !(stringCarousel in element ) ) { // prevent adding event handlers twice
   
-      if ( this[pause] && this[interval] ) {
+      if ( self[pause] && self[interval] ) {
         on( element, mouseHover[0], pauseHandler );
         on( element, mouseHover[1], resumeHandler );
         on( element, 'touchstart', pauseHandler );
@@ -791,22 +814,22 @@
       rightArrow && on( rightArrow, clickEvent, controlsHandler );
       leftArrow && on( leftArrow, clickEvent, controlsHandler );
     
-      indicator && on( indicator, clickEvent, indicatorHandler, false);
-      this[keyboard] === true && on( globalObject, keydownEvent, keyHandler, false);
+      indicator && on( indicator, clickEvent, indicatorHandler );
+      self[keyboard] && on( globalObject, keydownEvent, keyHandler );
   
     }
-    if (this.getActiveIndex()<0) {
+    if (self.getActiveIndex()<0) {
       slides[length] && addClass(slides[0],active);
       indicators[length] && setActivePage(0);
     }
   
-    if ( this[interval] ){ this.cycle(); }
-    element[stringCarousel] = this;
+    if ( self[interval] ){ self.cycle(); }
+    element[stringCarousel] = self;
   };
   
   // CAROUSEL DATA API
   // =================
-  initializeDataAPI( stringCarousel, Carousel, dataRide );
+  supports[push]( [ stringCarousel, Carousel, '['+dataRide+'="carousel"]' ] );
   
   
   /* Native Javascript for Bootstrap 3 | Collapse
@@ -822,7 +845,6 @@
     // set options
     options = options || {};
   
-  
     // event targets and constants
     var accordion = null, collapse = null, self = this,
       isAnimating = false, // when true it will prevent click handlers
@@ -833,90 +855,91 @@
       collapsed = 'collapsed',
   
       // private methods
-      openAction = function(collapseElement) {
+      openAction = function(collapseElement,toggle) {
         bootstrapCustomEvent.call(collapseElement, showEvent, component);
         isAnimating = true;
         addClass(collapseElement,collapsing);
-        addClass(collapseElement,inClass);
-        setTimeout(function() {
-          collapseElement[style][height] = getMaxHeight(collapseElement) + 'px';
-  
-          emulateTransitionEnd(collapseElement, function() {
-            isAnimating = false;
-            collapseElement[setAttribute](ariaExpanded,'true');
-            removeClass(collapseElement,collapsing);
-            collapseElement[style][height] = '';
-            bootstrapCustomEvent.call(collapseElement, shownEvent, component);
-          });
-        },20);
+        removeClass(collapseElement,component);
+        collapseElement[style][height] = collapseElement[scrollHeight] + 'px';
+        
+        emulateTransitionEnd(collapseElement, function() {
+          isAnimating = false;
+          collapseElement[setAttribute](ariaExpanded,'true');
+          toggle[setAttribute](ariaExpanded,'true');          
+          removeClass(collapseElement,collapsing);
+          addClass(collapseElement, component);
+          addClass(collapseElement, inClass);
+          collapseElement[style][height] = '';
+          bootstrapCustomEvent.call(collapseElement, shownEvent, component);
+        });
       },
-      closeAction = function(collapseElement) {
+      closeAction = function(collapseElement,toggle) {
         bootstrapCustomEvent.call(collapseElement, hideEvent, component);
         isAnimating = true;
-        collapseElement[style][height] = getMaxHeight(collapseElement) + 'px';
-        setTimeout(function() {
-          addClass(collapseElement,collapsing);
-          collapseElement[style][height] = '0px';
-  
-          emulateTransitionEnd(collapseElement, function() {
-            isAnimating = false;
-            collapseElement[setAttribute](ariaExpanded,'false');
-            removeClass(collapseElement,collapsing);
-            removeClass(collapseElement,inClass);
-            collapseElement[style][height] = '';
-            bootstrapCustomEvent.call(collapseElement, hiddenEvent, component);
-          });
-        },20);
+        collapseElement[style][height] = collapseElement[scrollHeight] + 'px'; // set height first
+        removeClass(collapseElement,component);
+        removeClass(collapseElement, inClass);
+        addClass(collapseElement, collapsing);
+        collapseElement[offsetWidth]; // force reflow to enable transition
+        collapseElement[style][height] = '0px';
+        
+        emulateTransitionEnd(collapseElement, function() {
+          isAnimating = false;
+          collapseElement[setAttribute](ariaExpanded,'false');
+          toggle[setAttribute](ariaExpanded,'false');
+          removeClass(collapseElement,collapsing);
+          addClass(collapseElement,component);
+          collapseElement[style][height] = '';
+          bootstrapCustomEvent.call(collapseElement, hiddenEvent, component);
+        });
       },
       getTarget = function() {
         var href = element.href && element[getAttribute]('href'),
           parent = element[getAttribute](dataTarget),
-          id = href || ( parent && targetsReg.test(parent) ) && parent;
+          id = href || ( parent && parent.charAt(0) === '#' ) && parent;
         return id && queryElement(id);
       };
     
     // public methods
     this.toggle = function(e) {
-      e.preventDefault();
+      e[preventDefault]();
       if ( isAnimating ) return;
       if (!hasClass(collapse,inClass)) { self.show(); } 
       else { self.hide(); }
     };
     this.hide = function() {
-      closeAction(collapse);
+      closeAction(collapse,element);
       addClass(element,collapsed);
     };
     this.show = function() {
-      openAction(collapse);
-      removeClass(element,collapsed);
-  
-      if ( accordion !== null ) {
-        var activeCollapses = getElementsByClassName(accordion,component+' '+inClass),
-            allToggles = accordion[querySelectorAll]('['+dataToggle+'="'+component+'"]'),
-            correspondingCollapse;
-        for (var i=0, al=activeCollapses[length]; i<al; i++) {
-          if ( activeCollapses[i] !== collapse ) { closeAction(activeCollapses[i]); }
-        }
-        for (var u=0, atl=allToggles[length]; u<atl; u++) {
-          correspondingCollapse = allToggles[u][getAttribute](dataTarget) || allToggles[u].href;
-          if ( correspondingCollapse.split('#')[1] !== collapse.id ) { addClass(allToggles[u],collapsed); } 
-          else { removeClass(allToggles[u],collapsed); }
+      if ( accordion ) {
+        var activeCollapse = queryElement('.'+component+'.'+inClass,accordion),
+            toggle = activeCollapse && (queryElement('['+dataToggle+'="'+component+'"]['+dataTarget+'="#'+activeCollapse.id+'"]',accordion)
+                   || queryElement('['+dataToggle+'="'+component+'"][href="#'+activeCollapse.id+'"]',accordion) ),
+            correspondingCollapse = toggle && (toggle[getAttribute](dataTarget) || toggle.href);
+        if ( activeCollapse && toggle && activeCollapse !== collapse ) { 
+          closeAction(activeCollapse,toggle); 
+          if ( correspondingCollapse.split('#')[1] !== collapse.id ) { addClass(toggle,collapsed); } 
+          else { removeClass(toggle,collapsed); }
         }
       }
+  
+      openAction(collapse,element);
+      removeClass(element,collapsed); 
     };
   
     // init
     if ( !(stringCollapse in element ) ) { // prevent adding event handlers twice
-      on(element, clickEvent, this.toggle);
+      on(element, clickEvent, self.toggle);
     }
     collapse = getTarget();
     accordion = queryElement(options.parent) || accordionData && getClosest(element, accordionData);
-    element[stringCollapse] = this;
+    element[stringCollapse] = self;
   };
   
   // COLLAPSE DATA API
   // =================
-  initializeDataAPI(stringCollapse, Collapse, dataToggle);
+  supports[push]( [ stringCollapse, Collapse, '['+dataToggle+'="collapse"]' ] );
   
   
   /* Native Javascript for Bootstrap 3 | Dropdown
@@ -933,71 +956,126 @@
     this.persist = option === true || element[getAttribute]('data-persist') === 'true' || false;
   
     // constants, event targets, strings
-    var self = this, isOpen = false,
+    var self = this, children = 'children',
       parent = element[parentNode],
       component = 'dropdown', open = 'open',
       relatedTarget = null,
       menu = queryElement('.dropdown-menu', parent),
-      children = menu[getElementsByTagName]('*'),
+      menuItems = (function(){
+        var set = menu[children], newSet = [];
+        for ( var i=0; i<set[length]; i++ ){
+          set[i][children][length] && (set[i][children][0].tagName === 'A' && newSet[push](set[i]));          
+        }
+        return newSet;
+      })(),
+  
+      // preventDefault on empty anchor links
+      preventEmptyAnchor = function(anchor){
+        (anchor.href && anchor.href.slice(-1) === '#' || anchor[parentNode] && anchor[parentNode].href 
+          && anchor[parentNode].href.slice(-1) === '#') && this[preventDefault]();      
+      },
+  
+      // toggle dismissible events
+      toggleDismiss = function(){
+        var type = element[open] ? on : off;
+        type(DOC, clickEvent, dismissHandler); 
+        type(DOC, keydownEvent, preventScroll);
+        type(DOC, keyupEvent, keyHandler);
+      },
   
       // handlers
-      keyHandler = function(e) {
-        if (isOpen && (e.which == 27 || e.keyCode == 27)) { relatedTarget = null; hide(); } // e.keyCode for IE8
+      dismissHandler = function(e) {
+        var eventTarget = e[target], hasData = eventTarget && (stringDropdown in eventTarget || stringDropdown in eventTarget[parentNode]);
+        if ( (eventTarget === menu || menu[contains](eventTarget)) && (self.persist || hasData) ) { return; }
+        else {
+          relatedTarget = eventTarget === element || element[contains](eventTarget) ? element : null;
+          hide();
+        }
+        preventEmptyAnchor.call(e,eventTarget);
       },
       clickHandler = function(e) {
-        var eventTarget = e[target],
-          hasData = eventTarget && (eventTarget[getAttribute](dataToggle) || eventTarget[parentNode] && getAttribute in eventTarget[parentNode] && eventTarget[parentNode][getAttribute](dataToggle));
-        if ( eventTarget === element || eventTarget === parent || eventTarget[parentNode] === element ) {
-          e.preventDefault(); // comment this line to stop preventing navigation when click target is a link 
-          relatedTarget = element;
-          self.toggle();
-        } else if ( isOpen ) {
-          if ( eventTarget === menu || children && nodeListToArray(children)[indexOf](eventTarget) > -1 && (self.persist || hasData) ) {
-            return;
-          } else { relatedTarget = null; hide(); }
-        }
-        (/\#$/.test(eventTarget.href) || eventTarget[parentNode] && /\#$/.test(eventTarget[parentNode].href)) && e.preventDefault(); // should be here to prevent jumps
+        relatedTarget = element;
+        show();
+        preventEmptyAnchor.call(e,e[target]);
       },
+      preventScroll = function(e){
+        var key = e.which || e.keyCode;
+        if( key === 38 || key === 40 ) { e[preventDefault](); }
+      },
+      keyHandler = function(e){
+        var key = e.which || e.keyCode, 
+            activeItem = DOC.activeElement,
+            idx = menuItems[indexOf](activeItem[parentNode]),
+            isSameElement = activeItem === element,
+            isInsideMenu = menu[contains](activeItem),
+            isMenuItem = activeItem[parentNode][parentNode] === menu;
+        
+        if ( isMenuItem || isSameElement ) { // navigate up | down
+          idx = isSameElement ? 0 
+                              : key === 38 ? (idx>1?idx-1:0) 
+                              : key === 40 ? (idx<menuItems[length]-1?idx+1:idx) : idx;
+          menuItems[idx] && setFocus(menuItems[idx][children][0]);
+        }
+        if ( (menuItems[length] && isMenuItem // menu has items
+          || !menuItems[length] && (isInsideMenu || isSameElement)  // menu might be a form
+          || !isInsideMenu ) // or the focused element is not in the menu at all
+          && element[open] && key === 27 // menu must be open
+        ) {
+          self.toggle();
+          relatedTarget = null;
+        }
+      },  
+  
       // private methods
       show = function() {
         bootstrapCustomEvent.call(parent, showEvent, component, relatedTarget);
         addClass(parent,open);
         menu[setAttribute](ariaExpanded,true);
         bootstrapCustomEvent.call(parent, shownEvent, component, relatedTarget);
-        on(document, keydownEvent, keyHandler);
-        isOpen = true;
+        element[open] = true;
+        off(element, clickEvent, clickHandler);
+        setTimeout(function(){ 
+          setFocus( menu[getElementsByTagName]('INPUT')[0] || element ); // focus the first input item | element
+          toggleDismiss(); 
+        },1);
       },
       hide = function() {
         bootstrapCustomEvent.call(parent, hideEvent, component, relatedTarget);
         removeClass(parent,open);
         menu[setAttribute](ariaExpanded,false);
         bootstrapCustomEvent.call(parent, hiddenEvent, component, relatedTarget);
-        off(document, keydownEvent, keyHandler);
-        isOpen = false;
+        element[open] = false;
+        toggleDismiss();
+        setFocus(element);
+        setTimeout(function(){ on(element, clickEvent, clickHandler); },1);
       };
+  
+    // set initial state to closed
+    element[open] = false;
   
     // public methods
     this.toggle = function() {
-      if (hasClass(parent,open) && isOpen) { hide(); } 
+      if (hasClass(parent,open) && element[open]) { hide(); } 
       else { show(); }
     };
   
     // init
-    if ( !(stringDropdown in element) ) { // prevent adding event handlers twice
-      menu[setAttribute]('tabindex', '0'); // Fix onblur on Chrome | Safari
-      on(document, clickEvent, clickHandler);
+    if (!(stringDropdown in element)) { // prevent adding event handlers twice
+      !tabindex in menu && menu[setAttribute](tabindex, '0'); // Fix onblur on Chrome | Safari
+      on(element, clickEvent, clickHandler);
     }
-    element[stringDropdown] = this;
+  
+    element[stringDropdown] = self;
   };
   
   // DROPDOWN DATA API
   // =================
-  initializeDataAPI( stringDropdown, Dropdown, dataToggle );
+  supports[push]( [stringDropdown, Dropdown, '['+dataToggle+'="dropdown"]'] );
   
   
   /* Native Javascript for Bootstrap 3 | Modal
   -------------------------------------------*/
-    
+  
   // MODAL DEFINITION
   // ===============
   var Modal = function(element, options) { // element can be the modal/triggering button
@@ -1005,7 +1083,7 @@
     // the modal (both JavaScript / DATA API init) / triggering button element (DATA API)
     element = queryElement(element);
   
-    // determine modal, triggering element 
+    // determine modal, triggering element
     var btnCheck = element[getAttribute](dataTarget)||element[getAttribute]('href'),
       checkModal = queryElement( btnCheck ),
       modal = hasClass(element,'modal') ? element : checkModal,
@@ -1028,34 +1106,35 @@
     this[backdrop] = options[backdrop] === staticString || modal[getAttribute](databackdrop) === staticString ? staticString : true;
     this[backdrop] = options[backdrop] === false || modal[getAttribute](databackdrop) === 'false' ? false : this[backdrop];
     this[content]  = options[content]; // JavaScript only
+    this[root]     = options[root] || DOC[body];
   
     // bind, constants, event targets and other vars
-    var self = this, open = this.open = false, relatedTarget = null,
+    var self = this, relatedTarget = null,
       bodyIsOverflowing, modalIsOverflowing, scrollbarWidth, overlay,
   
       // also find fixed-top / fixed-bottom items
-      fixedItems = getElementsByClassName(doc,fixedTop).concat(getElementsByClassName(doc,fixedBottom)),
+      fixedItems = getElementsByClassName(HTML,fixedTop).concat(getElementsByClassName(HTML,fixedBottom)),
   
       // private methods
       getWindowWidth = function() {
-        var htmlRect = doc[getBoundingClientRect]();
+        var htmlRect = HTML[getBoundingClientRect]();
         return globalObject[innerWidth] || (htmlRect[right] - Math.abs(htmlRect[left]));
       },
       setScrollbar = function () {
-        var bodyStyle = body.currentStyle || globalObject.getComputedStyle(body), 
+        var bodyStyle = self[root].currentStyle || globalObject.getComputedStyle(self[root]),
             bodyPad = parseInt((bodyStyle[paddingRight]), 10), itemPad;
-        if (bodyIsOverflowing) { 
-          body[style][paddingRight] = (bodyPad + scrollbarWidth) + 'px';
+        if (bodyIsOverflowing) {
+          self[root][style][paddingRight] = (bodyPad + scrollbarWidth) + 'px';
           if (fixedItems[length]){
             for (var i = 0; i < fixedItems[length]; i++) {
-              itemPad = globalObject.getComputedStyle(fixedItems[i])[paddingRight];
+              itemPad = (fixedItems[i].currentStyle || globalObject.getComputedStyle(fixedItems[i]))[paddingRight];
               fixedItems[i][style][paddingRight] = ( parseInt(itemPad) + scrollbarWidth) + 'px';
             }
           }
         }
       },
       resetScrollbar = function () {
-        body[style][paddingRight] = '';
+        self[root][style][paddingRight] = '';
         if (fixedItems[length]){
           for (var i = 0; i < fixedItems[length]; i++) {
             fixedItems[i][style][paddingRight] = '';
@@ -1063,16 +1142,16 @@
         }
       },
       measureScrollbar = function () { // thx walsh
-        var scrollDiv = document.createElement('div'), scrollBarWidth;
+        var scrollDiv = DOC[createElement]('div'), scrollBarWidth;
         scrollDiv.className = component+'-scrollbar-measure'; // this is here to stay
-        body.appendChild(scrollDiv);
+        self[root][appendChild](scrollDiv);
         scrollBarWidth = scrollDiv[offsetWidth] - scrollDiv[clientWidth];
-        body.removeChild(scrollDiv);
-        return scrollBarWidth;
+        self[root].removeChild(scrollDiv);
+      return scrollBarWidth;
       },
       checkScrollbar = function () {
-        bodyIsOverflowing = body[clientWidth] < getWindowWidth();
-        modalIsOverflowing = modal[scrollHeight] > doc[clientHeight];
+        bodyIsOverflowing = self[root][clientWidth] < getWindowWidth();
+        modalIsOverflowing = modal[scrollHeight] > HTML[clientHeight];
         scrollbarWidth = measureScrollbar();
       },
       adjustDialog = function () {
@@ -1084,37 +1163,41 @@
         modal[style][paddingRight] = '';
       },
       createOverlay = function() {
-        var newOverlay = document.createElement('div');
+        modalOverlay = 1;
+        
+        var newOverlay = DOC[createElement]('div');
         overlay = queryElement('.'+modalBackdropString);
   
         if ( overlay === null ) {
           newOverlay[setAttribute]('class',modalBackdropString+' fade');
           overlay = newOverlay;
-          body.appendChild(overlay);
+          self[root][appendChild](overlay);
         }
       },
       removeOverlay = function() {
-        overlay = queryElement('.'+modalBackdropString); 
+        overlay = queryElement('.'+modalBackdropString);
         if ( overlay && overlay !== null && typeof overlay === 'object' ) {
-          body.removeChild(overlay); overlay = null;
+          modalOverlay = 0;
+          self[root].removeChild(overlay); overlay = null;
         }
+        bootstrapCustomEvent.call(modal, hiddenEvent, component);
       },
       keydownHandlerToggle = function() {
-        if (!hasClass(modal,inClass)) {
-          on(document, keydownEvent, keyHandler);
+        if (hasClass(modal,inClass)) {
+          on(DOC, keydownEvent, keyHandler);
         } else {
-          off(document, keydownEvent, keyHandler);
+          off(DOC, keydownEvent, keyHandler);
         }
       },
       resizeHandlerToggle = function() {
-        if (!hasClass(modal,inClass)) {
+        if (hasClass(modal,inClass)) {
           on(globalObject, resizeEvent, self.update);
         } else {
           off(globalObject, resizeEvent, self.update);
         }
       },
       dismissHandlerToggle = function() {
-        if (!hasClass(modal,inClass)) {
+        if (hasClass(modal,inClass)) {
           on(modal, clickEvent, dismissHandler);
         } else {
           off(modal, clickEvent, dismissHandler);
@@ -1122,96 +1205,91 @@
       },
       // triggers
       triggerShow = function() {
-        open = self.open = true;
         setFocus(modal);
         bootstrapCustomEvent.call(modal, shownEvent, component, relatedTarget);
       },
       triggerHide = function() {
-        resizeHandlerToggle();
-        dismissHandlerToggle();
-        keydownHandlerToggle();
-  
         modal[style].display = '';
-  
-        open = self.open = false;
         element && (setFocus(element));
-        bootstrapCustomEvent.call(modal, hiddenEvent, component);
-        setTimeout(function() {
-          // if (!getElementsByClassName(document, component+' '+inClass)[0]) {
+        
+        (function(){
+          if (!getElementsByClassName(DOC,component+' '+inClass)[0]) {
             resetAdjustments();
             resetScrollbar();
-            removeClass(body, component+'-open');
-            removeOverlay();
-          // }
-        }, 100);
-      },    
+            removeClass(self[root],component+'-open');
+            overlay && hasClass(overlay,'fade') ? (removeClass(overlay,inClass), emulateTransitionEnd(overlay,removeOverlay)) 
+            : removeOverlay();
+  
+            resizeHandlerToggle();
+            dismissHandlerToggle();
+            keydownHandlerToggle();
+          }
+        }());
+      },
       // handlers
       clickHandler = function(e) {
-        var clickTarget = e[target]; 
+        var clickTarget = e[target];
         clickTarget = clickTarget[hasAttribute](dataTarget) || clickTarget[hasAttribute]('href') ? clickTarget : clickTarget[parentNode];
-        if ( !open && clickTarget === element && !hasClass(modal,inClass) ) {
+        if ( clickTarget === element && !hasClass(modal,inClass) ) {
           modal.modalTrigger = element;
           relatedTarget = element;
           self.show();
-          e.preventDefault();
+          e[preventDefault]();
         }
       },
       keyHandler = function(e) {
         var key = e.which || e.keyCode; // keyCode for IE8
-        if (self[keyboard] && key == 27 && open) {
+        if (self[keyboard] && key == 27 && hasClass(modal,inClass)) {
           self.hide();
         }
       },
       dismissHandler = function(e) {
         var clickTarget = e[target];
-        if ( open && (clickTarget[parentNode][getAttribute](dataDismiss) === component 
+        if ( hasClass(modal,inClass) && (clickTarget[parentNode][getAttribute](dataDismiss) === component
             || clickTarget[getAttribute](dataDismiss) === component
             || (clickTarget === modal && self[backdrop] !== staticString) ) ) {
           self.hide(); relatedTarget = null;
-          e.preventDefault();
+          e[preventDefault]();
         }
       };
   
     // public methods
     this.toggle = function() {
-      if (open && hasClass(modal,inClass)) {this.hide();} else {this.show();}
+      if ( hasClass(modal,inClass) ) {this.hide();} else {this.show();}
     };
     this.show = function() {
       bootstrapCustomEvent.call(modal, showEvent, component, relatedTarget);
   
       // we elegantly hide any opened modal
-      var currentOpen = getElementsByClassName(document,component+' in')[0];
-      try {
-          currentOpen && currentOpen !== modal && currentOpen.modalTrigger[stringModal].hide();
-      } catch (e) {
-          currentOpen.classList.remove('in');
-      }
+      var currentOpen = getElementsByClassName(DOC,component+' in')[0];
+      currentOpen && currentOpen !== modal && currentOpen.modalTrigger[stringModal].hide();
   
       if ( this[backdrop] ) {
-        createOverlay();
+        !modalOverlay && createOverlay();
       }
   
-      if ( overlay && !hasClass(overlay,inClass)) {
-        setTimeout( function() { addClass(overlay,inClass); },0);
+      if ( overlay && modalOverlay && !hasClass(overlay,inClass)) {
+        overlay[offsetWidth]; // force reflow to enable trasition
+        addClass(overlay,inClass);
       }
   
-      setTimeout( function() {
+      (function() {
         modal[style].display = 'block';
   
         checkScrollbar();
         setScrollbar();
         adjustDialog();
   
+        addClass(self[root],component+'-open');
+        addClass(modal,inClass);
+        modal[setAttribute](ariaHidden, false);
+        
         resizeHandlerToggle();
         dismissHandlerToggle();
         keydownHandlerToggle();
   
-        addClass(body,component+'-open');
-        addClass(modal,inClass);
-        modal[setAttribute](ariaHidden, false);
-  
         hasClass(modal,'fade') ? emulateTransitionEnd(modal, triggerShow) : triggerShow();
-      }, supportTransitions ? 150 : 0);
+      }());
     };
     this.hide = function() {
       bootstrapCustomEvent.call(modal, hideEvent, component);
@@ -1220,17 +1298,15 @@
       removeClass(modal,inClass);
       modal[setAttribute](ariaHidden, true);
   
-      !!overlay && removeClass(overlay,inClass);
-  
       setTimeout(function(){
         hasClass(modal,'fade') ? emulateTransitionEnd(modal, triggerHide) : triggerHide();
       }, supportTransitions ? 150 : 0);
     };
     this.setContent = function( content ) {
-      queryElement('.'+component+'-content',modal).innerHTML = content;
+      queryElement('.'+component+'-content',modal)[innerHTML] = content;
     };
     this.update = function() {
-      if (open) {
+      if (hasClass(modal,inClass)) {
         checkScrollbar();
         setScrollbar();
         adjustDialog();
@@ -1239,17 +1315,16 @@
   
     // init
     // prevent adding event handlers over and over
-    // modal is independent of a triggering element 
+    // modal is independent of a triggering element
     if ( !!element && !(stringModal in element) ) {
       on(element, clickEvent, clickHandler);
     }
-    if ( !!this[content] ) { this.setContent( this[content] ); }
-    !!element && (element[stringModal] = this);
+    if ( !!self[content] ) { self.setContent( self[content] ); }
+    !!element && (element[stringModal] = self);
   };
   
   // DATA API
-  initializeDataAPI(stringModal, Modal, dataToggle);
-  
+  supports[push]( [ stringModal, Modal, '['+dataToggle+'="modal"]' ] );
   
   /* Native Javascript for Bootstrap 3 | Popover
   ----------------------------------------------*/
@@ -1260,6 +1335,9 @@
   
     // initialization element
     element = queryElement(element);
+  
+    // set options
+    options = options || {};
   
     // DATA API
     var triggerData = element[getAttribute](dataTrigger), // click / hover / focus
@@ -1276,12 +1354,14 @@
         classString = 'class',
         div = 'div',
         fade = 'fade',
-        title = 'title',
         content = 'content',
-        dataTitle = 'data-title',
         dataContent = 'data-content',
         dismissible = 'dismissible',
         closeBtn = '<button type="button" class="close">×</button>',
+  
+        // check container
+        containerElement = queryElement(options[container]),
+        containerDataElement = queryElement(containerData),      
         
         // maybe the element is inside a modal
         modal = getClosest(element,'.modal'),
@@ -1290,19 +1370,18 @@
         navbarFixedTop = getClosest(element,'.'+fixedTop),
         navbarFixedBottom = getClosest(element,'.'+fixedBottom);
   
-    // set options
-    options = options || {};
+    // set instance options
     this[template] = options[template] ? options[template] : null; // JavaScript only
     this[trigger] = options[trigger] ? options[trigger] : triggerData || hoverEvent;
     this[animation] = options[animation] && options[animation] !== fade ? options[animation] : animationData || fade;
     this[placement] = options[placement] ? options[placement] : placementData || top;
     this[delay] = parseInt(options[delay] || delayData) || 200;
     this[dismissible] = options[dismissible] || dismissibleData === 'true' ? true : false;
-    this[container] = queryElement(options[container]) ? queryElement(options[container]) 
-                    : queryElement(containerData) ? queryElement(containerData) 
+    this[container] = containerElement ? containerElement 
+                    : containerDataElement ? containerDataElement 
                     : navbarFixedTop ? navbarFixedTop
                     : navbarFixedBottom ? navbarFixedBottom
-                    : modal ? modal : body;
+                    : modal ? modal : DOC[body];
   
     // bind, content
     var self = this, 
@@ -1330,35 +1409,35 @@
         titleString = element[getAttribute](dataTitle); // check content again
         contentString = element[getAttribute](dataContent);
   
-        popover = document.createElement(div);
+        popover = DOC[createElement](div);
   
         if ( contentString !== null && self[template] === null ) { //create the popover from data attributes
   
           popover[setAttribute]('role','tooltip');
   
           if (titleString !== null) {
-            var popoverTitle = document.createElement('h3');
+            var popoverTitle = DOC[createElement]('h3');
             popoverTitle[setAttribute](classString,component+'-title');
   
-            popoverTitle.innerHTML = self[dismissible] ? titleString + closeBtn : titleString;
-            popover.appendChild(popoverTitle);
+            popoverTitle[innerHTML] = self[dismissible] ? titleString + closeBtn : titleString;
+            popover[appendChild](popoverTitle);
           }
   
-          var popoverArrow = document.createElement(div), popoverContent = document.createElement(div);
+          var popoverArrow = DOC[createElement](div), popoverContent = DOC[createElement](div);
           popoverArrow[setAttribute](classString,'arrow'); popoverContent[setAttribute](classString,component+'-content');
-          popover.appendChild(popoverArrow); popover.appendChild(popoverContent);
+          popover[appendChild](popoverArrow); popover[appendChild](popoverContent);
   
           //set popover content
-          popoverContent.innerHTML = self[dismissible] && titleString === null ? contentString + closeBtn : contentString;
+          popoverContent[innerHTML] = self[dismissible] && titleString === null ? contentString + closeBtn : contentString;
   
         } else {  // or create the popover from template
-          var popoverTemplate = document.createElement(div);
-          popoverTemplate.innerHTML = self[template];
-          popover.innerHTML = popoverTemplate.firstChild.innerHTML;
+          var popoverTemplate = DOC[createElement](div);
+          popoverTemplate[innerHTML] = self[template];
+          popover[innerHTML] = popoverTemplate.firstChild[innerHTML];
         }
   
         //append to the container
-        self[container].appendChild(popover);
+        self[container][appendChild](popover);
         popover[style].display = 'block';
         popover[setAttribute](classString, component+ ' ' + placementSetting + ' ' + self[animation]);
       },
@@ -1367,17 +1446,24 @@
       },
       updatePopover = function() {
         styleTip(element,popover,placementSetting,self[container]);
-        if (!isElementInViewport(popover) ) { 
-          placementSetting = updatePlacement(placementSetting); 
-          styleTip(element,popover,placementSetting,self[container]); 
-        }
       },
       
+      // event toggle
+      dismissHandlerToggle = function(type){
+        if (clickEvent == self[trigger] || 'focus' == self[trigger]) {
+          !self[dismissible] && type( element, 'blur', self.hide );
+        }
+        self[dismissible] && type( DOC, clickEvent, dismissibleHandler );
+        !isIE8 && type( globalObject, resizeEvent, self.hide );
+      },
+  
       // triggers
       showTrigger = function() {
+        dismissHandlerToggle(on);
         bootstrapCustomEvent.call(element, shownEvent, component);
       },
       hideTrigger = function() {
+        dismissHandlerToggle(off);
         removePopover();
         bootstrapCustomEvent.call(element, hiddenEvent, component);
       };
@@ -1416,23 +1502,16 @@
       if (self[trigger] === hoverEvent) {
         on( element, mouseHover[0], self.show );
         if (!self[dismissible]) { on( element, mouseHover[1], self.hide ); }
-      } else if (/^(click|focus)$/.test(self[trigger])) {
+      } else if (clickEvent == self[trigger] || 'focus' == self[trigger]) {
         on( element, self[trigger], self.toggle );
-        if (!self[dismissible]) { on( element, 'blur', self.hide ); }
-      }
-      
-      if (self[dismissible]) { on( document, clickEvent, dismissibleHandler ); }
-    
-      // dismiss on window resize
-      !isIE8 && on( globalObject, resizeEvent, self.hide );
-  
+      }    
     }
     element[stringPopover] = self;
   };
   
   // POPOVER DATA API
   // ================
-  initializeDataAPI(stringPopover, Popover, dataToggle);
+  supports[push]( [ stringPopover, Popover, '['+dataToggle+'="popover"]' ] );
   
   
   /* Native Javascript for Bootstrap 3 | ScrollSpy
@@ -1446,15 +1525,17 @@
     element = queryElement(element); 
   
     // DATA API
-    var targetData = queryElement(element[getAttribute](dataTarget));
+    var targetData = queryElement(element[getAttribute](dataTarget)),
+        offsetData = element[getAttribute]('data-offset');
   
     // set options
     options = options || {};
     if ( !options[target] && !targetData ) { return; } // invalidate
   
     // event targets, constants
-    var spyTarget = options[target] && queryElement(options[target]) || targetData,
-        links = spyTarget && spyTarget[getElementsByTagName]('A'), 
+    var self = this, spyTarget = options[target] && queryElement(options[target]) || targetData,
+        links = spyTarget && spyTarget[getElementsByTagName]('A'),
+        offset = parseInt(offsetData || options['offset']) || 10,      
         items = [], targetItems = [], scrollOffset,
         scrollTarget = element[offsetHeight] < element[scrollHeight] ? element : globalObject, // determine which is the real scrollTarget
         isWindow = scrollTarget === globalObject;  
@@ -1462,31 +1543,30 @@
     // populate items and targets
     for (var i=0, il=links[length]; i<il; i++) {
       var href = links[i][getAttribute]('href'), 
-          targetItem = href && targetsReg.test(href) && queryElement(href);
+          targetItem = href && href.charAt(0) === '#' && href.slice(-1) !== '#' && queryElement(href);
       if ( !!targetItem ) {
-        items.push(links[i]);
-        targetItems.push(targetItem);
+        items[push](links[i]);
+        targetItems[push](targetItem);
       }
     }
   
     // private methods
     var updateItem = function(index) {
-        var parent = items[index][parentNode], // item's parent LI element
+      var parent = items[index][parentNode], // item's parent LI element
           targetItem = targetItems[index], // the menu item targets this element
           dropdown = getClosest(parent,'.dropdown'),
           targetRect = isWindow && targetItem[getBoundingClientRect](),
   
           isActive = hasClass(parent,active) || false,
   
-          topEdge = isWindow ? targetRect[top] + scrollOffset : targetItem[offsetTop] - (targetItems[index-1] ? 0 : 10),
-          bottomEdge = isWindow ? targetRect[bottom] + scrollOffset : targetItems[index+1] ? targetItems[index+1][offsetTop] : element[scrollHeight],
+          topEdge = (isWindow ? targetRect[top] + scrollOffset : targetItem[offsetTop]) - offset,
+          bottomEdge = isWindow ? targetRect[bottom] + scrollOffset - offset : targetItems[index+1] ? targetItems[index+1][offsetTop] - offset : element[scrollHeight],
   
           inside = scrollOffset >= topEdge && bottomEdge > scrollOffset;
   
         if ( !isActive && inside ) {
           if ( parent.tagName === 'LI' && !hasClass(parent,active) ) {
             addClass(parent,active);
-            isActive = true;
             if (dropdown && !hasClass(dropdown,active) ) {
               addClass(dropdown,active);
             }
@@ -1495,7 +1575,6 @@
         } else if ( !inside ) {
           if ( parent.tagName === 'LI' && hasClass(parent,active) ) {
             removeClass(parent,active);
-            isActive = false;
             if (dropdown && hasClass(dropdown,active) && !getElementsByClassName(parent[parentNode],active).length ) {
               removeClass(dropdown,active);
             }
@@ -1518,16 +1597,16 @@
   
     // init
     if ( !(stringScrollSpy in element) ) { // prevent adding event handlers twice
-      on( scrollTarget, scrollEvent, this.refresh );
-      !isIE8 && on( globalObject, resizeEvent, this.refresh ); 
+      on( scrollTarget, scrollEvent, self.refresh );
+      !isIE8 && on( globalObject, resizeEvent, self.refresh ); 
     }
-    this.refresh();
-    element[stringScrollSpy] = this;
+    self.refresh();
+    element[stringScrollSpy] = self;
   };
   
   // SCROLLSPY DATA API
   // ==================
-  initializeDataAPI(stringScrollSpy, ScrollSpy, dataSpy);
+  supports[push]( [ stringScrollSpy, ScrollSpy, '['+dataSpy+'="scroll"]' ] );
   
   
   /* Native Javascript for Bootstrap 3 | Tab
@@ -1544,10 +1623,7 @@
     var heightData = element[getAttribute](dataHeight),
       
         // strings
-        component = 'tab', height = 'height', isAnimating = 'isAnimating';
-  
-    // set default animation state
-    element[isAnimating] = false;
+        component = 'tab', height = 'height', float = 'float', isAnimating = 'isAnimating';
   
     // set options
     options = options || {};
@@ -1556,43 +1632,68 @@
     // bind, event targets
     var self = this, next,
       tabs = getClosest(element,'.nav'),
-      tabsContentContainer,
+      tabsContentContainer = false,
       dropdown = tabs && queryElement('.dropdown',tabs),
-      activeTab, activeContent, nextContent,
+      activeTab, activeContent, nextContent, containerHeight, equalContents, nextHeight,
+  
       // trigger
+      triggerEnd = function(){
+        tabsContentContainer[style][height] = '';
+        removeClass(tabsContentContainer,collapsing);
+        tabs[isAnimating] = false;
+      },
       triggerShow = function() {
-        bootstrapCustomEvent.call(next, shownEvent, component, activeTab);
         if (tabsContentContainer) { // height animation
-          (function(){
-            setTimeout(function(){
-              tabsContentContainer[style][height] = '';
-              removeClass(tabsContentContainer,collapsing);
-              activeTab[isAnimating] = next[isAnimating] = false;
-            },200);
-          }());
-        } else { 
-          activeTab[isAnimating] = next[isAnimating] = false; 
+          if ( equalContents ) {
+            triggerEnd();
+          } else {
+            setTimeout(function(){ // enables height animation
+              tabsContentContainer[style][height] = nextHeight + 'px'; // height animation
+              tabsContentContainer[offsetWidth];
+              emulateTransitionEnd(tabsContentContainer, triggerEnd);
+            },1);
+          }
+        } else {
+          tabs[isAnimating] = false; 
         }
+        bootstrapCustomEvent.call(next, shownEvent, component, activeTab);
       },
       triggerHide = function() {
-        removeClass(activeContent,active);
+        if (tabsContentContainer) {
+          activeContent[style][float] = left;
+          nextContent[style][float] = left;        
+          containerHeight = activeContent[scrollHeight];
+        }
+        
         addClass(nextContent,active);
-        setTimeout(function() {
-          addClass(nextContent,inClass);
-          nextContent[offsetHeight];
-          if (tabsContentContainer) addClass(tabsContentContainer,collapsing);
-          (function() {
-            bootstrapCustomEvent.call(next, showEvent, component, activeTab);
-            (function() {
-              if(tabsContentContainer) tabsContentContainer[style][height] = getMaxHeight(nextContent) + 'px'; // height animation
-              bootstrapCustomEvent.call(activeTab, hiddenEvent, component, next);
-            }());
-          }());
-        },20);
+        bootstrapCustomEvent.call(next, showEvent, component, activeTab);
+        
+        removeClass(activeContent,active);
+        bootstrapCustomEvent.call(activeTab, hiddenEvent, component, next);
+        
+        if (tabsContentContainer) {
+          nextHeight = nextContent[scrollHeight];
+          equalContents = nextHeight === containerHeight;
+          addClass(tabsContentContainer,collapsing);
+          tabsContentContainer[style][height] = containerHeight + 'px'; // height animation
+          tabsContentContainer[offsetHeight];
+          activeContent[style][float] = '';
+          nextContent[style][float] = '';
+        }
+  
+        if ( hasClass(nextContent, 'fade') ) {
+          setTimeout(function(){ // makes sure to go forward
+            addClass(nextContent,inClass);
+            emulateTransitionEnd(nextContent,triggerShow);
+          },20);
+        } else { triggerShow(); }        
       };
   
     if (!tabs) return; // invalidate 
   
+    // set default animation state
+    tabs[isAnimating] = false;
+      
     // private methods
     var getActiveTab = function() {
         var activeTabs = getElementsByClassName(tabs,active), activeTab;
@@ -1608,10 +1709,11 @@
       },
       // handler
       clickHandler = function(e) {
-        e.preventDefault();
-        next = e[target][getAttribute](dataToggle) === component || targetsReg.test(e[target][getAttribute]('href')) 
+        var href = e[target][getAttribute]('href');
+        e[preventDefault]();
+        next = e[target][getAttribute](dataToggle) === component || (href && href.charAt(0) === '#')
              ? e[target] : e[target][parentNode]; // allow for child elements like icons to use the handler
-        self.show();
+        !tabs[isAnimating] && !hasClass(next[parentNode],active) && self.show();
       };
   
     // public method
@@ -1621,46 +1723,37 @@
       activeTab = getActiveTab(); 
       activeContent = getActiveContent();
   
-      if ( (!activeTab[isAnimating] || !next[isAnimating]) && !hasClass(next[parentNode],active) ) {
-        activeTab[isAnimating] = next[isAnimating] = true;
-        removeClass(activeTab[parentNode],active);
-        addClass(next[parentNode],active);
+      tabs[isAnimating] = true;
+      removeClass(activeTab[parentNode],active);
+      addClass(next[parentNode],active);
   
-        if ( dropdown ) {
-          if ( !hasClass(element[parentNode][parentNode],'dropdown-menu') ) {
-            if (hasClass(dropdown,active)) removeClass(dropdown,active);
-          } else {
-            if (!hasClass(dropdown,active)) addClass(dropdown,active);
-          }
+      if ( dropdown ) {
+        if ( !hasClass(element[parentNode][parentNode],'dropdown-menu') ) {
+          if (hasClass(dropdown,active)) removeClass(dropdown,active);
+        } else {
+          if (!hasClass(dropdown,active)) addClass(dropdown,active);
         }
-        
-        if (tabsContentContainer) tabsContentContainer[style][height] = getMaxHeight(activeContent) + 'px'; // height animation
-  
-        (function(){
-          removeClass(activeContent,inClass);
-          bootstrapCustomEvent.call(activeTab, hideEvent, component, next);
-          (function(){
-            hasClass(activeContent, 'fade') ? emulateTransitionEnd(activeContent, triggerHide) : triggerHide();
-          }());
-        }());
-  
-        (function(){
-          hasClass(nextContent, 'fade') ? emulateTransitionEnd(nextContent, triggerShow) : triggerShow();
-        }());
       }
+      
+      bootstrapCustomEvent.call(activeTab, hideEvent, component, next);
+      
+      if (hasClass(activeContent, 'fade')) {
+        removeClass(activeContent,inClass);
+        emulateTransitionEnd(activeContent, triggerHide);
+      } else { triggerHide(); }
     };
   
     // init
     if ( !(stringTab in element) ) { // prevent adding event handlers twice
       on(element, clickEvent, clickHandler);
     }
-    if (this[height]) { tabsContentContainer = getActiveContent()[parentNode]; }
-    element[stringTab] = this;
+    if (self[height]) { tabsContentContainer = getActiveContent()[parentNode]; }
+    element[stringTab] = self;
   };
   
   // TAB DATA API
   // ============
-  initializeDataAPI(stringTab, Tab, dataToggle);
+  supports[push]( [ stringTab, Tab, '['+dataToggle+'="tab"]' ] );
   
   
   /* Native Javascript for Bootstrap 3 | Tooltip
@@ -1672,6 +1765,9 @@
   
     // initialization element
     element = queryElement(element);
+  
+    // set options
+    options = options || {};
   
     // DATA API
     var animationData = element[getAttribute](dataAnimation),
@@ -1686,6 +1782,10 @@
         fade = 'fade',
         div = 'div',
   
+        // check container
+        containerElement = queryElement(options[container]),
+        containerDataElement = queryElement(containerData),        
+  
         // maybe the element is inside a modal
         modal = getClosest(element,'.modal'),
         
@@ -1693,22 +1793,21 @@
         navbarFixedTop = getClosest(element,'.'+fixedTop),
         navbarFixedBottom = getClosest(element,'.'+fixedBottom);
   
-    // set options
-    options = options || {};
+    // set instance options
     this[animation] = options[animation] && options[animation] !== fade ? options[animation] : animationData || fade;
     this[placement] = options[placement] ? options[placement] : placementData || top;
     this[delay] = parseInt(options[delay] || delayData) || 200;
-    this[container] = queryElement(options[container]) ? queryElement(options[container]) 
-                    : queryElement(containerData) ? queryElement(containerData) 
+    this[container] = containerElement ? containerElement 
+                    : containerDataElement ? containerDataElement 
                     : navbarFixedTop ? navbarFixedTop
                     : navbarFixedBottom ? navbarFixedBottom
-                    : modal ? modal : body;
+                    : modal ? modal : DOC[body];
   
     // bind, event targets, title and constants
     var self = this, timer = 0, placementSetting = this[placement], tooltip = null,
-      titleString = element[getAttribute](title) || element[getAttribute](dataOriginalTitle);
+      titleString = element[getAttribute](title) || element[getAttribute](dataTitle) || element[getAttribute](dataOriginalTitle);
   
-    if ( !titleString ) return; // invalidate
+    if ( !titleString || titleString == "" ) return; // invalidate
   
     // private methods
     var removeToolTip = function() {
@@ -1716,26 +1815,24 @@
         tooltip = null; timer = null;
       },
       createToolTip = function() {
-        titleString = element[getAttribute](title) || element[getAttribute](dataOriginalTitle); // read the title again
-        tooltip = document.createElement(div);
+        titleString = element[getAttribute](title) || element[getAttribute](dataTitle) || element[getAttribute](dataOriginalTitle); // read the title again
+        if ( !titleString || titleString == "" ) return false; // invalidate
+        
+        tooltip = DOC[createElement](div);
         tooltip[setAttribute]('role',component);
   
-        var tooltipArrow = document.createElement(div), tooltipInner = document.createElement(div);
+        var tooltipArrow = DOC[createElement](div), tooltipInner = DOC[createElement](div);
         tooltipArrow[setAttribute](classString, component+'-arrow'); tooltipInner[setAttribute](classString,component+'-inner');
   
-        tooltip.appendChild(tooltipArrow); tooltip.appendChild(tooltipInner);
+        tooltip[appendChild](tooltipArrow); tooltip[appendChild](tooltipInner);
   
-        tooltipInner.innerHTML = titleString;
+        tooltipInner[innerHTML] = titleString;
   
-        self[container].appendChild(tooltip);
+        self[container][appendChild](tooltip);
         tooltip[setAttribute](classString, component + ' ' + placementSetting + ' ' + self[animation]);
       },
       updateTooltip = function () {
         styleTip(element,tooltip,placementSetting,self[container]);
-        if (!isElementInViewport(tooltip) ) { 
-          placementSetting = updatePlacement(placementSetting); 
-          styleTip(element,tooltip,placementSetting,self[container]); 
-        }
       },
       showTooltip = function () {
         !hasClass(tooltip,inClass) && ( addClass(tooltip,inClass) );
@@ -1743,8 +1840,10 @@
       // triggers
       showTrigger = function() {
         bootstrapCustomEvent.call(element, shownEvent, component);
+        !isIE8 && on( globalObject, resizeEvent, self.hide );      
       },
       hideTrigger = function() {
+        !isIE8 && off( globalObject, resizeEvent, self.hide );      
         removeToolTip();
         bootstrapCustomEvent.call(element, hiddenEvent, component);
       };
@@ -1755,7 +1854,7 @@
       timer = setTimeout( function() {
         if (tooltip === null) {
           placementSetting = self[placement]; // we reset placement in all cases
-          createToolTip();
+          if(createToolTip() == false) return;
           updateTooltip();
           showTooltip();
           bootstrapCustomEvent.call(element, showEvent, component);
@@ -1766,7 +1865,7 @@
     this.hide = function() {
       clearTimeout(timer);
       timer = setTimeout( function() {
-        if (tooltip && tooltip !== null && hasClass(tooltip,inClass)) {
+        if (tooltip && hasClass(tooltip,inClass)) {
           bootstrapCustomEvent.call(element, hideEvent, component);
           removeClass(tooltip,inClass);
           !!self[animation] ? emulateTransitionEnd(tooltip, hideTrigger) : hideTrigger();
@@ -1782,16 +1881,34 @@
     if ( !(stringTooltip in element) ) { // prevent adding event handlers twice
       element[setAttribute](dataOriginalTitle,titleString);
       element.removeAttribute(title);
-      on(element, mouseHover[0], this.show);
-      on(element, mouseHover[1], this.hide);
+      on(element, mouseHover[0], self.show);
+      on(element, mouseHover[1], self.hide);
     }
-    element[stringTooltip] = this;
+    element[stringTooltip] = self;
   };
   
   // TOOLTIP DATA API
   // =================
-  initializeDataAPI(stringTooltip, Tooltip, dataToggle);
+  supports[push]( [ stringTooltip, Tooltip, '['+dataToggle+'="tooltip"]' ] );
   
+  
+  
+  /* Native Javascript for Bootstrap 3 | Initialize Data API
+  --------------------------------------------------------*/
+  var initializeDataAPI = function( constructor, collection ){
+      for (var i=0, l=collection[length]; i<l; i++) {
+        new constructor(collection[i]);
+      }
+    },
+    initCallback = BSN.initCallback = function(lookUp){
+      lookUp = lookUp || DOC;
+      for (var i=0, l=supports[length]; i<l; i++) {
+        initializeDataAPI( supports[i][1], lookUp[querySelectorAll] (supports[i][2]) );
+      }
+    };
+  
+  // bulk initialize all components
+  DOC[body] ? initCallback() : on( DOC, 'DOMContentLoaded', function(){ initCallback(); } );
   
   return {
     Affix: Affix,

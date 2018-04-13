@@ -68,7 +68,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
         this.setSlideIndexAsSelected(index);
     };
     Swiper.prototype.setSlideIndexAsSelected = function(index) {
-        var sliders = this.container[0].querySelectorAll('.swiper-slide');
+        var sliders = this.$el[0].querySelectorAll('.swiper-slide');
         for (var i=0; i<sliders.length; i++) {
             var slider = sliders[i];
             if (slider.getAttribute('data-swiper-slide-index') == index) {
@@ -123,6 +123,14 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
     CustomEvent.prototype = window.Event.prototype;
 
     // Maplat App Class
+    var normalizeDegree = function(degree) {
+        while (1) {
+            if (degree <= 180 && degree > -180) break;
+            var times = degree > 0 ? -1.0 : 1.0;
+            degree = degree + times * 360.0;
+        }
+        return degree;
+    }
 
     var MaplatApp = function(appOption) {
         var app = this;
@@ -132,6 +140,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
         app.mobileIF = false;
         app.mapDiv = appOption.div || 'map_div';
         app.mapDivDocument = document.querySelector('#' + app.mapDiv);
+        app.mapDivDocument.classList.add('maplat');
         var noUI = appOption.no_ui || false;
         if (appOption.mobile_if) {
             app.mobileIF = true;
@@ -142,6 +151,13 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
         var lang = appOption.lang;
         if (!lang) {
             lang = browserLanguage();
+        }
+        var setting = appOption.setting;
+        var pwa_manifest = appOption.pwa_manifest || "./pwa/" + appid +"_manifest.json";
+        var pwa_worker = appOption.pwa_worker || "./service-worker.js";
+        var pwa_appleicon = appOption.pwa_appleicon || {default: "./pwa/" + appid + "_icon.png"};
+        if (pwa_appleicon instanceof String) {
+            pwa_appleicon = {default: pwa_appleicon};
         }
 
         // Add UI HTML Element
@@ -298,7 +314,8 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                     pois: []
                 };
                 resolve(appData);
-            }) : new Promise(function(resolve, reject) {
+            }) : setting ? Promise.resolve(setting) :
+            new Promise(function(resolve, reject) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', 'apps/' + appid + '.json', true);
                 xhr.responseType = 'json';
@@ -337,6 +354,29 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
 
         var promises = Promise.all([i18nPromise, appPromise]);
 
+        // PWA対応: 非同期処理
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', pwa_manifest, true);
+
+        xhr.onload = function(e) {
+            // 有無をチェックしているだけなのでデータは使わない
+            var head = document.querySelector('head');
+            head.appendChild((createElement('<link rel="manifest" href="' + pwa_manifest + '">'))[0]);
+            // service workerが有効なら、service-worker.js を登録します
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register(pwa_worker).then(function() {
+                    console.log('Service Worker Registered');
+                });
+            }
+            Object.keys(pwa_appleicon).forEach(function(key) {
+                var value = pwa_appleicon[key];
+                var sizes = key == 'default' ? '' : ' sizes="' + key + '"';
+                var tag = '<link rel="apple-touch-icon"' + sizes + ' href="' + value + '">';
+                head.appendChild((createElement(tag))[0]);
+            });
+        };
+        xhr.send();
+
         app.waitReady = promises.then(function(result) {
             app.appData = result[1];
             app.i18n = result[0][1];
@@ -350,7 +390,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
 
             if (!noUI) {
                 var lwModalElm = app.mapDivDocument.querySelector('#loadWait');
-                var lwModal = new bsn.Modal(lwModalElm);
+                var lwModal = new bsn.Modal(lwModalElm, {'root': app.mapDivDocument});
                 if (splash) {
                     app.mapDivDocument.querySelector('#splash_img').setAttribute('src', 'img/' + app.appData.splash);
                     app.mapDivDocument.querySelector('#splash_div').classList.remove('hide');
@@ -367,14 +407,14 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                         }
                     },
                     centeredSlides: true,
-                    loop: true,
-                    onClick: function(sw, e) {
-                        e.preventDefault();
-                        if (!sw.clickedSlide) return;
-                        var slide = sw.clickedSlide;
-                        app.changeMap(slide.getAttribute('data'));
-                        sw.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
-                    }
+                    loop: true
+                });
+                baseSwiper.on('click', function(e) {
+                    e.preventDefault();
+                    if (!baseSwiper.clickedSlide) return;
+                    var slide = baseSwiper.clickedSlide;
+                    app.changeMap(slide.getAttribute('data'));
+                    baseSwiper.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
                 });
                 overlaySwiper = new Swiper('.overlay-swiper', {
                     slidesPerView: 2,
@@ -387,14 +427,14 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                         }
                     },
                     centeredSlides: true,
-                    loop: true,
-                    onClick: function(sw, e) {
-                        e.preventDefault();
-                        if (!sw.clickedSlide) return;
-                        var slide = sw.clickedSlide;
-                        app.changeMap(slide.getAttribute('data'));
-                        sw.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
-                    }
+                    loop: true
+                });
+                overlaySwiper.on('click', function(e) {
+                    e.preventDefault();
+                    if (!overlaySwiper.clickedSlide) return;
+                    var slide = overlaySwiper.clickedSlide;
+                    app.changeMap(slide.getAttribute('data'));
+                    overlaySwiper.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
                 });
                 app.mapDivDocument.querySelector('.map-title').addEventListener('click', function() {
                     var from = app.mapObject.getSource();
@@ -418,7 +458,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                         }
                     });
                     var mapInfoModalElm = app.mapDivDocument.querySelector('#map_info');
-                    var mapInfoModal = new bsn.Modal(mapInfoModalElm);
+                    var mapInfoModal = new bsn.Modal(mapInfoModalElm, {'root': app.mapDivDocument});
                     mapInfoModal.show();
                 });
             }
@@ -459,25 +499,19 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
             }
             if (!noUI) {
                 var shown = false;
-                app.mapObject.on('gps_request', function() {
-                    shown = true;
-                    var gwModalElm = app.mapDivDocument.querySelector('#gpsWait');
-                    var gwModal = new bsn.Modal(gwModalElm);
-                    gwModal.show();
-                });
-                app.mapObject.on('gps_result', function(evt) {
-                    var result = evt.frameState;
+                var gpsWaitPromise = null;
+                function showGPSresult(result) {
                     if (result && result.error) {
                         app.currentPosition = null;
                         if (result.error == 'gps_out' && shown) {
                             shown = false;
                             var gwModalElm = app.mapDivDocument.querySelector('#gpsWait');
-                            var gwModal = new bsn.Modal(gwModalElm);
+                            var gwModal = new bsn.Modal(gwModalElm, {'root': app.mapDivDocument});
                             gwModal.hide();
                             app.mapDivDocument.querySelector('#gpsDialogTitle').innerText = app.t('app.out_of_map');
                             app.mapDivDocument.querySelector('#gpsDialogBody').innerText = app.t('app.out_of_map_desc');
                             var gdModalElm = app.mapDivDocument.querySelector('#gpsDialog');
-                            var gdModal = new bsn.Modal(gdModalElm);
+                            var gdModal = new bsn.Modal(gdModalElm, {'root': app.mapDivDocument});
                             gdModal.show();
                         }
                     } else {
@@ -486,8 +520,39 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                     if (shown) {
                         shown = false;
                         var gwModalElm = app.mapDivDocument.querySelector('#gpsWait');
-                        var gwModal = new bsn.Modal(gwModalElm);
+                        var gwModal = new bsn.Modal(gwModalElm, {'root': app.mapDivDocument});
                         gwModal.hide();
+                    }
+                }
+                app.mapObject.on('gps_request', function() {
+                    gpsWaitPromise = 'gps_request';
+                    var promises = [
+                        new Promise(function(resolve) {
+                            if (gpsWaitPromise != 'gps_request') {
+                                resolve(gpsWaitPromise);
+                            } else gpsWaitPromise = resolve;
+                        })
+                    ];
+                    shown = true;
+                    var gwModalElm = app.mapDivDocument.querySelector('#gpsWait');
+                    var gwModal = new bsn.Modal(gwModalElm, {'root': app.mapDivDocument});
+                    gwModal.show();
+                    // 200m秒以上最低待たないと、Modalがうまく動かない場合がある
+                    promises.push(new Promise(function(resolve) {
+                        setTimeout(resolve, 200);
+                    }));
+                    Promise.all(promises).then(function(results) {
+                        showGPSresult(results[0]);
+                    });
+                });
+                app.mapObject.on('gps_result', function(evt) {
+                    if (gpsWaitPromise == 'gps_request') {
+                        gpsWaitPromise = evt.frameState;
+                    } else if (gpsWaitPromise) {
+                        gpsWaitPromise(evt.frameState);
+                        gpsWaitPromise = null;
+                    } else if (!shown) {
+                        showGPSresult(evt.frameState);
                     }
                 });
                 if (fakeGps) {
@@ -501,18 +566,20 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                 }
             }
             app.pois = app.appData.pois;
+            app.lines = [];
 
             document.querySelector('title').innerHTML = app.translate(appName);
 
             var dataSource = app.appData.sources;
 
-            var sourcePromise = splash ? [
+            var fadeTime = splash ? 1000 : 200;
+            var sourcePromise = noUI ? [] : [
                 new Promise(function(resolve) {
                     setTimeout(function() {
                         resolve();
-                    }, 1000);
+                    }, fadeTime);
                 })
-            ] :[];
+            ];
             var commonOption = {
                 home_position: homePos,
                 merc_zoom: defZoom,
@@ -524,13 +591,15 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
             }
 
             return Promise.all(sourcePromise).then(function(sources) {
-                if (splash) {
-                    sources.shift();
-                }
+                app.mercSrc = sources.reduce(function(prev, curr) {
+                    if (prev) return prev;
+                    if (curr instanceof ol.source.NowMap) return curr;
+                }, null);
 
                 if (!noUI) {
+                    sources.shift();
                     var lwModalElm = app.mapDivDocument.querySelector('#loadWait');
-                    var lwModal = new bsn.Modal(lwModalElm);
+                    var lwModal = new bsn.Modal(lwModalElm, {'root': app.mapDivDocument});
                     lwModal.hide();
                 }
 
@@ -565,7 +634,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                 if (!noUI) {
                     baseSwiper.on;
                     overlaySwiper.on;
-                    //swiper.setSlideIndex(sources.length - 1);
+                    // swiper.setSlideIndex(sources.length - 1);
                     app.ellips();
                 }
 
@@ -580,7 +649,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                 app.changeMap(initial.sourceID);
 
                 function showInfo(data) {
-                    app.dispatchEvent(new CustomEvent('clickPoi', data));
+                    app.dispatchEvent(new CustomEvent('clickMarker', data));
                     if (!app.mobileIF) {
                         app.mapDivDocument.querySelector('#poi_name').innerText = app.translate(data.name);
                         if (data.url || data.html) {
@@ -605,7 +674,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                             app.mapDivDocument.querySelector('#poi_desc').innerHTML = app.translate(data.desc).replace(/\n/g, '<br>');
                         }
                         var piModalElm = app.mapDivDocument.querySelector('#poi_info');
-                        var piModal = new bsn.Modal(piModalElm);
+                        var piModal = new bsn.Modal(piModalElm, {'root': app.mapDivDocument});
                         piModal.show();
                     }
                 }
@@ -619,6 +688,17 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                         });
                     if (feature) {
                         showInfo(feature.get('datum'));
+                    } else {
+                        if (app.mobileIF) {
+                            var xy = evt.coordinate;
+                            app.from.xy2MercAsync(xy).then(function(merc){
+                                var lnglat = ol.proj.transform(merc, 'EPSG:3857', 'EPSG:4326');
+                                app.dispatchEvent(new CustomEvent('clickMap', {
+                                    longitude: lnglat[0],
+                                    latitude: lnglat[1]
+                                }));
+                            });
+                        }
                     }
                 };
                 app.mapObject.on('click', clickHandler);
@@ -714,6 +794,33 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                 };
                 app.mapObject.on('postrender', backMapMove);
 
+                if (app.mobileIF) {
+                    app.mapObject.on('postrender', function(evt) {
+                        var view = app.mapObject.getView();
+                        var rotation = normalizeDegree(view.getRotation() * 180 / Math.PI);
+                        app.from.size2MercsAsync().then(function(mercs) {
+                            return app.mercSrc.mercs2SizeAsync(mercs);
+                        }).then(function(size) {
+                            if (app.mobileMapMoveBuffer && app.mobileMapMoveBuffer[0][0] == size[0][0] &&
+                                app.mobileMapMoveBuffer[0][1] == size[0][1] &&
+                                app.mobileMapMoveBuffer[1] == size[1] &&
+                                app.mobileMapMoveBuffer[2] == size[2]) {
+                                return;
+                            }
+                            app.mobileMapMoveBuffer = size;
+                            var ll = ol.proj.transform(size[0], 'EPSG:3857', 'EPSG:4326');
+                            app.dispatchEvent(new CustomEvent('changeViewpoint', {
+                                longitude: ll[0],
+                                latitude: ll[1],
+                                mercator: size[0],
+                                zoom: size[1],
+                                direction: normalizeDegree(size[2] * 180 / Math.PI),
+                                rotation: rotation
+                            }));
+                        });
+                    });
+                }
+
                 app.sliderCommon.on('propertychange', function(evt) {
                     if (evt.key === 'slidervalue') {
                         app.mapObject.setOpacity(app.sliderCommon.get(evt.key) * 100);
@@ -728,45 +835,69 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
     MaplatApp.prototype.setMarker = function(data) {
         var app = this;
         app.logger.debug(data);
-        if (typeof data == 'string') {
-            data = JSON.parse(data);
-        }
-        var lat = data.latitude;
-        var long = data.longitude;
+        var lnglat = data.lnglat || [data.lng || data.longitude, data.lat || data.latitude];
         var x = data.x;
         var y = data.y;
-        var src = app.mapObject.getSource();
+        var src = app.from;
         var promise = (x && y) ?
             new Promise(function(resolve) {
                 resolve(src.xy2HistMapCoords([x, y]));
             }):
             (function() {
-                var merc = ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857');
+                var merc = ol.proj.transform(lnglat, 'EPSG:4326', 'EPSG:3857');
                 return src.merc2XyAsync(merc);
             })();
-        var datum = data.data;
         promise.then(function(xy) {
-            app.mapObject.setMarker(xy, {'datum': datum}, datum.icon);
+            if (src.insideCheckHistMapCoords(xy)) {
+                app.mapObject.setMarker(xy, {'datum': data}, data.icon);
+            }
         });
     };
 
-    MaplatApp.prototype.resetMarker = function(data) {
+    MaplatApp.prototype.resetMarker = function() {
         this.mapObject.resetMarker();
     };
-       
-    MaplatApp.prototype.setGPSMarker = function(data) {
-       if (typeof data == 'string') {
-           data = JSON.parse(data);
-       }
-        var lnglat = [data.longitude, data.latitude];
-        var acc = data.accuracy;
-        var gpsVal = {lnglat: lnglat, acc: acc};
-       
+
+    MaplatApp.prototype.setLine = function(data) {
         var app = this;
-       
-       //alert("app:" + app + " mapObject:" + app.mapObject );
-       
-       app.mapObject.setGPSMarker(gpsVal, true);
+        app.logger.debug(data);
+
+        var xyPromises = data.lnglats.map(function(lnglat){
+            var merc = ol.proj.transform(lnglat, 'EPSG:4326', 'EPSG:3857');
+            return app.from.merc2XyAsync(merc);
+        });
+        Promise.all(xyPromises).then(function(xys){
+            app.mapObject.setLine(xys, data.stroke);
+        });
+    };
+
+    MaplatApp.prototype.resetLine = function() {
+        this.mapObject.resetLine();
+    };
+
+    MaplatApp.prototype.addMarker = function(data) {
+        this.pois.push(data);
+        this.setMarker(data);
+    };
+
+    MaplatApp.prototype.clearMarker = function() {
+        this.pois = [];
+        this.resetMarker();
+    };
+
+    MaplatApp.prototype.addLine = function(data) {
+        this.lines.push(data);
+        this.setLine(data);
+    };
+
+    MaplatApp.prototype.clearLine = function() {
+        this.lines = [];
+        this.resetLine();
+    };
+
+    MaplatApp.prototype.setGPSMarker = function(position) {
+        this.currentPosition = position;
+        this.mapObject.setGPSMarker(position, true);
     };
 
     MaplatApp.prototype.changeMap = function(sourceID) {
@@ -835,41 +966,38 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                     view.setZoom(size[1]);
                     view.setRotation(size[2]);
                 } else if (!app.__init) {
-                    app.mapDivDocument.querySelector('#gpsDialogTitle').innerText = app.t('app.out_of_map');
-                    app.mapDivDocument.querySelector('#gpsDialogBody').innerText = app.t('app.out_of_map_area');
-                    var gdModalElm = app.mapDivDocument.querySelector('#gpsDialog');
-                    var gdModal = new bsn.Modal(gdModalElm);
-                    gdModal.show();
+                    if (app.mobileIF) {
+                        app.dispatchEvent(new CustomEvent('outOfMap', {}));
+                    } else {
+                        app.mapDivDocument.querySelector('#gpsDialogTitle').innerText = app.t('app.out_of_map');
+                        app.mapDivDocument.querySelector('#gpsDialogBody').innerText = app.t('app.out_of_map_area');
+                        var gdModalElm = app.mapDivDocument.querySelector('#gpsDialog');
+                        var gdModal = new bsn.Modal(gdModalElm, {'root': app.mapDivDocument});
+                        gdModal.show();
+                    }
                     to.goHome();
                 }
                 to.setGPSMarker(app.currentPosition, true);
-                app.mapObject.resetMarker();
+                app.resetMarker();
                 for (var i = 0; i < app.pois.length; i++) {
-                    (function(datum) {
-                        var lngLat = [datum.lng, datum.lat];
-                        var merc = ol.proj.transform(lngLat, 'EPSG:4326', 'EPSG:3857');
-
-                        to.merc2XyAsync(merc).then(function(xy) {
-                            if (to.insideCheckHistMapCoords(xy)) {
-                                app.mapObject.setMarker(xy, {'datum': datum}, datum.icon);
-                            }
-                        });
+                    (function(data) {
+                        app.setMarker(data);
                     })(app.pois[i]);
                 }
                 if (to.pois) {
                     for (var i = 0; i < to.pois.length; i++) {
-                        (function(datum) {
-                            var lngLat = [datum.lng, datum.lat];
-                            var merc = ol.proj.transform(lngLat, 'EPSG:4326', 'EPSG:3857');
-
-                            to.merc2XyAsync(merc).then(function(xy) {
-                                if (to.insideCheckHistMapCoords(xy)) {
-                                    app.mapObject.setMarker(xy, {'datum': datum}, datum.icon);
-                                }
-                            });
+                        (function(data) {
+                            app.setMarker(data);
                         })(to.pois[i]);
                     }
                 }
+                app.resetLine();
+                for (var i = 0; i < app.lines.length; i++) {
+                    (function(data) {
+                        app.setLine(data);
+                    })(app.lines[i]);
+                }
+
                 app.mapObject.updateSize();
                 app.mapObject.renderSync();
 
@@ -891,6 +1019,10 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                 }
             });
         }
+    };
+
+    MaplatApp.prototype.moveTo = function(cond) {
+        this.from.moveTo(cond);
     };
 
     MaplatApp.prototype.convertParametersFromCurrent = function(to, callback) {

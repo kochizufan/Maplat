@@ -15,16 +15,9 @@
 
 @property (nonatomic, assign) id <MaplatCacheDelegate> delegate;
 
-- (void)webView:(UIWebView *)webView callApp2WebWithKey:(NSString *)key value:(NSString *)value;
-
 @end
 
 @protocol MaplatCacheDelegate <NSObject>
 @optional
-- (void)maplatCache:(MaplatCache *)maplatCache didReceiveKey:(NSString *)key value:(NSString *)value;
-@end
-
-@interface UIView (FindUIViewController)
-- (UIViewController *) firstAvailableUIViewController;
-- (id) traverseResponderChainForUIViewController;
+- (void)onCallWeb2AppWithKey:(NSString *)key value:(NSString *)value;
 @end

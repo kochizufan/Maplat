@@ -9,11 +9,22 @@
 #import "ViewController.h"
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "MaplatCache.h"
+#import "MaplatBridge.h"
 
-@interface ViewController () <CLLocationManagerDelegate, MaplatCacheDelegate>
+const double BaseLongitude = 141.1529555;
+const double BaseLatitude = 39.7006006;
+
+@interface ViewController () <CLLocationManagerDelegate, MaplatBridgeDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (retain, nonatomic) NSString *nowMap;
+@property (nonatomic) double nowDirection;
+@property (nonatomic) double nowRotation;
+
+@property (nonatomic, strong) MaplatBridge *maplatBridge;
+
+@property (nonatomic) double defaultLongitude;
+@property (nonatomic) double defaultLatitude;
 
 @end
 
@@ -27,17 +38,66 @@
     self.webView = [UIWebView new];
     
     self.view = self.webView;
+    
+    self.nowMap = @"morioka_ndl";
+    self.nowDirection = 0;
+    self.nowRotation = 0;
+    
+    // テストボタンの生成
+    for (int i=1; i<=6; i++) {
+        UIButton *button = [UIButton new];
+        button.tag = i;
+        button.frame = CGRectMake(10, i*60, 100, 40);
+        button.alpha = 0.8;
+        button.backgroundColor = [UIColor lightGrayColor];
+        switch (i) {
+            case 1:
+                [button setTitle:@"地図切替" forState:UIControlStateNormal];
+                break;
+            case 2:
+                [button setTitle:@"ﾏｰｶｰ追加" forState:UIControlStateNormal];
+                break;
+            case 3:
+                [button setTitle:@"ﾏｰｶｰ消去" forState:UIControlStateNormal];
+                break;
+            case 4:
+                [button setTitle:@"地図移動" forState:UIControlStateNormal];
+                break;
+            case 5:
+                [button setTitle:@"東を上" forState:UIControlStateNormal];
+                break;
+            case 6:
+                [button setTitle:@"右を上" forState:UIControlStateNormal];
+                break;
+            default:
+                [button setTitle:[NSString stringWithFormat:@"button %d", i] forState:UIControlStateNormal];
+                break;
+        }
+        [button addTarget:self action:@selector(testButton:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:button];
+    }
+
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     [NSThread sleepForTimeInterval:10]; //Safariのデバッガを繋ぐための時間。本番では不要。
-    MaplatCache *cache = (MaplatCache *)[NSURLCache sharedURLCache];
-    cache.delegate = self;
+    _defaultLongitude = 0;
+    _defaultLatitude = 0;
     
-    self.webView.delegate = cache;
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://localresource/mobile_sample.html"]]];
+    _maplatBridge = [[MaplatBridge alloc] initWithWebView:self.webView appID:@"mobile" setting:@{
+        @"app_name" : @"モバイルアプリ",
+        @"sources" : @[
+            @"gsi",
+            @"osm",
+            @{
+                @"mapID" : @"morioka_ndl"
+            }
+        ],
+        @"pois" : @[]
+    }];
+    _maplatBridge.delegate = self;
     
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
@@ -54,16 +114,46 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - MaplatCacheDelegate
+#pragma mark - MaplatBridgeDelegate
 
-- (void)maplatCache:(MaplatCache *)maplatCache didReceiveKey:(NSString *)key value:(NSString *)value {
-    NSLog(@"didReceiveKey:%@ value:%@", key, value);
-    
-    if ([key isEqualToString:@"callApp2Web"]) {
-        if ([value isEqualToString:@"ready"]) {
-            [_locationManager startUpdatingLocation];
-        }
-    }
+- (void)onReady
+{
+    [self addMarkers];
+    [_locationManager startUpdatingLocation];
+}
+
+- (void)onClickMarkerWithMarkerId:(long)markerId markerData:(id)markerData
+{
+    NSString *message = [NSString stringWithFormat:@"clickMarker ID:%ld DATA:%@", markerId, markerData];
+    [self toast:message];
+}
+
+- (void)onChangeViewpointWithLatitude:(double)latitude longitude:(double)longitude zoom:(double)zoom direction:(double)direction rotation:(double)rotation
+{
+    NSLog(@"LatLong: (%f, %f) zoom: %f direction: %f rotation %f", latitude, longitude, zoom, direction, rotation);
+}
+
+- (void)onOutOfMap
+{
+    [self toast:@"地図範囲外です"];
+}
+
+- (void)onClickMapWithLatitude:(double)latitude longitude:(double)longitude
+{
+    NSString *message = [NSString stringWithFormat:@"clickMap latitude:%f longitude:%f", latitude, longitude];
+    [self toast:message];
+}
+
+- (void)addMarkers
+{
+    [_maplatBridge addLineWithLngLat:@[@[@141.1501111, @39.69994722], @[@141.1529555, @39.7006006]] stroke:nil];
+    [_maplatBridge addLineWithLngLat:@[@[@141.151995, @39.701599], @[@141.151137, @39.703736], @[@141.1521671, @39.7090232]]
+                                stroke:@{@"color":@"#ffcc33", @"width":@2}];
+    [_maplatBridge addMarkerWithLatitude:39.69994722 longitude:141.1501111 markerId:1 stringData:@"001"];
+    [_maplatBridge addMarkerWithLatitude:39.7006006 longitude:141.1529555 markerId:5 stringData:@"005"];
+    [_maplatBridge addMarkerWithLatitude:39.701599 longitude:141.151995 markerId:6 stringData:@"006"];
+    [_maplatBridge addMarkerWithLatitude:39.703736 longitude:141.151137 markerId:7 stringData:@"007"];
+    [_maplatBridge addMarkerWithLatitude:39.7090232 longitude:141.1521671 markerId:9 stringData:@"009"];
 }
 
 #pragma mark - Location Manager
@@ -75,9 +165,20 @@
     if (locationAge > 5.0) return;
     
     NSLog(@"location updated. newLocation:%@", newLocation);
+
+    double latitude;
+    double longitude;
+    if (_defaultLatitude == 0 || _defaultLongitude == 0) {
+        _defaultLatitude = newLocation.coordinate.latitude;
+        _defaultLongitude = newLocation.coordinate.longitude;
+        latitude = BaseLatitude;
+        longitude = BaseLongitude;
+    } else {
+        latitude = BaseLatitude - _defaultLatitude + newLocation.coordinate.latitude;
+        longitude = BaseLongitude - _defaultLongitude + newLocation.coordinate.longitude;
+    }
     
-    NSString *value = [NSString stringWithFormat:@"{\"latitude\":%f,\"longitude\":%f,\"accuracy\":%f}", newLocation.coordinate.latitude, newLocation.coordinate.longitude, newLocation.horizontalAccuracy];
-    [self callApp2WebWithKey:@"setGPSMarker" value:value];
+    [_maplatBridge setGPSMarkerWithLatitude:latitude longitude:longitude accuracy:newLocation.horizontalAccuracy];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
@@ -87,13 +188,96 @@
     }
 }
 
-#pragma mark -
+#pragma mark - test
 
-
-- (void)callApp2WebWithKey:(NSString *)key value:(NSString *)value
-{
-    [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"javascript:jsBridge.callApp2Web('%@','%@');", key, value]];
+// テストボタン　アクション
+- (void)testButton:(UIButton *) button {
+    NSString *nextMap;
+    double nextDirection;
+    double nextRotation;
+    switch((int)button.tag) {
+        case 1:
+            nextMap = [self.nowMap isEqualToString:@"morioka_ndl"] ? @"gsi" : @"morioka_ndl";
+            [_maplatBridge changeMap:nextMap];
+            self.nowMap = nextMap;
+            break;
+        case 2:
+            [self addMarkers];
+            break;
+        case 3:
+            [_maplatBridge clearLine];
+            [_maplatBridge clearMarker];
+            break;
+        case 4:
+            [_maplatBridge setViewpointWithLatitude:39.69994722 longitude:141.1501111];
+            break;
+        case 5:
+            if (_nowDirection == 0) {
+                nextDirection = -90;
+                [button setTitle:@"南を上" forState:UIControlStateNormal];
+            } else if (_nowDirection == -90) {
+                nextDirection = 180;
+                [button setTitle:@"西を上" forState:UIControlStateNormal];
+            } else if (_nowDirection == 180) {
+                nextDirection = 90;
+                [button setTitle:@"北を上" forState:UIControlStateNormal];
+            } else {
+                nextDirection = 0;
+                [button setTitle:@"東を上" forState:UIControlStateNormal];
+            }
+            [_maplatBridge setDirection:nextDirection];
+            _nowDirection = nextDirection;
+            break;
+        case 6:
+            if (_nowRotation == 0) {
+                nextRotation = -90;
+                [button setTitle:@"下を上" forState:UIControlStateNormal];
+            } else if (_nowRotation == -90) {
+                nextRotation = 180;
+                [button setTitle:@"左を上" forState:UIControlStateNormal];
+            } else if (_nowRotation == 180) {
+                nextRotation = 90;
+                [button setTitle:@"上を上" forState:UIControlStateNormal];
+            } else {
+                nextRotation = 0;
+                [button setTitle:@"右を上" forState:UIControlStateNormal];
+            }
+            [_maplatBridge setRotation:nextRotation];
+            _nowRotation = nextRotation;
+            break;
+    }
 }
 
+// トースト
+- (void)toast:(NSString *)message
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    int duration = 1; // duration in seconds
+    [self presentViewController: alert animated:YES completion:^(){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        });
+    }];
+}
 
+@end
+
+@implementation UIView (FindUIViewController)
+- (UIViewController *) firstAvailableUIViewController {
+    // convenience function for casting and to "mask" the recursive function
+    return (UIViewController *)[self traverseResponderChainForUIViewController];
+}
+
+- (id) traverseResponderChainForUIViewController {
+    id nextResponder = [self nextResponder];
+    if ([nextResponder isKindOfClass:[UIViewController class]]) {
+        return nextResponder;
+    } else if ([nextResponder isKindOfClass:[UIView class]]) {
+        return [nextResponder traverseResponderChainForUIViewController];
+    } else {
+        return nil;
+    }
+}
 @end
