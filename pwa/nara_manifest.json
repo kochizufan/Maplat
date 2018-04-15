@@ -23,6 +23,6 @@
     "sizes": "512x512",
     "type": "image/png"
   }],
-  "start_url": "https://s.maplat.jp/r/naramap",
+  "start_url": "../?appid=nara&overlay=true",
   "display": "standalone"
 }
