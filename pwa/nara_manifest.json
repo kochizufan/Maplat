@@ -1,7 +1,7 @@
 {
   "name": "ぷらっと奈良",
   "short_name": "ぷら奈良",
-  "background_color": "#fc980c",
+  "background_color": "#f6f0d3",
   "icons": [{
     "src": "./nara_icon-96.png",
     "sizes": "96x96",
