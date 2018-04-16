@@ -1,8 +1,9 @@
 {
     "app_name": {
-        "ja": "会津若松市古地図アプリ",
-        "en": "Aizuwakamatsu Historical Map App"
+        "ja": "ぷらっと会津若松",
+        "en": "Maplat Aizuwakamatsu"
     },
+    "splash" : "aizu_splash.png",
     "lang": "ja",
     "fake_gps": true,
     "fake_center": {
