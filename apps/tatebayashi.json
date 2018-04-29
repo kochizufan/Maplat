@@ -1,0 +1,46 @@
+{
+    "app_name" : "ぷらっと館林",
+    "fake_gps" : true,
+    "fake_center" : "千眼寺",
+    "fake_radius" : 10,
+    "home_position" : [ 139.532100, 36.249302 ],
+    "default_zoom" : 17,
+    "sources" : [
+        {
+            "mapID" : "tatebayashi-yorimoimap-180405-1",
+            "label" : "よりもい1"
+        },{
+            "mapID" : "tatebayashi-yorimoimap-180405-2",
+            "label" : "よりもい2"
+        },{
+            "mapID" : "tatebayashi-yorimoimap-180405-3",
+            "label" : "よりもい3"
+        },{
+            "mapID" : "tatebayashi-yorimoimap-180405-4",
+            "label" : "よりもい4"
+        },{
+            "mapID" : "tatebayashi-yorimoimap-180405-5",
+            "label" : "よりもい5"
+        },{
+            "mapID" : "tatebayashi_rekishinokomichi_1",
+            "label" : "歴史小径1"
+        },{
+            "mapID" : "tatebayashi_rekishinokomichi_2",
+            "label" : "歴史小径2"
+        },
+        "gsi",
+        {
+            "mapID": "gsi_ortho",
+            "label": {
+                "ja": "地理院オルソ",
+                "en": "GSI Ortho"
+            },
+            "attr": "The Geospatial Information Authority of Japan",
+            "maptype": "base",
+            "url": "https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
+            "maxZoom": 18
+        },
+        "osm"
+    ], 
+    "pois" :[]
+}
