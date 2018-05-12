@@ -17,7 +17,7 @@
     "default_zoom": 17,
     "sources": [
         {
-            "mapID": "iwaki_taira_genna",
+            "mapID": "iwaki_taira_genna2",
             "maptype": "maplat",
             "algorythm": "tin",
             "label": {
