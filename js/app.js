@@ -60,7 +60,8 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
     };
 
     Swiper.prototype.setSlideIndex = function(index) {
-        this.slideTo(index + this.params.slidesPerView); // <= Maybe bug of swiper;
+        // this.slideTo(index + this.params.slidesPerView); // <= Maybe bug of swiper;
+        this.slideToLoop(index);
         this.setSlideIndexAsSelected(index);
     };
     Swiper.prototype.setSlideIndexAsSelected = function(index) {
@@ -152,7 +153,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
         // Modal記述の動作を調整する関数
         modalSetting = function(target) {
             var modalElm = app.mapDivDocument.querySelector('#modalBase');
-            ['poi', 'map', 'load', 'gpsW', 'gpsD'].map(function(target_) {
+            ['poi', 'map', 'load', 'gpsW', 'gpsD', 'help'].map(function(target_) {
                 var className = 'modal_' + target_;
                 if (target == target_) {
                     modalElm.classList.add(className);
@@ -226,17 +227,41 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
             '<span id="modal_title"></span>' +
             '<span id="modal_load_title" data-i18n="html.app_loading_title"></span>' +
             '<span id="modal_gpsW_title" data-i18n="html.acquiring_gps"></span>' +
+            '<span id="modal_help_title" data-i18n="html.help_title"></span>' +
 
             '</h4>' +
             '</div>' +
             '<div class="modal-body">' +
+
+            '<div id="modal_help_content">' +
+            '<div id="help_content">' +
+            '<span data-i18n-html="html.help_using_maplat"></span>' +
+            '<p class="col-xs-12 help_img"><img src="parts/fullscreen.png"></p>' +
+            '<h4 data-i18n="html.help_operation_title"></h4>' +
+            '<p data-i18n-html="html.help_operation_content" class="recipient"></p>' +
+            '<h4 data-i18n="html.help_selection_title"></h4>' +
+            '<p data-i18n-html="html.help_selection_content" class="recipient"></p>' +
+            '<h4 data-i18n="html.help_gps_title"></h4>' +
+            '<p data-i18n-html="html.help_gps_content" class="recipient"></p>' +
+            '<h4 data-i18n="html.help_poi_title"></h4>' +
+            '<p data-i18n-html="html.help_poi_content" class="recipient"></p>' +
+            '<h4 data-i18n="html.help_etc_title"></h4>' +
+            '<ul>' +
+            '<li data-i18n-html="html.help_etc_attr" class="recipient"></li>' +
+            '<li data-i18n-html="html.help_etc_help" class="recipient"></li>' +
+            '<li data-i18n-html="html.help_etc_slider" class="recipient"></li>' +
+            '</ul>' +
+            '<p><a href="https://github.com/code4nara/Maplat/wiki" target="_blank">Maplat</a>' +
+            ' © 2015- Kohei Otsuka, Code for Nara, RekishiKokudo project</p>' +
+            '</div>' +
+            '</div>' +
 
             '<div id="modal_poi_content">' +
             '<div id="poi_web" class="embed-responsive embed-responsive-60vh">' +
             '<iframe id="poi_iframe" class="iframe_poi" frameborder="0" src=""></iframe>' +
             '</div>' +
             '<div id="poi_data" class="hide">' +
-            '<p class="col-xs-12 poi_img"><img id="poi_img" src=""></img></p>' +
+            '<p class="col-xs-12 poi_img"><img id="poi_img" src=""></p>' +
             '<p class="recipient" id="poi_address"></p>' +
             '<p class="recipient" id="poi_desc"></p>' +
             '</div>' +
@@ -244,7 +269,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
 
             '<div id="modal_map_content">' +
 
-            ol.source.HistMap.META_KEYS.map(function(key) {
+            ol.source.META_KEYS.map(function(key) {
                 if (key == 'title' || key == 'officialTitle') return '';
 
                 return '<div class="recipients" id="' + key + '_div"><dl class="dl-horizontal">' +
@@ -332,7 +357,12 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                     var key = target.getAttribute('data-i18n');
                     target.innerText = t(key);
                 }
-
+                var i18nTargets = app.mapDivDocument.querySelectorAll('[data-i18n-html]');
+                for (var i=0; i<i18nTargets.length; i++) {
+                    var target = i18nTargets[i];
+                    var key = target.getAttribute('data-i18n-html');
+                    target.innerHTML = t(key);
+                }
                 resolve([t, i18n]);
             });
         });
@@ -372,7 +402,7 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
             app.i18n = result[0][1];
             app.t = result[0][0];
             var baseSwiper, overlaySwiper;
-            ol.source.HistMap.setI18n(app.i18n, app.t);
+            ol.source.setI18n(app.i18n, app.t);
 
             // Check Splash data
             var splash = false;
@@ -426,32 +456,6 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                     var slide = overlaySwiper.clickedSlide;
                     app.changeMap(slide.getAttribute('data'));
                     overlaySwiper.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
-                });
-                app.mapDivDocument.querySelector('.map-title').addEventListener('click', function() {
-                    var from = app.mapObject.getSource();
-
-                    if (!ol.source.HistMap.META_KEYS.reduce(function(prev, curr) {
-                        if (curr == 'title') return prev;
-                        return from[curr] || prev;
-                    }, false)) return;
-
-                    app.mapDivDocument.querySelector('#modal_title').innerText = from.officialTitle || from.title;
-                    ol.source.HistMap.META_KEYS.map(function(key) {
-                        if (key == 'title' || key == 'officialTitle') return;
-                        if (!from[key] || from[key] == '') {
-                            app.mapDivDocument.querySelector('#' + key + '_div').classList.add('hide');
-                        } else {
-                            app.mapDivDocument.querySelector('#' + key + '_div').classList.remove('hide');
-                            app.mapDivDocument.querySelector('#' + key).innerHTML =
-                                (key == 'license' || key == 'dataLicense') ?
-                                    '<img src="parts/' + from[key].toLowerCase().replace(/ /g, '_') + '.png">' :
-                                    from[key];
-                        }
-                    });
-                    var modalElm = app.mapDivDocument.querySelector('#modalBase');
-                    var modal = new bsn.Modal(modalElm, {'root': app.mapDivDocument});
-                    modalSetting('map');
-                    modal.show();
                 });
             }
 
@@ -546,6 +550,40 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                         showGPSresult(evt.frameState);
                     }
                 });
+                app.mapObject.on('click_control', function(evt) {
+                    var control = evt.frameState.control;
+                    if (control == 'copyright') {
+                        var from = app.from; // app.mapObject.getSource();
+
+                        if (!ol.source.META_KEYS.reduce(function(prev, curr) {
+                                if (curr == 'title') return prev;
+                                return from[curr] || prev;
+                            }, false)) return;
+
+                        app.mapDivDocument.querySelector('#modal_title').innerText = from.officialTitle || from.title;
+                        ol.source.META_KEYS.map(function(key) {
+                            if (key == 'title' || key == 'officialTitle') return;
+                            if (!from[key] || from[key] == '') {
+                                app.mapDivDocument.querySelector('#' + key + '_div').classList.add('hide');
+                            } else {
+                                app.mapDivDocument.querySelector('#' + key + '_div').classList.remove('hide');
+                                app.mapDivDocument.querySelector('#' + key).innerHTML =
+                                    (key == 'license' || key == 'dataLicense') ?
+                                        '<img src="parts/' + from[key].toLowerCase().replace(/ /g, '_') + '.png">' :
+                                        from[key];
+                            }
+                        });
+                        var modalElm = app.mapDivDocument.querySelector('#modalBase');
+                        var modal = new bsn.Modal(modalElm, {'root': app.mapDivDocument});
+                        modalSetting('map');
+                        modal.show();
+                    } else {
+                        var modalElm = app.mapDivDocument.querySelector('#modalBase');
+                        var modal = new bsn.Modal(modalElm, {'root': app.mapDivDocument});
+                        modalSetting('help');
+                        modal.show();
+                    }
+                });
                 if (fakeGps) {
                     var newElem = createElement(sprintf(app.t('app.fake_explanation'), app.translate(fakeCenter), fakeRadius))[0];
                     var elem = app.mapDivDocument.querySelector('#modal_gpsW_content');
@@ -626,7 +664,8 @@ define(['histmap', 'sprintf', 'i18n', 'i18nxhr', 'swiper', 'bootstrap'],
                 if (!noUI) {
                     baseSwiper.on;
                     overlaySwiper.on;
-                    // swiper.setSlideIndex(sources.length - 1);
+                    // baseSwiper.setSlideIndex(baseSwiper.slides.length - 1);
+                    // overlaySwiper.setSlideIndex(overlaySwiper.slides.length - 1);
                     app.ellips();
                 }
 
