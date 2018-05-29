@@ -29,17 +29,7 @@
             "label" : "歴史小径2"
         },
         "gsi",
-        {
-            "mapID": "gsi_ortho",
-            "label": {
-                "ja": "地理院オルソ",
-                "en": "GSI Ortho"
-            },
-            "attr": "The Geospatial Information Authority of Japan",
-            "maptype": "base",
-            "url": "https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg",
-            "maxZoom": 18
-        },
+        "gsi_ortho",
         "osm"
     ], 
     "pois" :[]

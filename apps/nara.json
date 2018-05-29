@@ -44,6 +44,7 @@
             "label" : "京終界隈"
         },
         "gsi",
+        "gsi_ortho",
         "osm"
     ], 
     "pois" :[

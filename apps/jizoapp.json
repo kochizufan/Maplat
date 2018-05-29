@@ -2,6 +2,7 @@
   "app_name": "地蔵プロジェクト",
   "sources": [
     "gsi",
+    "gsi_ortho",
     "osm",
     {
       "mapID": "nara_ezuya",

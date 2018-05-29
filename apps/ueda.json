@@ -20,6 +20,7 @@
             "label" : 1867
         },
         "gsi",
+        "gsi_ortho",
         "osm"
     ], 
     "pois" :[

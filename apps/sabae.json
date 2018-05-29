@@ -26,6 +26,7 @@
             "label" : 2002
         },
         "gsi",
+        "gsi_ortho",
         "osm"
     ], 
     "pois" :[
