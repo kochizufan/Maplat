@@ -1,8 +1,9 @@
 {
     "app_name": {
-        "ja": "いわき市古地図アプリ",
-        "en": "Iwaki Historical Map App"
+        "ja": "ぷらっといわき",
+        "en": "Maplat Iwaki"
     },
+    "splash" : "iwaki_splash.png",
     "lang": "ja",
     "fake_gps": true,
     "fake_center": {

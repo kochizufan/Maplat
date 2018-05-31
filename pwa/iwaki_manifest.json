@@ -1,0 +1,28 @@
+{
+  "name": "ぷらっといわき",
+  "short_name": "ぷらいわき",
+  "background_color": "#f6f0d3",
+  "icons": [{
+    "src": "./iwaki_icon-96.png",
+    "sizes": "96x96",
+    "type": "image/png"
+  },{
+    "src": "./iwaki_icon-144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  },{
+    "src": "./iwaki_icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  },{
+    "src": "./iwaki_icon-256.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  },{
+    "src": "./iwaki_icon-512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "start_url": "../?appid=iwaki&overlay=true",
+  "display": "standalone"
+}
