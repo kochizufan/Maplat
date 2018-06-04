@@ -6,7 +6,16 @@
     "fake_radius" : 10,
     "home_position" : [ 135.8311667, 34.68325 ],
     "default_zoom" : 17,
+    "start_from": "nara_ezuya",
     "sources" : [
+        {
+            "mapID" : "narapreflib_138073_gangoji",
+            "label" : "元興寺"
+        },
+        {
+            "mapID" : "nara_ezuya",
+            "label" : 1844
+        },
         {
             "mapID" : "NaraOldMap1",
             "label" : "明治期"
@@ -37,15 +46,7 @@
         },
         "gsi",
         "gsi_ortho",
-        "osm",
-        {
-            "mapID" : "narapreflib_138073_gangoji",
-            "label" : "元興寺"
-        },
-        {
-            "mapID" : "nara_ezuya",
-            "label" : 1844
-        }
+        "osm"
     ],
     "pois" :[
         {

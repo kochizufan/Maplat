@@ -16,7 +16,17 @@
         37.487708
     ],
     "default_zoom": 17,
+    "start_from": "aizu-jonai-kato-period",
     "sources": [
+        {
+            "mapID": "aizu-jonai-kato-period",
+            "maptype": "maplat",
+            "algorythm": "tin",
+            "label": {
+                "ja": "加藤家期",
+                "en": "Kato family (1627)"
+            }
+        },
         {
             "mapID": "aizu-jonai-hoshina-period",
             "maptype": "maplat",
@@ -97,16 +107,7 @@
         },
         "gsi",
         "gsi_ortho",
-        "osm",
-        {
-            "mapID": "aizu-jonai-kato-period",
-            "maptype": "maplat",
-            "algorythm": "tin",
-            "label": {
-                "ja": "加藤家期",
-                "en": "Kato family (1627)"
-            }
-        }
+        "osm"
     ],
     "pois": [
         {
