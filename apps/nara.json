@@ -101,25 +101,32 @@
                 "en" : "https://en.m.wikipedia.org/wiki/Kasuga-taisha"
             }
         },{
-            "name" : "念仏寺山古墳",
-            "address" : "奈良県奈良市油阪町字山ノ寺",
+            "name" : {
+                "ja" : "念仏寺山古墳",
+                "en" : "Nenbutsuji-yama ancient tomb"
+            },
             "lat" : 34.68346944,
             "lng" : 135.8240111,
-            "desc" : "前方後円墳。宮内庁により「春日率川坂上陵」として第9代開化天皇の陵に治定されている。「弘法山古墳（高坊山古墳）」などとも言われる。",
-            "image" : "Kaika_Tennnouryou.png"
+            "url" : "https://ja.m.wikipedia.org/wiki/%E5%BF%B5%E4%BB%8F%E5%AF%BA%E5%B1%B1%E5%8F%A4%E5%A2%B3"
         },{
-            "name" : "多聞山城",
+            "name" : {
+                "ja" : "多聞山城",
+                "en" : "Tamon-yama Castle"
+            },
             "lat" : 34.69443889,
             "lng" : 135.8314419,
-            "desc" : "松永氏の居城となった平山城。多聞城とも呼ばれる。",
-            "image" : "Tamon_castle.jpg"
+            "url" : "https://ja.m.wikipedia.org/wiki/%E5%A4%9A%E8%81%9E%E5%B1%B1%E5%9F%8E"
         },{
-            "name" : "元興寺",
-            "address" : "奈良県奈良市中院町11",
+            "name" : {
+                "ja" : "元興寺",
+                "en" : "Gango-ji Temple"
+            },
             "lat" : 34.67780278,
             "lng" : 135.8313556,
-            "desc" : "蘇我馬子が飛鳥に建立した日本最古の本格的仏教寺院法興寺が前身で、平城京遷都で移転し、元興寺となった。奈良時代には東大寺、興福寺と並ぶ大寺院であった。",
-            "image" : "Gangoji.jpg"
+            "url" : {
+                "ja" : "https://ja.m.wikipedia.org/wiki/%E5%85%83%E8%88%88%E5%AF%BA",
+                "en" : "https://en.m.wikipedia.org/wiki/Gang%C5%8D-ji"
+            }
         }
     ]
 }
