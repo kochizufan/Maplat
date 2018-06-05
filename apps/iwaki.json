@@ -66,7 +66,10 @@
                 "ja": "磐城平城(イワキタイラジョウ)",
                 "en": "Iwaki Taira Castle"
             },
-            "url": "https://ja.m.wikipedia.org/wiki/%E7%A3%90%E5%9F%8E%E5%B9%B3%E5%9F%8E"
+            "url": {
+                "ja": "https://ja.m.wikipedia.org/wiki/%E7%A3%90%E5%9F%8E%E5%B9%B3%E5%9F%8E",
+                "en": "https://en.m.wikipedia.org/wiki/Iwakitaira_Castle"
+            }
         },
         {
             "lat": 37.055892,
