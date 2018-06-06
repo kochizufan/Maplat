@@ -1,5 +1,8 @@
 {
-    "app_name" : "ぷらっと奈良",
+    "app_name" : {
+        "ja" : "ぷらっと奈良",
+        "en" : "Maplat Nara"
+    },
     "splash" : "nara_splash.png",
     "fake_gps" : true,
     "fake_center" : "興福寺",
