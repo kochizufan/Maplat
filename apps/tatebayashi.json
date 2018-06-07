@@ -1,32 +1,59 @@
 {
-    "app_name" : "ぷらっと館林",
+    "app_name" : {
+        "ja" : "ぷらっと館林",
+        "en" : "Maplat Tatebayashi"
+    },
+    "splash" : "tatebayashi_splash.png",
+    "lang": "ja",
     "fake_gps" : true,
     "fake_center" : "千眼寺",
     "fake_radius" : 10,
     "home_position" : [ 139.532100, 36.249302 ],
     "default_zoom" : 17,
+    "start_from": "tatebayashi_rekishinokomichi_1",
     "sources" : [
         {
             "mapID" : "tatebayashi-yorimoimap-180405-1",
-            "label" : "よりもい1"
+            "label" : {
+                "ja" : "よりもい1",
+                "en" : "Yorimoi-1"
+            }
         },{
             "mapID" : "tatebayashi-yorimoimap-180405-2",
-            "label" : "よりもい2"
+            "label" : {
+                "ja" : "よりもい2",
+                "en" : "Yorimoi-2"
+            }
         },{
             "mapID" : "tatebayashi-yorimoimap-180405-3",
-            "label" : "よりもい3"
+            "label" : {
+                "ja" : "よりもい3",
+                "en" : "Yorimoi-3"
+            }
         },{
             "mapID" : "tatebayashi-yorimoimap-180405-4",
-            "label" : "よりもい4"
+            "label" : {
+                "ja" : "よりもい4",
+                "en" : "Yorimoi-4"
+            }
         },{
             "mapID" : "tatebayashi-yorimoimap-180405-5",
-            "label" : "よりもい5"
+            "label" : {
+                "ja" : "よりもい5",
+                "en" : "Yorimoi-5"
+            }
         },{
             "mapID" : "tatebayashi_rekishinokomichi_1",
-            "label" : "歴史小径1"
+            "label" : {
+                "ja" : "歴史小径1",
+                "en" : "History Path-1"
+            }
         },{
             "mapID" : "tatebayashi_rekishinokomichi_2",
-            "label" : "歴史小径2"
+            "label" : {
+                "ja" : "歴史小径2",
+                "en" : "History Path-2"
+            }
         },
         "gsi",
         "gsi_ortho",
