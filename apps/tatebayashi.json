@@ -10,7 +10,7 @@
     "fake_radius" : 10,
     "home_position" : [ 139.532100, 36.249302 ],
     "default_zoom" : 17,
-    "start_from": "tatebayashi_rekishinokomichi_1",
+    "start_from": "tatebayashi_ojozu",
     "sources" : [
         {
             "mapID" : "tatebayashi-yorimoimap-180405-1",
@@ -43,6 +43,12 @@
                 "en" : "Yorimoi-5"
             }
         },{
+            "mapID" : "tatebayashi_ojozu",
+            "label" : {
+                "ja" : "館林御城図",
+                "en" : "Tatebayashi Castle"
+            }
+        },{
             "mapID" : "tatebayashi_rekishinokomichi_1",
             "label" : {
                 "ja" : "歴史小径1",
@@ -59,5 +65,27 @@
         "gsi_ortho",
         "osm"
     ], 
-    "pois" :[]
+    "pois" :[
+        {
+            "lat": 36.243881,
+            "lng": 139.543517,
+            "name": {
+                "ja": "館林城(タテバヤシジョウ)",
+                "en": "Tatebayashi Castle"
+            },
+            "url": {
+                "ja": "https://ja.m.wikipedia.org/wiki/%E9%A4%A8%E6%9E%97%E5%9F%8E",
+                "en": "https://en.m.wikipedia.org/wiki/Tatebayashi_Castle"
+            }
+        },
+        {
+            "lat": 36.2248279,
+            "lng": 139.5313667,
+            "name": {
+                "ja": "茂林寺(モリンジ)",
+                "en": "Morinji Temple"
+            },
+            "url": "https://ja.m.wikipedia.org/wiki/%E8%8C%82%E6%9E%97%E5%AF%BA"
+        }
+    ]
 }
