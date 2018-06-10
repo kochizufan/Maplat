@@ -20,8 +20,6 @@
     "sources": [
         {
             "mapID": "iwaki_taira_genna2",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "元和平城",
                 "en": "Taira castle (1622)"
@@ -29,8 +27,6 @@
         },
         {
             "mapID": "boshinshiki_tairajo",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "戊辰平城",
                 "en": "Taira castle (1868)"
@@ -38,8 +34,6 @@
         },
         {
             "mapID": "iwaki_taira_shigai_1954",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "平市街(1954)",
                 "en": "Taira (1954)"
@@ -47,11 +41,23 @@
         },
         {
             "mapID": "iwaki_taira_shigai_1961",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "平市街(1961)",
                 "en": "Taira (1961)"
+            }
+        },
+        {
+            "mapID": "taira_rekishi_sansaku_2009",
+            "label": {
+                "ja": "歴史散策(2009)",
+                "en": "History Tour (2009)"
+            }
+        },
+        {
+            "mapID": "taira_machinaka_burari_2009",
+            "label": {
+                "ja": "平散歩(2009)",
+                "en": "Taira Stroll (2009)"
             }
         },
         "gsi",

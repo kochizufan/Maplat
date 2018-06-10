@@ -13,6 +13,25 @@
     "start_from": "tatebayashi_ojozu",
     "sources" : [
         {
+            "mapID" : "tatebayashi_ojozu",
+            "label" : {
+                "ja" : "館林御城図",
+                "en" : "Tatebayashi Castle"
+            }
+        },{
+            "mapID" : "tatebayashi_rekishinokomichi_1",
+            "label" : {
+                "ja" : "歴史小径1",
+                "en" : "History Path-1"
+            }
+        },{
+            "mapID" : "tatebayashi_rekishinokomichi_2",
+            "label" : {
+                "ja" : "歴史小径2",
+                "en" : "History Path-2"
+            }
+        },
+        {
             "mapID" : "tatebayashi-yorimoimap-180405-1",
             "label" : {
                 "ja" : "よりもい1",
@@ -41,24 +60,6 @@
             "label" : {
                 "ja" : "よりもい5",
                 "en" : "Yorimoi-5"
-            }
-        },{
-            "mapID" : "tatebayashi_ojozu",
-            "label" : {
-                "ja" : "館林御城図",
-                "en" : "Tatebayashi Castle"
-            }
-        },{
-            "mapID" : "tatebayashi_rekishinokomichi_1",
-            "label" : {
-                "ja" : "歴史小径1",
-                "en" : "History Path-1"
-            }
-        },{
-            "mapID" : "tatebayashi_rekishinokomichi_2",
-            "label" : {
-                "ja" : "歴史小径2",
-                "en" : "History Path-2"
             }
         },
         "gsi",

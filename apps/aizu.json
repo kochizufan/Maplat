@@ -20,8 +20,6 @@
     "sources": [
         {
             "mapID": "aizu-jonai-kato-period",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "加藤家期",
                 "en": "Kato family (1627)"
@@ -29,8 +27,6 @@
         },
         {
             "mapID": "aizu-jonai-hoshina-period",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "保科家期",
                 "en": "Hoshina family (1643)"
@@ -38,8 +34,6 @@
         },
         {
             "mapID": "aizu-jonai-kyoho-period",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "享保期",
                 "en": "Mid of Edo (1734)"
@@ -47,8 +41,6 @@
         },
         {
             "mapID": "aizu-boshin-wakamatsujo-meisaizu",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "戊辰戦期",
                 "en": "Boshin War (1868)"
@@ -56,8 +48,6 @@
         },
         {
             "mapID": "aizu-wakamatsu-taisho-kaitei",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "大正期",
                 "en": "Taisho (1914)"
@@ -65,8 +55,6 @@
         },
         {
             "mapID": "aizuwakamatsu-annai-showa5",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "昭和初期",
                 "en": "Showa (1930)"
@@ -89,8 +77,6 @@
         },
         {
             "mapID": "aizuwakamatsu-machinaka-jokamachi",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "まちなか",
                 "en": "City center"
@@ -98,8 +84,6 @@
         },
         {
             "mapID": "aizu-wakamatsu-shigaizu-aibase",
-            "maptype": "maplat",
-            "algorythm": "tin",
             "label": {
                 "ja": "市街図",
                 "en": "Sightseeing"
