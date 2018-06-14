@@ -73,7 +73,8 @@
             "mapID": "jcp_maps_wakamatsu",
             "maptype": "overlay",
             "url": "https://t.tilemap.jp/jcp_maps/wakamatsu/{z}/{x}/{-y}.png",
-            "maxZoom": 16
+            "maxZoom": 16,
+            "envelopLngLats" : [[139.90101308591164, 37.523848776110384], [139.95794705763817, 37.52390560293867], [139.95730934084384, 37.46644763380387], [139.90049820485194, 37.466379239469816]]
         },
         {
             "mapID": "aizuwakamatsu-machinaka-jokamachi",

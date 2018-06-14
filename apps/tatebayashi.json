@@ -44,7 +44,8 @@
             "mapID" : "kanto_rapid-900913",
             "maptype" : "overlay",
             "url" : "https://www.finds.jp/ws/tmc/1.0.0/Kanto_Rapid-900913-L/{z}/{x}/{y}.jpg",
-            "maxZoom": 17
+            "maxZoom": 17,
+            "envelopLngLats" : [[139.454802, 36.209997], [139.630240, 36.209997], [139.630240, 36.283371], [139.454802, 36.283371]]
         },
         {
             "mapID" : "tatebayashi_rekishinokomichi_1",
