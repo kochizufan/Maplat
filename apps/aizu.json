@@ -54,6 +54,13 @@
             }
         },
         {
+            "mapID": "aizuwakamatsu_tetsudosho_1935",
+            "label": {
+                "ja": "鉄道省地図",
+                "en": "Railway Map (1930)"
+            }
+        },
+        {
             "mapID": "aizuwakamatsu-annai-showa5",
             "label": {
                 "ja": "昭和初期",
