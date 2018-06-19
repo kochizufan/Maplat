@@ -33,6 +33,13 @@
             }
         },
         {
+            "mapID": "daitaira_shokugyo_meisai",
+            "label": {
+                "ja": "平(1936)",
+                "en": "Taira (1936)"
+            }
+        },
+        {
             "mapID": "iwaki_taira_shigai_1954",
             "label": {
                 "ja": "平市街(1954)",
