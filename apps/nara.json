@@ -12,6 +12,13 @@
     "start_from": "nara_ezuya",
     "sources" : [
         {
+            "mapID" : "kofukuji_keidai_kou",
+            "label" : {
+                "ja" : "興福寺",
+                "en" : "Kofuku-ji"
+            }
+        },
+        {
             "mapID" : "narapreflib_138073_gangoji",
             "label" : {
                 "ja" : "元興寺",
