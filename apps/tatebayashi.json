@@ -20,6 +20,13 @@
             }
         },
         {
+            "mapID" : "tatebayashi_kaei_jokamachi",
+            "label" : {
+                "ja" : "嘉永館林城下",
+                "en" : "Tatebayashi (1848)"
+            }
+        },
+        {
             "attr" : {
                 "ja": "農研機構",
                 "en": "NARO"
