@@ -149,13 +149,6 @@ define(['ol-custom'], function(ol) {
         options = Object.assign(options, commonOptions);
         if (!options.maptype) options.maptype = 'maplat';
         options.label = ol.source.translate(options.label || options.year);
-        if (options.attr) {
-            options.attributions = [
-                new ol.Attribution({
-                    html: ol.source.translate(options.attr)
-                })
-            ];
-        }
         if (options.maptype == 'base' || options.maptype == 'overlay') {
             options.sourceID = options.mapID;
             var targetSrc = options.maptype == 'base' ? ol.source.NowMap : ol.source.TmsMap;
@@ -231,6 +224,8 @@ define(['ol-custom'], function(ol) {
                             image.crossOrigin='Anonymous';
                             tileLoadFn(tile, src);
                         }
+                    } else {
+                        tile.handleImageError_();
                     }
                     --numLoadingTiles;
                     if (numLoadingTiles === 0) {
