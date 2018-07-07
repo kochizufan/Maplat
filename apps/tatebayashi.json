@@ -15,8 +15,15 @@
         {
             "mapID" : "tatebayashi_ojozu",
             "label" : {
-                "ja" : "館林御城図",
-                "en" : "Tatebayashi Castle"
+                "ja" : "綱吉時代",
+                "en" : "Tsunayoshi Era"
+            }
+        },
+        {
+            "mapID" : "tatebayashi_castle_akimoto",
+            "label" : {
+                "ja" : "秋元時代",
+                "en" : "Akimoto Era"
             }
         },
         {
