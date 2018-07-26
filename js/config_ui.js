@@ -82,7 +82,7 @@ require.config
         'resize': {
             exports: 'addResizeListener'
         },
-        'ui': {
+        'core': {
             deps: ['histmap', 'histmap_tin']
         }
     }
