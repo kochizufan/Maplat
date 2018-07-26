@@ -28,7 +28,7 @@
         'resize': {
             exports: 'addResizeListener'
         },
-        '{name}': {
+        'core': {
             deps: ['histmap', 'histmap_tin']
         }
     }
