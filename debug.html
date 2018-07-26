@@ -6,7 +6,7 @@
   <meta content="yes" name="apple-mobile-web-app-capable">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="icon" type="image/png" href="parts/favicon.png">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/ui.css">
   <style>
     .mainview {
         position: absolute;
@@ -22,7 +22,7 @@
     <div id="map_div"></div>
   </div>
 </body>
-<!--script src="js/aigle-es5.min.js"></script-->
+<script src="js/aigle-es5.min.js"></script>
 <script src="js/require.min.js"></script>
 <script src="js/config.js"></script>
 <script>
@@ -33,13 +33,13 @@
         option[hash[0]] = hash[1];
     }
     Maplat.createObject(option).then(function(app) {
-        app.addEventListener('clickMarker', function (evt) {
+        app.core.addEventListener('clickMarker', function (evt) {
             console.log(evt);
         });
-        app.addEventListener('clickMap', function (evt) {
+        app.core.addEventListener('clickMap', function (evt) {
             console.log(evt);
         });
-        app.addLine({
+        app.core.addLine({
             lnglats: [[141.151995, 39.701599], [141.151137, 39.703736], [141.1521671, 39.7090232]],
             stroke: {
                 color: '#ffcc33',

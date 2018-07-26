@@ -564,7 +564,6 @@ define(['ol3', 'resize', 'turf'], function(ol, addResizeListener, turf) {
             src: 'parts/defaultpin.png'
         }))
     });
-    var i18n;
     var t = function(arg) { return arg; };
 
     ol.source.setCustomFunction = function(target) {
@@ -824,36 +823,8 @@ define(['ol3', 'resize', 'turf'], function(ol, addResizeListener, turf) {
 
         for (var i = 0; i < ol.source.META_KEYS.length; i++) {
             var key = ol.source.META_KEYS[i];
-            self[key] = ol.source.translate(options[key]);
+            self[key] = options[key];
         }
-    };
-
-    ol.source.setI18n = function(i18n_, t_) {
-        i18n = i18n_;
-        t = t_;
-    };
-
-    ol.source.translate = function(dataFragment, defLang) {
-        if (!dataFragment || typeof dataFragment != 'object') return dataFragment;
-        if (!i18n) return dataFragment; // For MaplatEditor
-        var langs = Object.keys(dataFragment);
-        var key = langs.reduce(function(prev, curr, idx, arr) {
-            if (curr == defLang) {
-                prev = [dataFragment[curr], true];
-            } else if (!prev || (curr == 'en' && !prev[1])) {
-                prev = [dataFragment[curr], false];
-            }
-            if (idx == arr.length - 1) return prev[0];
-            return prev;
-        }, null);
-        key = (typeof key == 'string') ? key : key + '';
-        if (i18n.exists(key, {ns: 'translation', nsSeparator: '__X__yX__X__'}))
-            return t(key, {ns: 'translation', nsSeparator: '__X__yX__X__'});
-        for (var i = 0; i < langs.length; i++) {
-            var lang = langs[i];
-            i18n.addResource(lang, 'translation', key, dataFragment[lang]);
-        }
-        return t(key, {ns: 'translation', nsSeparator: '__X__yX__X__'});
     };
 
     ol.source.NowMap = function(optOptions) {
@@ -950,18 +921,7 @@ define(['ol3', 'resize', 'turf'], function(ol, addResizeListener, turf) {
         var overlayLayer = this._overlay_group = new ol.layer.Group();
         overlayLayer.set('name', 'overlay');
 
-        this.sliderCommon = new ol.control.SliderCommon({reverse: true, tipLabel: t('control.trans', {ns: 'translation'})});
-        var controls = optOptions.controls ? optOptions.controls :
-            optOptions.off_control ? [] :
-            [
-                new ol.control.Copyright({tipLabel: t('control.info', {ns: 'translation'})}),
-                new ol.control.CompassRotate({tipLabel: t('control.compass', {ns: 'translation'})}),
-                new ol.control.Zoom({tipLabel: t('control.zoom', {ns: 'translation'})}),
-                new ol.control.SetGPS({tipLabel: t('control.gps', {ns: 'translation'})}),
-                new ol.control.GoHome({tipLabel: t('control.home', {ns: 'translation'})}),
-                this.sliderCommon,
-                new ol.control.Maplat({tipLabel: t('control.help', {ns: 'translation'})})
-            ];
+        var controls = optOptions.controls ? optOptions.controls : [];
 
         var options = {
             controls: controls,
