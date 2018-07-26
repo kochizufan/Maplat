@@ -28,7 +28,7 @@
         'resize': {
             exports: 'addResizeListener'
         },
-        'app': {
+        'ui': {
             deps: ['histmap', 'histmap_tin']
         }
     }
