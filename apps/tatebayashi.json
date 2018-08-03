@@ -88,6 +88,13 @@
             }
         },
         {
+            "mapID" : "tatebayashi_saiken_ura",
+            "label" : {
+                "ja" : "お寺お散歩",
+                "en" : "Temple Stroll"
+            }
+        },
+        {
             "mapID" : "tatebayashi_yorimoi_maplat",
             "label" : {
                 "ja" : "よりもい",
