@@ -46,7 +46,7 @@ gulp.task('server', function() {
     }).unref();
 });
 
-gulp.task('build', ['mobile_build'], function() {
+gulp.task('build', ['mobile_build', 'sw_build'], function() {
     try {
         fs.removeSync('./example.zip');
     } catch (e) {
@@ -142,7 +142,7 @@ var configMaker = function(name) {
         new Promise(function(resolve, reject) {
             gulp.src(['./js/polyfill.js', './js/config.js', './js/loader.js'])
                 .pipe(concat('config_' + name + '.js'))
-                .pipe(replace(/\s+name:[^\n]+,\n\s+out:[^\n]+,\n\s+include:[^\n]+,/, ''))
+                .pipe(replace(/\s+name:[^\n]+,\r?\n+\s+out:[^\n]+,\r?\n\s+include:[^\n]+,/, ''))
                 .pipe(replace(/\{app\}/, name))
                 .pipe(replace(/\{name\}/, name))
                 .on('error', reject)
@@ -180,16 +180,6 @@ gulp.task('sw_build', function() {
                 cacheName: 'resourcesCache',
                 expiration: {
                     maxAgeSeconds: 60 * 60 * 24,
-                },
-            },
-        },
-        {
-            urlPattern: /^https?:.+\/[0-9]+\/[0-9]+\/[0-9]+\.(?:jpg|png)$/,
-            handler: 'staleWhileRevalidate',
-            options: {
-                cacheName: 'tileCache',
-                expiration: {
-                    maxAgeSeconds: 60 * 60 * 24 * 30,
                 },
             },
         }],

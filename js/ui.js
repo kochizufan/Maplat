@@ -1,4 +1,4 @@
-define(['core', 'sprintf', 'swiper', 'ol3', 'bootstrap', 'i18n', 'i18nxhr'],
+define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'i18n', 'i18nxhr'],
     function(Core, sprintf, Swiper, ol, bsn, i18n, i18nxhr) {
 
     var browserLanguage = function() {
@@ -106,6 +106,9 @@ define(['core', 'sprintf', 'swiper', 'ol3', 'bootstrap', 'i18n', 'i18nxhr'],
             });
         };
 
+        if (ui.core.cacheEnable) {
+            ui.core.mapDivDocument.classList.add('cache_enable');
+        }
         if ('ontouchstart' in window) {
             ui.core.mapDivDocument.classList.add('ol-touch');
         }
@@ -206,6 +209,12 @@ define(['core', 'sprintf', 'swiper', 'ol3', 'bootstrap', 'i18n', 'i18nxhr'],
                     '<dd id="' + key + '"></dd>' +
                     '</dl></div>';
             }).join('') +
+
+            '<div class="recipients" id="modal_cache_content"><dl class="dl-horizontal">' +
+            '<dt data-i18n="html.cache_handle"></dt>' +
+            '<dd><span id="cache_size"></span>' +
+            '<a id="cache_delete" class="btn btn-default pull-right" href="#" data-i18n="html.cache_delete"></a></dd>' +
+            '</dl></div>' +
 
             '</div>' +
 
@@ -520,6 +529,31 @@ define(['core', 'sprintf', 'swiper', 'ol3', 'bootstrap', 'i18n', 'i18nxhr'],
                     showGPSresult(evt.frameState);
                 }
             });
+            var putTileCacheSize = function(size) {
+                var unit = 'Bytes';
+                if (size > 1024) {
+                    size = Math.round(size * 10 / 1024) / 10;
+                    unit = 'KBytes';
+                }
+                if (size > 1024) {
+                    size = Math.round(size * 10 / 1024) / 10;
+                    unit = 'MBytes';
+                }
+                if (size > 1024) {
+                    size = Math.round(size * 10 / 1024) / 10;
+                    unit = 'GBytes';
+                }
+                ui.core.mapDivDocument.querySelector('#cache_size').innerHTML = size + ' ' + unit;
+            };
+
+            document.querySelector('#cache_delete').addEventListener('click', function(evt) {
+                evt.preventDefault();
+                var from = ui.core.getMapMeta();
+                ui.core.clearMapTileCacheAsync(from.sourceID, true).then(function() {
+                    ui.core.getMapTileCacheSizeAsync(from.sourceID).then(putTileCacheSize);
+                });
+            });
+
             ui.core.mapObject.on('click_control', function(evt) {
                 var control = evt.frameState.control;
                 if (control == 'copyright') {
@@ -543,6 +577,9 @@ define(['core', 'sprintf', 'swiper', 'ol3', 'bootstrap', 'i18n', 'i18nxhr'],
                                     ui.translate(from[key]);
                         }
                     });
+
+                    ui.core.getMapTileCacheSizeAsync(from.sourceID).then(putTileCacheSize);
+
                     var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
                     var modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
                     modalSetting('map');
