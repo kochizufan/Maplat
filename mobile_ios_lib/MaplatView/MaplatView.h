@@ -36,7 +36,7 @@
 
 - (void)setViewpointWithLatitude:(double)latitude longitude:(double)longitude;
 - (void)setDirection:(double)direction;
-- (void)setRotation:(double)rotate;
+- (void)setRotation:(double)rotation;
 
 - (void)addLineWithLngLat:(NSArray *)lnglats stroke:(NSDictionary *)stroke;
 - (void)clearLine;
@@ -50,7 +50,7 @@
 @optional
 - (void)onReady;
 - (void)onClickMarkerWithMarkerId:(long)markerId markerData:(id)markerData;
-- (void)onChangeViewpointWithLatitude:(double)latitude longitude:(double)longitude zoom:(double)zoom direction:(double)direction rotation:(double)rotation;
+- (void)onChangeViewpointWithX:(double)x y:(double)y latitude:(double)latitude longitude:(double)longitude mercatorX:(double)mercator_x mercatorY:(double)mercator_y zoom:(double)zoom mercZoom:(double)merc_zoom direction:(double)direction rotation:(double)rotation;
 - (void)onOutOfMap;
 - (void)onClickMapWithLatitude:(double)latitude longitude:(double)longitude;
 @end

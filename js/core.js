@@ -98,6 +98,20 @@ define(['histmap'], function(ol) {
         var app = this;
 
         ol.events.EventTarget.call(app);
+        if (appOption.restore_session) {
+            app.restoreSession = true;
+            var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
+            var currentTime = Math.floor(new Date().getTime() / 1000);
+            if (lastEpoch && currentTime - lastEpoch < 3600) {
+                app.restoreSourceID = localStorage.getItem('sourceID');
+                app.restorePosition = {
+                    x: parseFloat(localStorage.getItem('x')),
+                    y: parseFloat(localStorage.getItem('y')),
+                    zoom: parseFloat(localStorage.getItem('zoom')),
+                    rotation: parseFloat(localStorage.getItem('rotation'))
+                };
+            }
+        }
         var appid = app.appid = appOption.appid || 'sample';
         app.mapDiv = appOption.div || 'map_div';
         app.mapDivDocument = document.querySelector('#' + app.mapDiv);
@@ -215,7 +229,8 @@ define(['histmap'], function(ol) {
                     app.cacheHash[source.sourceID] = source;
                 }
 
-                var initial = app.startFrom || cache[cache.length - 1].sourceID;
+                var initial = app.restoreSourceID || app.startFrom || cache[cache.length - 1].sourceID;
+                app.restoreSourceID = undefined;
                 app.from = cache.reduce(function(prev, curr) {
                     if (prev) {
                         return !(prev instanceof ol.source.HistMap) && curr.sourceID != initial ? curr : prev;
@@ -339,6 +354,8 @@ define(['histmap'], function(ol) {
 
                 app.mapObject.on('postrender', function(evt) {
                     var view = app.mapObject.getView();
+                    var center = view.getCenter();
+                    var zoom = view.getDecimalZoom();
                     var rotation = normalizeDegree(view.getRotation() * 180 / Math.PI);
                     app.from.size2MercsAsync().then(function(mercs) {
                         return app.mercSrc.mercs2SizeAsync(mercs);
@@ -351,14 +368,27 @@ define(['histmap'], function(ol) {
                         }
                         app.mobileMapMoveBuffer = size;
                         var ll = ol.proj.transform(size[0], 'EPSG:3857', 'EPSG:4326');
+                        var direction = normalizeDegree(size[2] * 180 / Math.PI);
                         app.dispatchEvent(new CustomEvent('changeViewpoint', {
+                            x: center[0],
+                            y: center[1],
                             longitude: ll[0],
                             latitude: ll[1],
-                            mercator: size[0],
-                            zoom: size[1],
-                            direction: normalizeDegree(size[2] * 180 / Math.PI),
+                            mercator_x: size[0][0],
+                            mercator_y: size[0][1],
+                            zoom: zoom,
+                            mercZoom: size[1],
+                            direction: direction,
                             rotation: rotation
                         }));
+                        if (app.restoreSession) {
+                            var currentTime = Math.floor(new Date().getTime() / 1000);
+                            localStorage.setItem('epoch', currentTime);
+                            localStorage.setItem('x', center[0]);
+                            localStorage.setItem('y', center[1]);
+                            localStorage.setItem('zoom', zoom);
+                            localStorage.setItem('rotation', rotation);
+                        }
                     });
                 });
             });
@@ -510,6 +540,11 @@ define(['histmap'], function(ol) {
                     app.mapObject.exchangeSource(to);
                 }
                 app.dispatchEvent(new CustomEvent('mapChanged', app.getMapMeta(to.sourceID)));
+                if (app.restoreSession) {
+                    var currentTime = Math.floor(new Date().getTime() / 1000);
+                    localStorage.setItem('epoch', currentTime);
+                    localStorage.setItem('sourceID', to.sourceID);
+                }
 
                 // This must be here: Because, render process works after view.setCenter,
                 // and Changing "from" content must be finished before "postrender" event
@@ -550,7 +585,12 @@ define(['histmap'], function(ol) {
 
                 if (app.__init == true) {
                     app.__init = false;
-                    to.goHome();
+                    if (app.restorePosition) {
+                        to.moveToDegree(app.restorePosition);
+                        app.restorePosition = undefined;
+                    } else {
+                        to.goHome();
+                    }
                 } else if (app.backMap && backTo) {
                     app.convertParametersFromCurrent(backTo, function(size) {
                         var view = app.backMap.getView();
