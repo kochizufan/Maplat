@@ -102,7 +102,10 @@ define(['histmap'], function(ol) {
             app.restoreSession = true;
             var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
             var currentTime = Math.floor(new Date().getTime() / 1000);
+                alert(lastEpoch);
+                alert(currentTime);
             if (lastEpoch && currentTime - lastEpoch < 3600) {
+                alert('Restore!');
                 app.restoreSourceID = localStorage.getItem('sourceID');
                 app.restoreBackID = localStorage.getItem('backID');
                 app.restorePosition = {
