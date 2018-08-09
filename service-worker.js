@@ -24,7 +24,7 @@ self.__precacheManifest = [
   },
   {
     "url": "dist/maplat.js",
-    "revision": "b947fb513e62594fa83998e241b149ce"
+    "revision": "a8f05d39e81cec3665382e229690603f"
   },
   {
     "url": "dist/maplat.css",
@@ -103,18 +103,6 @@ self.__precacheManifest = [
     "revision": "8793f7f3c3c8ad97ab0721c9abc0f27a"
   },
   {
-    "url": "parts/hotoke.png",
-    "revision": "08050d7cb88c2d125ecf1ffc48f8608b"
-  },
-  {
-    "url": "parts/jinja.png",
-    "revision": "d302d698e99b6c85e82bdf966ee96f8c"
-  },
-  {
-    "url": "parts/jizo.png",
-    "revision": "2ea68998967bac3f9328f71e1cef6052"
-  },
-  {
     "url": "parts/loading.gif",
     "revision": "9e34e033ec7749c0ee473c1879fe4a96"
   },
@@ -152,11 +140,11 @@ self.__precacheManifest = [
   },
   {
     "url": "locales/en/translation.json",
-    "revision": "d805490dcaa897e423054b168fd7f0d9"
+    "revision": "b46a74ade4ae73eda9fb3950e3496505"
   },
   {
     "url": "locales/ja/translation.json",
-    "revision": "bdd045e9c1f462ef190857146550f5e6"
+    "revision": "9d79f6a451abefd65bd547025aa2f8af"
   },
   {
     "url": "fonts/clarenbd-webfont.eot",
@@ -164,7 +152,7 @@ self.__precacheManifest = [
   },
   {
     "url": "fonts/clarenbd-webfont.svg",
-    "revision": "d2f37e259a79183317d620c38598d0c8"
+    "revision": "877daf82b367b4f2967fa7da9d13d747"
   },
   {
     "url": "fonts/clarenbd-webfont.ttf",
@@ -203,3 +191,4 @@ workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerRoute(/(?:maps\/.+\.json|apps\/.+\.json|tmbs\/.+_menu\.jpg|img\/.+\.(?:png|jpg))$/, workbox.strategies.networkFirst({ cacheName: "resourcesCache", plugins: [new workbox.expiration.Plugin({"maxAgeSeconds":86400,"purgeOnQuotaError":false})] }), 'GET');
+
