@@ -194,6 +194,74 @@
                 "en": "<b>Old temple which is famous with golden turtle legend</b>\nThis temple is next to the Otaguchi-mon gate, the west gate of Tatebayashi town. It was founded by Yoshimasa Ashikaga in 1484, and once it was perished in Sengoku era, then it was re-founded by Yasumasa Sakakibara, the lord of Tatebayashi Castle. Once upon a time, there was an golden turtle in the temple, and the turtle predicted a good event of nearby area. But the turtle was lost from the temple because of heavy flood, and when it was rediscovered in a nearby town far after, it had changed into a stone turtle."
             },
             "image": "hosenji.jpg"
+        },
+        {
+            "lat": 36.251980,
+            "lng": 139.535970,
+            "address": {
+                "ja": "群馬県館林市台宿町2",
+                "en": "2, Daishuku-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "熊野神社(クマノジンジャ)",
+                "en": "Kumano Shrine"
+            },
+            "desc": {
+                "ja": "<b>Under construction 黄金造りの亀伝説が伝わる室町時代からの古刹</b>\n館林城下の西門、太田口門に隣接する寺で、文明16年(1484年)に足利義政によって創建されたといいます。戦国時代に荒廃しましたが、館林城主榊原康政の助力で再興されました。寺にはかつて、黄金で造られた亀があり、近隣にめでたい出来事が起こる際には必ず前兆があると伝えられていました。山号の『瑞亀山』もこれにちなんでつけられたとも言われています。ある時周辺一帯に大水があり、人々がそれに気を取られている間に、金亀は寺を抜け出し姿を消してしまい、人々の懸命の捜索も甲斐なくみつからなかったといいます。寛文11年(1671年)、近隣の邑楽郡板倉町籾谷の地にこの金亀とそっくりな大亀があらわれたため、漁師たちが引き上げ安勝寺という寺に安置したが、既に金亀ではなく石亀に変わってしまっていたと言います。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、<a href=\"http://w-concept.jp/tatebayashijou/joukamachi/housenji.html\" target=\"_blank\">「館林城の再建をめざす会」サイト内記事</a>",
+                "en": "<b>Old temple which is famous with golden turtle legend</b>\nThis temple is next to the Otaguchi-mon gate, the west gate of Tatebayashi town. It was founded by Yoshimasa Ashikaga in 1484, and once it was perished in Sengoku era, then it was re-founded by Yasumasa Sakakibara, the lord of Tatebayashi Castle. Once upon a time, there was an golden turtle in the temple, and the turtle predicted a good event of nearby area. But the turtle was lost from the temple because of heavy flood, and when it was rediscovered in a nearby town far after, it had changed into a stone turtle."
+            },
+            "image": "kumano_shrine.jpg"
+        },
+        {
+            "lat": 36.241156,
+            "lng": 139.533041,
+            "address": {
+                "ja": "群馬県館林市緑町1丁目3-7",
+                "en": "3-7, 1-chome, Midori-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "トウミギ地蔵尊(トウミギジゾウソン)",
+                "en": "Tomigi Jizo"
+            },
+            "desc": {
+                "ja": "<b>Under construction 黄金造りの亀伝説が伝わる室町時代からの古刹</b>\n館林城下の西門、太田口門に隣接する寺で、文明16年(1484年)に足利義政によって創建されたといいます。戦国時代に荒廃しましたが、館林城主榊原康政の助力で再興されました。寺にはかつて、黄金で造られた亀があり、近隣にめでたい出来事が起こる際には必ず前兆があると伝えられていました。山号の『瑞亀山』もこれにちなんでつけられたとも言われています。ある時周辺一帯に大水があり、人々がそれに気を取られている間に、金亀は寺を抜け出し姿を消してしまい、人々の懸命の捜索も甲斐なくみつからなかったといいます。寛文11年(1671年)、近隣の邑楽郡板倉町籾谷の地にこの金亀とそっくりな大亀があらわれたため、漁師たちが引き上げ安勝寺という寺に安置したが、既に金亀ではなく石亀に変わってしまっていたと言います。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、<a href=\"http://w-concept.jp/tatebayashijou/joukamachi/housenji.html\" target=\"_blank\">「館林城の再建をめざす会」サイト内記事</a>",
+                "en": "<b>Old temple which is famous with golden turtle legend</b>\nThis temple is next to the Otaguchi-mon gate, the west gate of Tatebayashi town. It was founded by Yoshimasa Ashikaga in 1484, and once it was perished in Sengoku era, then it was re-founded by Yasumasa Sakakibara, the lord of Tatebayashi Castle. Once upon a time, there was an golden turtle in the temple, and the turtle predicted a good event of nearby area. But the turtle was lost from the temple because of heavy flood, and when it was rediscovered in a nearby town far after, it had changed into a stone turtle."
+            },
+            "image": "tomigi_jizo.jpg"
+        },
+        {
+            "lat": 36.251630,
+            "lng": 139.528562,
+            "address": {
+                "ja": "群馬県館林市西本町9-9",
+                "en": "9-9, Nishihon-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "愛宕神社(アタゴジンジャ)",
+                "en": "Atago Shrine"
+            },
+            "desc": {
+                "ja": "<b>Under construction 黄金造りの亀伝説が伝わる室町時代からの古刹</b>\n館林城下の西門、太田口門に隣接する寺で、文明16年(1484年)に足利義政によって創建されたといいます。戦国時代に荒廃しましたが、館林城主榊原康政の助力で再興されました。寺にはかつて、黄金で造られた亀があり、近隣にめでたい出来事が起こる際には必ず前兆があると伝えられていました。山号の『瑞亀山』もこれにちなんでつけられたとも言われています。ある時周辺一帯に大水があり、人々がそれに気を取られている間に、金亀は寺を抜け出し姿を消してしまい、人々の懸命の捜索も甲斐なくみつからなかったといいます。寛文11年(1671年)、近隣の邑楽郡板倉町籾谷の地にこの金亀とそっくりな大亀があらわれたため、漁師たちが引き上げ安勝寺という寺に安置したが、既に金亀ではなく石亀に変わってしまっていたと言います。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、<a href=\"http://w-concept.jp/tatebayashijou/joukamachi/housenji.html\" target=\"_blank\">「館林城の再建をめざす会」サイト内記事</a>",
+                "en": "<b>Old temple which is famous with golden turtle legend</b>\nThis temple is next to the Otaguchi-mon gate, the west gate of Tatebayashi town. It was founded by Yoshimasa Ashikaga in 1484, and once it was perished in Sengoku era, then it was re-founded by Yasumasa Sakakibara, the lord of Tatebayashi Castle. Once upon a time, there was an golden turtle in the temple, and the turtle predicted a good event of nearby area. But the turtle was lost from the temple because of heavy flood, and when it was rediscovered in a nearby town far after, it had changed into a stone turtle."
+            },
+            "image": "atago_shrine.jpg"
+        },
+        {
+            "lat": 36.250370,
+            "lng": 139.527486,
+            "address": {
+                "ja": "群馬県館林市西本町2-50",
+                "en": "2-50, Nishihon-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "応声寺(オウセイジ)",
+                "en": "Oseiji Temple"
+            },
+            "desc": {
+                "ja": "<b>Under construction 黄金造りの亀伝説が伝わる室町時代からの古刹</b>\n館林城下の西門、太田口門に隣接する寺で、文明16年(1484年)に足利義政によって創建されたといいます。戦国時代に荒廃しましたが、館林城主榊原康政の助力で再興されました。寺にはかつて、黄金で造られた亀があり、近隣にめでたい出来事が起こる際には必ず前兆があると伝えられていました。山号の『瑞亀山』もこれにちなんでつけられたとも言われています。ある時周辺一帯に大水があり、人々がそれに気を取られている間に、金亀は寺を抜け出し姿を消してしまい、人々の懸命の捜索も甲斐なくみつからなかったといいます。寛文11年(1671年)、近隣の邑楽郡板倉町籾谷の地にこの金亀とそっくりな大亀があらわれたため、漁師たちが引き上げ安勝寺という寺に安置したが、既に金亀ではなく石亀に変わってしまっていたと言います。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、<a href=\"http://w-concept.jp/tatebayashijou/joukamachi/housenji.html\" target=\"_blank\">「館林城の再建をめざす会」サイト内記事</a>",
+                "en": "<b>Old temple which is famous with golden turtle legend</b>\nThis temple is next to the Otaguchi-mon gate, the west gate of Tatebayashi town. It was founded by Yoshimasa Ashikaga in 1484, and once it was perished in Sengoku era, then it was re-founded by Yasumasa Sakakibara, the lord of Tatebayashi Castle. Once upon a time, there was an golden turtle in the temple, and the turtle predicted a good event of nearby area. But the turtle was lost from the temple because of heavy flood, and when it was rediscovered in a nearby town far after, it had changed into a stone turtle."
+            },
+            "image": "oseiji.jpg"
         }
     ]
 }
