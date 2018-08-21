@@ -190,7 +190,7 @@
                 "en": "Hosenji Temple"
             },
             "desc": {
-                "ja": "<b>黄金造りの亀伝説が伝わる室町時代からの古刹</b>\n館林城下の西門、太田口門に隣接する寺で、文明16年(1484年)に足利義政によって創建されたといいます。戦国時代に荒廃しましたが、館林城主榊原康政の助力で再興されました。寺にはかつて、黄金で造られた亀があり、近隣にめでたい出来事が起こる際には必ず前兆があると伝えられていました。山号の『瑞亀山』もこれにちなんでつけられたとも言われています。ある時周辺一帯に大水があり、人々がそれに気を取られている間に、金亀は寺を抜け出し姿を消してしまい、人々の懸命の捜索も甲斐なくみつからなかったといいます。寛文11年(1671年)、近隣の邑楽郡板倉町籾谷の地にこの金亀とそっくりな大亀があらわれたため、漁師たちが引き上げ安勝寺という寺に安置したが、既に金亀ではなく石亀に変わってしまっていたと言います。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、<a href=\"http://w-concept.jp/tatebayashijou/joukamachi/housenji.html\" target=\"_blank\">「館林城の再建をめざす会」サイト内記事</a>",
+                "ja": "<b>黄金造りの亀伝説が伝わる室町時代からの古刹</b>\n館林城下の西門、太田口門に隣接する寺で、文明16年(1484年)に足利義政によって創建されたといいます。戦国時代に荒廃しましたが、館林城主榊原康政の助力で再興されました。寺にはかつて、黄金で造られた亀があり、近隣にめでたい出来事が起こる際には必ず前兆があると伝えられていました。山号の『瑞亀山』もこれにちなんでつけられたとも言われています。ある時周辺一帯に大水があり、人々がそれに気を取られている間に、金亀は寺を抜け出し姿を消してしまい、人々の懸命の捜索も甲斐なくみつからなかったといいます。寛文11年(1671年)、近隣の邑楽郡板倉町籾谷の地にこの金亀とそっくりな大亀があらわれたため、漁師たちが引き上げ安勝寺という寺に安置しましたが、既に金亀ではなく石亀に変わってしまっていました。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、<a href=\"http://w-concept.jp/tatebayashijou/joukamachi/housenji.html\" target=\"_blank\">「館林城の再建をめざす会」サイト内記事</a>",
                 "en": "<b>Old temple which is famous with golden turtle legend</b>\nThis temple is next to the Otaguchi-mon gate, the west gate of Tatebayashi town. It was founded by Yoshimasa Ashikaga in 1484, and once it was perished in Sengoku era, then it was re-founded by Yasumasa Sakakibara, the lord of Tatebayashi Castle. Once upon a time, there was an golden turtle in the temple, and the turtle predicted a good event of nearby area. But the turtle was lost from the temple because of heavy flood, and when it was rediscovered in a nearby town far after, it had changed into a stone turtle."
             },
             "image": "hosenji.jpg"
@@ -211,6 +211,23 @@
                 "en": "<b>A shrine with a legend which the treasures were excavated from here</b>\nOnce upon a time, there was a temple called \"Enmei-in\" in this place. In 1695, the priest of this temple saw a strange dream. The dream said, \"Digging the ground of this temple, sacred treasure will appear. If you carefully worship the treasure, the temple will prosper\". When the priest excavated the ground, three jugs were digged out. People worshiped this place as a \"Kumano Shrine\", but unfortunately, the jugs had been sold off by the priest. Hence, the temple has gone away, only the shrine remains."
             },
             "image": "kumano_shrine.jpg"
+        },
+        {
+            "lat": 36.250370,
+            "lng": 139.527486,
+            "address": {
+                "ja": "群馬県館林市西本町2-50",
+                "en": "2-50, Nishihon-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "応声寺(オウショウジ)",
+                "en": "Oshoji Temple"
+            },
+            "desc": {
+                "ja": "<b>ムジナの残した六字名号の残る寺</b>\n江戸時代には館林城下の時報係を務めていた時宗の寺院で、そのため天保3年(1683年)館林城が一時は異常となった際に、不要となった城鐘を預かり今日まで境内隣に残されています。天正の末期ごろ、当山中興覚阿上人が十日念仏を催したところ、「茂林寺の僧守鶴」と名乗る異様な風体の僧が訪れ、一心不乱に念仏を唱えていました。やがて十日念仏が終わると、その僧は「私は実は数千年の齢を経たムジナの化身である」と正体を明かし、「南無阿弥陀仏」の六字の名号を書き残して姿を消しました。その六字名号が今もこの寺に伝わっています。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著、館林城鐘脇の案内板",
+                "en": "<b>The temple where the calligraphy written by raccoon dog is left</b>\nIn the Edo period, this temple was responsible for ringing the time bells in Tatebayashi Town, so a big bell for telling time has been left in the temple for now. In the past, a monk who named \"Morinji Temple's Shukaku\" carried out ten-day buddhist training at this temple. After ten-day training, the monk said in fact he is the incarnation of thousand-years aged racoon dog, and he wrote and left a calligraphy on which Buddhist prayers were written. The calligraphy still remains in this temple."
+            },
+            "image": "oshoji.jpg"
         }
     ]
 }
