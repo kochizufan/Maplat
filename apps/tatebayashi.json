@@ -213,6 +213,40 @@
             "image": "kumano_shrine.jpg"
         },
         {
+            "lat": 36.241156,
+            "lng": 139.533041,
+            "address": {
+                "ja": "群馬県館林市緑町1丁目3-7",
+                "en": "3-7, 1-chome, Midori-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "トウミギ地蔵尊(トウミギジゾウソン)",
+                "en": "Tomigi Jizo"
+            },
+            "desc": {
+                "ja": "<b>木彫りから石仏に変身したお地蔵様</b>\n「トウミギ」とはトウモロコシの事で、トウモロコシの旬である8月末ごろに縁日があったのでこの名がついたといいます。この地蔵様は昔はイチイの木を用い飛騨の名工が彫ったとされる立派な木彫りの地蔵様でした。地蔵様が汚されるのを恐れた堂守は、ある時この像を厨子に納め固く扉を閉ざし、人に見せない秘仏としました。そのまま数十年、お地蔵様は誰の目にも触れませんでしたが、その後この地域を暴風が襲い、地蔵堂も傷つき厨子も破壊されました。村人たちがお堂の修理のために確かめてみると、お地蔵様はなぜか石地蔵に変わってしまっていました。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著",
+                "en": "<b>Wood carving Jizo statue changed into stone Jizo statue</b>\n\"Tomigi\" means maize, and this is named because the festival of this temple is held in the season of maize. Initially, this Jizo was a wooden Jizo statue carved by famous sculptor in Hida with Yew trees as a material. The priest of this temple wanted to keep this Jizo a secret, put it in a pagoda and locked it down. So no one had ever seen this Jizo for decades. After that, a heavy rain struck the area, the temple was damaged and the pagoda was also broken. People saw the Jizo for the first time in decades, but the Jizo turned into a stone statue."
+            },
+            "image": "tomigi_jizo.jpg"
+        },
+        {
+            "lat": 36.251630,
+            "lng": 139.528562,
+            "address": {
+                "ja": "群馬県館林市西本町9-9",
+                "en": "9-9, Nishihon-cho, Tatebayashi, GUNMA"
+            },
+            "name": {
+                "ja": "愛宕神社(アタゴジンジャ)",
+                "en": "Atago Shrine"
+            },
+            "desc": {
+                "ja": "<b>梢から火を吹き老杉を守ろうとした不思議の社</b>\n役行者創建と伝わる古い神社で、江戸期は市中の総鎮守と定められて城主の手厚い保護を受けたといいます。ところが明治を過ぎると藩の庇護もなくなり、社殿も荒れ果てました。なんとか費用を工面し社を修理したいと思う神主に、悪徳商人がつけこみます。境内に十数本生えていた樹齢数百年の巨杉を二束三文で買い取り一儲けしようとしたのです。ところがいざ伐採しようとするとにわかに突風が巻き起こり、杉の梢が火を吹き始め、その火が神主の居宅に燃え移り全焼してしまいました。幸い梢は2、3本が焼けただけでしたが、この不思議を見た信徒たちは伐採中止を求め、老杉は難を逃れました。残念ながらその後、公害で老杉は枯れてしまい、今は1本も残っていません。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著",
+                "en": "<b>A miracle shrine that burned fire from branches and protected cedars from logging</b>\nThis shrine was very old shrine established by \"En-no-gyoja\", and was under the protection of the lord of Tatebayashi Castle in Edo period. However in Meiji era, the protection from the lord was lost, the shrine was desolated. The Shinto priest wanted to repair the shrine by financing the money somehow, but an malicious merchant came to him and tried to deceive him. They tried to purchase sacred and huge cedars cheaply and to sell them. However, when the merchants tried to cut the cedars, the miracle that a flame spouted from the branches of the cedars, occurred disturbing trying to cut. As a result, the cedars were not cut, but those cedars later died due to air pollution."
+            },
+            "image": "atago_shrine.jpg"
+        },
+        {
             "lat": 36.250370,
             "lng": 139.527486,
             "address": {
