@@ -96,6 +96,7 @@ define(['histmap'], function(ol) {
     // Maplat App Class
     var MaplatApp = function(appOption) {
         var app = this;
+        app.initialRestore = {};
 
         ol.events.EventTarget.call(app);
         if (appOption.restore_session) {
@@ -103,15 +104,15 @@ define(['histmap'], function(ol) {
             var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
             var currentTime = Math.floor(new Date().getTime() / 1000);
             if (lastEpoch && currentTime - lastEpoch < 3600) {
-                app.restoreSourceID = localStorage.getItem('sourceID');
-                app.restoreBackID = localStorage.getItem('backID');
-                app.restorePosition = {
+                app.initialRestore.sourceID = localStorage.getItem('sourceID');
+                app.initialRestore.backgroundID = localStorage.getItem('backgroundID') || localStorage.getItem('backID');
+                app.initialRestore.position = {
                     x: parseFloat(localStorage.getItem('x')),
                     y: parseFloat(localStorage.getItem('y')),
                     zoom: parseFloat(localStorage.getItem('zoom')),
                     rotation: parseFloat(localStorage.getItem('rotation'))
                 };
-                app.restoreTransparency = parseFloat(localStorage.getItem('transparency') || 0);
+                app.initialRestore.transparency = parseFloat(localStorage.getItem('transparency') || 0);
             }
         }
         var appid = app.appid = appOption.appid || 'sample';
@@ -120,6 +121,7 @@ define(['histmap'], function(ol) {
         app.mapDivDocument.classList.add('maplat');
         app.logger = new Logger(appOption.debug ? LoggerLevel.ALL : LoggerLevel.INFO);
         app.cacheEnable = appOption.cache_enable || false;
+        app.stateBuffer = {};
         var setting = appOption.setting;
 
         // Add UI HTML Element
@@ -231,8 +233,7 @@ define(['histmap'], function(ol) {
                     app.cacheHash[source.sourceID] = source;
                 }
 
-                var initial = app.restoreSourceID || app.startFrom || cache[cache.length - 1].sourceID;
-                app.restoreSourceID = undefined;
+                var initial = app.initialRestore.sourceID || app.startFrom || cache[cache.length - 1].sourceID;
                 app.from = cache.reduce(function(prev, curr) {
                     if (prev) {
                         return !(prev instanceof ol.source.HistMap) && curr.sourceID != initial ? curr : prev;
@@ -240,7 +241,7 @@ define(['histmap'], function(ol) {
                     if (curr.sourceID != initial) return curr;
                     return prev;
                 }, null);
-                app.changeMap(initial);
+                app.changeMap(initial, app.initialRestore);
 
                 var showInfo = function(data) {
                     app.dispatchEvent(new CustomEvent('clickMarker', data));
@@ -391,6 +392,14 @@ define(['histmap'], function(ol) {
                             localStorage.setItem('zoom', zoom);
                             localStorage.setItem('rotation', rotation);
                         }
+                        app.requestUpdateState({
+                            position: {
+                                x: center[0],
+                                y: center[1],
+                                zoom: zoom,
+                                rotation: rotation
+                            }
+                        });
                     });
                 });
             });
@@ -493,143 +502,168 @@ define(['histmap'], function(ol) {
         this.mapObject.setGPSMarker(position, true);
     };
 
-    MaplatApp.prototype.changeMap = function(sourceID) {
+    MaplatApp.prototype.changeMap = function(sourceID, restore) {
         var app = this;
+        if (!restore) restore = {};
         var now = app.cacheHash['osm'];
         var to = app.cacheHash[sourceID];
-        if ((to == app.from) && (to != now)) return;
-        if (to != app.from) {
-            app.convertParametersFromCurrent(to, function(size) {
-                var backSrc = null;
-                var backTo = null;
-                var backRestore = app.restoreBackID ? app.cacheHash[app.restoreBackID] : undefined;
-                app.restoreBackID = undefined;
 
-                if (app.backMap) {
-                    // Overlay = true case:
-                    backSrc = app.backMap.getSource(); // Get current source of background map
-                    if (!(to instanceof ol.source.NowMap)) {
-                        // If new foreground source is nonlinear map:
-                        if (backRestore) {
-                            backTo = backRestore;
-                            if (!backSrc) {
-                                app.backMap.exchangeSource(backTo);
-                            }
-                        } else {
-                            if (!backSrc) {
-                                // If current background source is not set, specify it
-                                backTo = now;
-                                if (app.from instanceof ol.source.NowMap) {
-                                    backTo = app.from instanceof ol.source.TmsMap ?
-                                        app.mapObject.getSource() :
-                                        // If current foreground is TMS overlay, set current basemap as new background
-                                        app.from; // If current foreground source is basemap, set current foreground as new background
-                                }
+        if (!app.changeMapSeq) {
+            app.changeMapSeq = Promise.resolve();
+        }
+
+        app.changeMapSeq = app.changeMapSeq.then(function() {
+            return new Promise(function(resolve, reject) {
+                app.convertParametersFromCurrent(to, function(size) {
+                    var backSrc = null;
+                    var backTo = null;
+                    var backRestore = restore.backgroundID ? app.cacheHash[restore.backgroundID] : undefined;
+
+                    if (app.backMap) {
+                        // Overlay = true case:
+                        backSrc = app.backMap.getSource(); // Get current source of background map
+                        if (!(to instanceof ol.source.NowMap)) {
+                            // If new foreground source is nonlinear map:
+                            if (backRestore) {
+                                backTo = backRestore;
                                 app.backMap.exchangeSource(backTo);
                             } else {
-                                // If current background source is set, use it again
-                                backTo = backSrc;
+                                if (!backSrc) {
+                                    // If current background source is not set, specify it
+                                    backTo = now;
+                                    if (app.from instanceof ol.source.NowMap) {
+                                        backTo = app.from instanceof ol.source.TmsMap ?
+                                            app.mapObject.getSource() :
+                                            // If current foreground is TMS overlay, set current basemap as new background
+                                            app.from; // If current foreground source is basemap, set current foreground as new background
+                                    }
+                                    app.backMap.exchangeSource(backTo);
+                                } else {
+                                    // If current background source is set, use it again
+                                    backTo = backSrc;
+                                }
                             }
+                            if (app.restoreSession) {
+                                var currentTime = Math.floor(new Date().getTime() / 1000);
+                                localStorage.setItem('epoch', currentTime);
+                                localStorage.setItem('backgroundID', backTo.sourceID);
+                            }
+                            app.requestUpdateState({backgroundID: backTo.sourceID});
+                        } else if (to instanceof ol.source.NowMap) {
+                            // If new foreground source is basemap or TMS overlay, remove source from background map
+                            app.backMap.exchangeSource();
+                        }
+                        // Overlay = true case: end
+                    }
+                    if (to instanceof ol.source.TmsMap) {
+                        // Foreground is TMS overlay case: set TMS as Layer
+                        app.mapObject.setLayer(to);
+                        // If current foreground is basemap then set it as basemap layer
+                        if (backRestore) {
+                            app.mapObject.exchangeSource(backRestore);
+                        } else if (!(app.from instanceof ol.source.NowMap)) {
+                            var backToLocal = backSrc || now;
+                            app.mapObject.exchangeSource(backToLocal);
                         }
                         if (app.restoreSession) {
                             var currentTime = Math.floor(new Date().getTime() / 1000);
                             localStorage.setItem('epoch', currentTime);
-                            localStorage.setItem('backID', backTo.sourceID);
+                            localStorage.setItem('backgroundID', app.mapObject.getSource().sourceID);
                         }
-                    } else if (to instanceof ol.source.NowMap) {
-                        // If new foreground source is basemap or TMS overlay, remove source from background map
-                        app.backMap.exchangeSource();
+                        app.requestUpdateState({backgroundID: app.mapObject.getSource().sourceID});
+                    } else {
+                        // Remove overlay from foreground and set current source to foreground
+                        app.mapObject.setLayer();
+                        app.mapObject.exchangeSource(to);
                     }
-                    // Overlay = true case: end
-                }
-                if (to instanceof ol.source.TmsMap) {
-                    // Foreground is TMS overlay case: set TMS as Layer
-                    app.mapObject.setLayer(to);
-                    // If current foreground is basemap then set it as basemap layer
-                    if (backRestore) {
-                        app.mapObject.exchangeSource(backRestore);
-                    } else if (!(app.from instanceof ol.source.NowMap)) {
-                        var backToLocal = backSrc || now;
-                        app.mapObject.exchangeSource(backToLocal);
-                    }
+                    app.dispatchEvent(new CustomEvent('mapChanged', app.getMapMeta(to.sourceID)));
                     if (app.restoreSession) {
                         var currentTime = Math.floor(new Date().getTime() / 1000);
                         localStorage.setItem('epoch', currentTime);
-                        localStorage.setItem('backID', app.mapObject.getSource().sourceID);
+                        localStorage.setItem('sourceID', to.sourceID);
                     }
-                } else {
-                    // Remove overlay from foreground and set current source to foreground
-                    app.mapObject.setLayer();
-                    app.mapObject.exchangeSource(to);
-                }
-                app.dispatchEvent(new CustomEvent('mapChanged', app.getMapMeta(to.sourceID)));
-                if (app.restoreSession) {
-                    var currentTime = Math.floor(new Date().getTime() / 1000);
-                    localStorage.setItem('epoch', currentTime);
-                    localStorage.setItem('sourceID', to.sourceID);
-                }
-
-                // This must be here: Because, render process works after view.setCenter,
-                // and Changing "from" content must be finished before "postrender" event
-                app.from = to;
-
-                var view = app.mapObject.getView();
-                if (to.insideCheckHistMapCoords(size[0])) {
-                    view.setCenter(size[0]);
-                    view.setZoom(size[1]);
-                    view.setRotation(size[2]);
-                } else if (!app.__init) {
-                    app.dispatchEvent(new CustomEvent('outOfMap', {}));
-                    to.goHome();
-                }
-                to.setGPSMarker(app.currentPosition, true);
-                app.resetMarker();
-                for (var i = 0; i < app.pois.length; i++) {
-                    (function(data) {
-                        app.setMarker(data);
-                    })(app.pois[i]);
-                }
-                if (to.pois) {
-                    for (var i = 0; i < to.pois.length; i++) {
-                        (function(data) {
-                            app.setMarker(data);
-                        })(to.pois[i]);
+                    var updateState = {
+                        sourceID: to.sourceID
+                    };
+                    if (to instanceof ol.source.NowMap && !(to instanceof ol.source.TmsMap)) {
+                        updateState.backgroundID = '____delete____';
                     }
-                }
-                app.resetLine();
-                for (var i = 0; i < app.lines.length; i++) {
-                    (function(data) {
-                        app.setLine(data);
-                    })(app.lines[i]);
-                }
+                    app.requestUpdateState(updateState);
 
-                app.mapObject.updateSize();
-                app.mapObject.renderSync();
+                    // This must be here: Because, render process works after view.setCenter,
+                    // and Changing "from" content must be finished before "postrender" event
+                    app.from = to;
 
-                if (app.__init == true) {
-                    app.__init = false;
-                    if (app.restorePosition) {
-                        to.setViewpoint(app.restorePosition);
-                        app.restorePosition = undefined;
-                    } else {
-                        to.goHome();
-                    }
-                    if (app.restoreTransparency) {
-                        app.setTransparency(app.restoreTransparency);
-                        app.restoreTransparency = undefined;
-                    }
-                } else if (app.backMap && backTo) {
-                    app.convertParametersFromCurrent(backTo, function(size) {
-                        var view = app.backMap.getView();
+                    var view = app.mapObject.getView();
+                    if (to.insideCheckHistMapCoords(size[0])) {
                         view.setCenter(size[0]);
                         view.setZoom(size[1]);
                         view.setRotation(size[2]);
-                        app.backMap.updateSize();
-                        app.backMap.renderSync();
-                    });
-                }
+                    } else if (!app.__init) {
+                        app.dispatchEvent(new CustomEvent('outOfMap', {}));
+                        to.goHome();
+                    }
+                    to.setGPSMarker(app.currentPosition, true);
+                    app.resetMarker();
+                    for (var i = 0; i < app.pois.length; i++) {
+                        (function(data) {
+                            app.setMarker(data);
+                        })(app.pois[i]);
+                    }
+                    if (to.pois) {
+                        for (var i = 0; i < to.pois.length; i++) {
+                            (function(data) {
+                                app.setMarker(data);
+                            })(to.pois[i]);
+                        }
+                    }
+                    app.resetLine();
+                    for (var i = 0; i < app.lines.length; i++) {
+                        (function(data) {
+                            app.setLine(data);
+                        })(app.lines[i]);
+                    }
+
+                    app.mapObject.updateSize();
+                    app.mapObject.renderSync();
+
+                    if (restore.position) {
+                        app.__init = false;
+                        to.setViewpoint(restore.position);
+                    }
+                    if (restore.transparency) {
+                        app.setTransparency(restore.transparency);
+                    }
+                    if (app.__init == true) {
+                        app.__init = false;
+                        to.goHome();
+                    } else if (app.backMap && backTo) {
+                        app.convertParametersFromCurrent(backTo, function (size) {
+                            var view = app.backMap.getView();
+                            view.setCenter(size[0]);
+                            view.setZoom(size[1]);
+                            view.setRotation(size[2]);
+                            app.backMap.updateSize();
+                            app.backMap.renderSync();
+                        });
+                    }
+                    resolve();
+                });
             });
+        });
+    };
+
+    MaplatApp.prototype.requestUpdateState = function(data) {
+        var app = this;
+        app.stateBuffer = Object.assign(app.stateBuffer, data);
+        if (app.stateBuffer.backgroundID == '____delete____') {
+            delete app.stateBuffer.backgroundID;
         }
+        if (app.timer) clearTimeout(app.timer);
+        app.timer = setTimeout(function() {
+            app.timer = undefined;
+            app.dispatchEvent(new CustomEvent('updateState', app.stateBuffer));
+        }, 50);
     };
 
     MaplatApp.prototype.setTransparency = function(percentage) {
@@ -640,6 +674,7 @@ define(['histmap'], function(ol) {
             localStorage.setItem('epoch', currentTime);
             localStorage.setItem('transparency', percentage);
         }
+        this.requestUpdateState({transparency: percentage});
     };
 
     MaplatApp.prototype.getTransparency = function() {
