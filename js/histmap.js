@@ -135,57 +135,75 @@ define(['ol-custom'], function(ol) {
         if (typeof options === 'string') {
             options = baseDict[options];
         }
+
         options = Object.assign(options, commonOptions);
-        if (!options.maptype) options.maptype = 'maplat';
         options.label = options.label || options.year;
+        options.sourceID = options.sourceID || options.mapID;
+        options.title = options.title || options.era;
         if (options.maptype == 'base' || options.maptype == 'overlay') {
-            options.sourceID = options.mapID;
             var targetSrc = options.maptype == 'base' ? ol.source.NowMap : ol.source.TmsMap;
-            return targetSrc.createAsync(Object.assign({
-                url: options.url,
-                sourceID: options.sourceID,
-                label: options.label
-            }, options)).catch(function(err) {
-                throw err;
+            return targetSrc.createAsync(options).then(function(obj) {
+                return obj.initialWait.then(function() {
+                    return obj;
+                });
             });
         }
 
         return new Promise(function(resolve, reject) {
-            requirejs(['histmap_tin'], resolve);
-        }).then(function() {
-            return ol.source.HistMap_tin.createAsync(Object.assign({
-                title: options.title || options.era,
-                mapID: options.mapID,
-                width: options.width,
-                height: options.height,
-                maptype: options.maptype,
-                sourceID: options.sourceID || options.mapID,
-                label: options.label
-            }, options))
-                .then(function(obj) {
-                    return new Promise(function(resolve, reject) {
-                        if (options.noload) {
-                            /* MaplatEditor用 なくさない */
-                            resolve(obj);
+            var url = options.setting_file || 'maps/' + options.mapID + '.json';
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+
+            xhr.onload = function(e) {
+                if (this.status == 200 || this.status == 0 ) { // 0 for UIWebView
+                    try {
+                        var resp = this.response;
+                        if (typeof resp != 'object') resp = JSON.parse(resp);
+                        options = Object.assign(resp, options);
+                        options.label = options.label || resp.year;
+                        if (!options.maptype) options.maptype = 'maplat';
+
+                        if (options.maptype == 'base' || options.maptype == 'overlay') {
+                            var targetSrc = options.maptype == 'base' ? ol.source.NowMap : ol.source.TmsMap;
+                            targetSrc.createAsync(options).then(function(ret) {
+                                resolve(ret);
+                            });
                             return;
                         }
-                        if (obj.cacheWait) {
-                            obj.cacheWait.then(function() {
-                                obj.mapSize2MercSize(resolve);
-                            }).catch(function() {
-                                obj.mapSize2MercSize(resolve);
-                            });
-                        } else {
-                            obj.mapSize2MercSize(resolve);
+                        if (options.noload) {
+                            resolve(new ol.source.HistMap_tin(options));
+                            return;
                         }
-                    });
-                }).catch(function(err) {
-                    throw err;
-                });
-        }).catch(function(err) {
-            throw err;
+
+                        new Promise(function(res, rej) {
+                            requirejs(['histmap_tin'], res);
+                        }).then(function() {
+                            ol.source.HistMap_tin.createAsync(options)
+                                .then(function(obj) {
+                                    obj.initialWait.then(function() {
+                                        obj.mapSize2MercSize(resolve);
+                                    }).catch(function() {
+                                        obj.mapSize2MercSize(resolve);
+                                    });
+                                }).catch(function(err) {
+                                    reject(err);
+                                });
+                        }).catch(function(err) {
+                            reject(err);
+                        });
+                    } catch(err) {
+                        reject(err);
+                    }
+                } else {
+                    reject('Fail to load map json');
+                    // self.postMessage({'event':'cannotLoad'});
+                }
+            };
+            xhr.send();
         });
     };
+
     ol.source.setCustomFunction(ol.source.HistMap);
 
     ol.source.HistMap.prototype.xy2MercAsync = function(xy) {

@@ -428,6 +428,39 @@ define(['ol3', 'turf'], function(ol, turf) {
             // var scale = abss / 4.0;
             return Math.atan2(sinx, cosx);
         };
+
+        target.prototype.resolvePois = function(pois) {
+            var self = this;
+            if (!pois) pois = [];
+            if (typeof pois == 'string') {
+                return new Promise(function(resolve, reject) {
+                    var url = pois.match(/\//) ? pois : 'pois/' + pois;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', url, true);
+                    xhr.responseType = 'json';
+
+                    xhr.onload = function(e) {
+                        if (this.status == 200 || this.status == 0 ) { // 0 for UIWebView
+                            try {
+                                var resp = this.response;
+                                if (typeof resp != 'object') resp = JSON.parse(resp);
+                                self.pois = resp;
+                                resolve();
+                            } catch(err) {
+                                reject(err);
+                            }
+                        } else {
+                            reject('Fail to load poi json');
+                        }
+                    };
+                    xhr.send();
+                });
+            } else {
+                self.pois = pois;
+                return Promise.resolve();
+            }
+        };
     };
     ol.source.META_KEYS = ['title', 'officialTitle', 'author', 'createdAt', 'era',
         'contributor', 'mapper', 'license', 'dataLicense', 'attr', 'dataAttr',
@@ -455,13 +488,22 @@ define(['ol3', 'turf'], function(ol, turf) {
             self[key] = options[key];
         }
 
-        if (options.cache_enable) {
-            self.cacheWait = self.setupTileCacheAsnyc();
-        }
+        var cacheWait = options.cache_enable ? self.setupTileCacheAsnyc() : Promise.resolve();
+        var poisWait = self.resolvePois(options.pois);
+        self.initialWait = Promise.all([cacheWait, poisWait]);
     };
 
     ol.source.NowMap = function(optOptions) {
         var options = optOptions || {};
+        if (!options.imageExtention) options.imageExtention = 'jpg';
+        if (options.mapID) {
+            this.mapID = options.mapID;
+            if (options.mapID != 'osm') {
+                options.url = options.url ||
+                    (options.tms ? 'tiles/' + options.mapID + '/{z}/{x}/{-y}.' + options.imageExtention :
+                        'tiles/' + options.mapID + '/{z}/{x}/{y}.' + options.imageExtention);
+            }
+        }
         ol.source.OSM.call(this, options);
         ol.source.setCustomInitialize(this, options);
         ol.source.setupTileLoadFunction(this);
@@ -725,7 +767,8 @@ define(['ol3', 'turf'], function(ol, turf) {
                 // listen to changes in position
                 var map = this;
                 geolocation.on('change', function(evt) {
-                    var source = map.getLayers().item(0).getSource();
+                    var overlayLayer = map.getLayer('overlay').getLayers().item(0);
+                    var source = overlayLayer ? overlayLayer.getSource() : map.getLayers().item(0).getSource();
                     var lnglat = geolocation.getPosition();
                     var acc = geolocation.getAccuracy();
                     if (source.fake_gps && ol.MathEx.getDistance(source.home_position, lnglat) > source.fake_gps) {
