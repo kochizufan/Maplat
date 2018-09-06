@@ -1,5 +1,6 @@
 {
     "app_name" : "上田城城下町アプリ",
+    "lang": "ja",
     "fake_gps" : true,
     "fake_center" : "上田城",
     "fake_radius" : 10,

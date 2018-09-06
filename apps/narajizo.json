@@ -1,5 +1,6 @@
 {
   "app_name": "地蔵プロジェクト",
+  "lang": "ja",
   "sources": [
     "gsi",
     "gsi_ortho",

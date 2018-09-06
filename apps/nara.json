@@ -3,6 +3,7 @@
         "ja" : "ぷらっと奈良",
         "en" : "Maplat Nara"
     },
+    "lang": "ja",
     "splash" : "nara_splash.png",
     "fake_gps" : true,
     "fake_center" : "興福寺",

@@ -1,5 +1,6 @@
 {
     "app_name" : "鯖江市古地図アプリ",
+    "lang": "ja",
     "fake_gps" : true,
     "fake_center" : "鯖江市",
     "fake_radius" : 10,
