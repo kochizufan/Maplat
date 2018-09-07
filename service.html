@@ -50,6 +50,8 @@
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
   ga('create', 'UA-104602009-1', 'auto');
-  ga('send', 'pageview');
+  ga('send', 'pageview', {
+    'dimension1': navigator.userAgent
+  });
 </script>
 </html>
