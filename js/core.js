@@ -99,9 +99,20 @@ define(['histmap'], function(ol) {
         app.initialRestore = {};
 
         ol.events.EventTarget.call(app);
+
+        var appid = app.appid = appOption.appid || 'sample';
+        app.mapDiv = appOption.div || 'map_div';
+        app.mapDivDocument = document.querySelector('#' + app.mapDiv);
+        app.mapDivDocument.classList.add('maplat');
+        app.logger = new Logger(appOption.debug ? LoggerLevel.ALL : LoggerLevel.INFO);
+        app.cacheEnable = appOption.cache_enable || false;
+        app.stateBuffer = {};
+        var setting = appOption.setting;
+
         if (appOption.restore) {
             if (appOption.restore_session) app.restoreSession = true;
             app.initialRestore = appOption.restore;
+            app.setShowBorder(appOption.restore.showBorder || false);
         } else if (appOption.restore_session) {
             app.restoreSession = true;
             var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
@@ -116,16 +127,11 @@ define(['histmap'], function(ol) {
                     rotation: parseFloat(localStorage.getItem('rotation'))
                 };
                 app.initialRestore.transparency = parseFloat(localStorage.getItem('transparency') || 0);
+                app.setShowBorder(parseInt(localStorage.getItem('tshowBorser') || '0') ? true : false);
             }
+        } else {
+            app.setShowBorder(false);
         }
-        var appid = app.appid = appOption.appid || 'sample';
-        app.mapDiv = appOption.div || 'map_div';
-        app.mapDivDocument = document.querySelector('#' + app.mapDiv);
-        app.mapDivDocument.classList.add('maplat');
-        app.logger = new Logger(appOption.debug ? LoggerLevel.ALL : LoggerLevel.INFO);
-        app.cacheEnable = appOption.cache_enable || false;
-        app.stateBuffer = {};
-        var setting = appOption.setting;
 
         // Add UI HTML Element
         var newElems = createElement('<img id="center_circle" class="prevent-default" ' +
@@ -257,16 +263,24 @@ define(['histmap'], function(ol) {
                         if (curr instanceof ol.source.NowMap) return curr;
                     }, null);
 
-                    app.dispatchEvent(new CustomEvent('sourceLoaded', sources));
-
                     var cache = [];
                     app.cacheHash = {};
+                    var colors = ['maroon', 'red', 'purple', 'fuchsia', 'green', 'lime', 'olive',
+                        'yellow', 'navy', 'blue', 'teal', 'aqua'];
+                    var cIndex = 0;
                     for (var i=0; i<sources.length; i++) {
                         var source = sources[i];
                         source._map = app.mapObject;
+                        if (source.envelop) {
+                            source.envelopColor = colors[cIndex];
+                            cIndex = cIndex + 1;
+                            if (cIndex == colors.length) cIndex = 0;
+                        }
                         cache.push(source);
                         app.cacheHash[source.sourceID] = source;
                     }
+
+                    app.dispatchEvent(new CustomEvent('sourceLoaded', sources));
 
                     var initial = app.initialRestore.sourceID || app.startFrom || cache[cache.length - 1].sourceID;
                     app.from = cache.reduce(function(prev, curr) {
@@ -470,17 +484,38 @@ define(['histmap'], function(ol) {
         return createMapInfo(app.cacheHash[sourceID]);
     };
 
+    MaplatApp.prototype.setShowBorder = function(flag) {
+        this.showBorder = flag;
+        this.updateEnvelop();
+        if (flag) {
+            this.mapDivDocument.classList.add('show-border');
+        } else {
+            this.mapDivDocument.classList.remove('show-border');
+        }
+        if (this.restoreSession) {
+            var currentTime = Math.floor(new Date().getTime() / 1000);
+            localStorage.setItem('epoch', currentTime);
+            localStorage.setItem('showBorder', this.showBorder ? 1 : 0);
+        }
+        this.requestUpdateState({showBorder: this.showBorder ? 1 : 0});
+    };
+
     MaplatApp.prototype.setMarker = function(data) {
         var app = this;
         app.logger.debug(data);
         var lnglat = data.lnglat || [data.lng || data.longitude, data.lat || data.latitude];
         var x = data.x;
         var y = data.y;
+        var coords = data.coordinates;
         var src = app.from;
-        var promise = (x && y) ?
+        var promise = coords ?
+            (function() {
+                return src.merc2XyAsync(coords);
+            })() :
+            (x && y) ?
             new Promise(function(resolve) {
                 resolve(src.xy2HistMapCoords([x, y]));
-            }):
+            }) :
             (function() {
                 var merc = ol.proj.transform(lnglat, 'EPSG:4326', 'EPSG:3857');
                 return src.merc2XyAsync(merc);
@@ -500,10 +535,18 @@ define(['histmap'], function(ol) {
         var app = this;
         app.logger.debug(data);
 
-        var xyPromises = data.lnglats.map(function(lnglat) {
-            var merc = ol.proj.transform(lnglat, 'EPSG:4326', 'EPSG:3857');
-            return app.from.merc2XyAsync(merc);
-        });
+        var xyPromises;
+        if (data.coordinates) {
+            xyPromises = data.coordinates.map(function(coord) {
+                return app.from.merc2XyAsync(coord);
+            });
+        } else {
+            xyPromises = data.lnglats.map(function(lnglat) {
+                var merc = ol.proj.transform(lnglat, 'EPSG:4326', 'EPSG:3857');
+                return app.from.merc2XyAsync(merc);
+            });
+        }
+
         Promise.all(xyPromises).then(function(xys) {
             app.mapObject.setLine(xys, data.stroke);
         });
@@ -536,6 +579,36 @@ define(['histmap'], function(ol) {
     MaplatApp.prototype.setGPSMarker = function(position) {
         this.currentPosition = position;
         this.from.setGPSMarker(position, true);
+    };
+
+    MaplatApp.prototype.updateEnvelop = function() {
+        var app = this;
+        if (!app.mapObject) return;
+
+        app.mapObject.resetEnvelop();
+
+        if (app.showBorder) {
+            Object.keys(app.cacheHash).filter(function (key) {
+                return app.cacheHash[key].envelop;
+            }).map(function(key) {
+                var source = app.cacheHash[key];
+                var xyPromises = (key == app.from.sourceID) && (source instanceof ol.source.HistMap) ?
+                    [[0, 0], [source.width, 0], [source.width, source.height], [0, source.height], [0, 0]].map(function(xy) {
+                        return Promise.resolve(source.xy2HistMapCoords(xy));
+                    }) :
+                    source.envelop.geometry.coordinates[0].map(function(coord) {
+                        return app.from.merc2XyAsync(coord);
+                    });
+
+                Promise.all(xyPromises).then(function(xys) {
+                    app.mapObject.setEnvelop(xys, {
+                        color: source.envelopColor,
+                        width: 2,
+                        lineDash: [6, 6]
+                    });
+                });
+            });
+        }
     };
 
     MaplatApp.prototype.changeMap = function(sourceID, restore) {
@@ -659,6 +732,7 @@ define(['histmap'], function(ol) {
                             app.setLine(data);
                         })(app.lines[i]);
                     }
+                    app.updateEnvelop();
 
                     app.mapObject.updateSize();
                     app.mapObject.renderSync();
