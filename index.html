@@ -17,7 +17,10 @@
         option[hash[0]] = hash[1];
     }
     if (option['appid']) {
-        var url = 'https://s.maplat.jp/r/' + option['appid'] + 'map/';
+        var appid = option['appid'];
+        if (appid == 'iwate') appid = 'morioka';
+        if (appid == 'jizoapp') appid = 'narajizo';
+        var url = 'https://s.maplat.jp/r/' + appid + 'map/';
         if (option['lang']) {
             url = url + '?lang=' + option['lang'];
         }
