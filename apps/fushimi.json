@@ -15,24 +15,6 @@
             "mapID": "fushimijo_maplat",
             "label": "丸の内圖"
         },
-        {
-            "title": "木幡山伏見城縄張図",
-            "createdAt": "2017",
-            "era": "慶長2年(1597年)頃",
-            "author": "デアゴスティーニ・ジャパン",
-            "attr": "(c) デアゴスティーニ・ジャパン",
-            "reference": "日本の城 改訂版 3号 デアゴスティーニ・ジャパン",
-            "license": "All Right Reserved",
-            "dataLicense": "CC BY-SA",
-            "label": "縄張図",
-            "mapID": "fushimijo_tms",
-            "maptype": "overlay",
-            "url": "https://t.tilemap.jp/private/fushimijo_tms/{z}/{x}/{-y}.png",
-            "maxZoom": 18,
-            "envelopLngLats" : [[135.773988737494, 34.93205496838526], [135.78637026697504, 34.93206168227901], [135.78640865105226, 34.94368352300576], [135.77396138871435, 34.94369071102828]]
-        },
-        "gsi",
-        "gsi_ortho",
         "osm"
     ],
     "pois": []
