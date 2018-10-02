@@ -8,12 +8,16 @@
         139.929796,
         37.487708
     ],
-    "default_zoom": 17,
+    "default_zoom": 18,
     "start_from": "fushimijo_maplat",
     "sources": [
         {
             "mapID": "fushimijo_maplat",
             "label": "丸の内圖"
+        },
+        {
+            "mapID": "fushimi_kojo_ezu",
+            "label": "古城絵図"
         },
         "osm"
     ],
