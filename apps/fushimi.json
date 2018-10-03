@@ -19,6 +19,10 @@
             "mapID": "fushimi_kojo_ezu",
             "label": "古城絵図"
         },
+        {
+            "mapID": "fushimi_joka_ezu",
+            "label": "城下町絵図"
+        },
         "osm"
     ],
     "pois": []
