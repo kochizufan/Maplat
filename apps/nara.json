@@ -13,6 +13,13 @@
     "start_from": "nara_ezuya",
     "sources" : [
         {
+            "mapID" : "heijokyo_timetrip",
+            "label" : {
+                "ja" : "平城京",
+                "en" : "Heijokyo"
+            }
+        },
+        {
             "mapID" : "kofukuji_keidai_kou",
             "label" : {
                 "ja" : "興福寺",
