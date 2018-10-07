@@ -262,6 +262,22 @@
                 "en": "<b>The temple where the calligraphy written by raccoon dog is left</b>\nIn the Edo period, this temple was responsible for ringing the time bells in Tatebayashi Town, so a big bell for telling time has been left in the temple for now. In the past, a monk who named \"Morinji Temple's Shukaku\" carried out ten-day buddhist training at this temple. After ten-day training, the monk said in fact he is the incarnation of thousand-years aged racoon dog, and he wrote and left a calligraphy on which Buddhist prayers were written. The calligraphy still remains in this temple."
             },
             "image": "oshoji.jpg"
+        },
+        {
+            "lat": 36.246440,
+            "lng": 139.532465,
+            "address": "群馬県館林市本町2-8",
+            "name": "青梅天満宮(アオウメテンマングウ)",
+            "desc": "<b>菅原道真が投げた梅の実が落ちたと伝わる、日本四社の1つ</b>\n江戸時代には宝幢寺境内に鎮座していました。菅原道真が大宰府に左遷された時に、楊枝の先に梅の実を刺し東西南北に投げたところ、北は出雲菅原天満宮の花久理梅、南は讃岐綱敷天満神社の四季梅、西は筑前大宰府天満宮の飛梅となり、東の1つがこの青梅天満宮に落ちたと言われており、この四つの神社を日本四社と呼びます。\n\n参考: 『館林の社寺』館林双書15巻",
+            "image": "aoume.jpg"
+        },
+        {
+            "lat": 36.240803,
+            "lng": 139.531622,
+            "address": "群馬県館林市緑町1丁目2-15",
+            "name": "遍照寺(ヘンショウジ)",
+            "desc": "<b>高僧の怒りが墓石を捻り上げた、宥円のネジリ石伝説が伝わる寺</b>\n天正年間頃、この寺の住持は名僧と名も高い宥円という僧でした。ある日、館林城主御前で他宗の僧と宗論を行うこととなりました。論は終始宥円がリードしましたが、結果は城主の贔屓判定で宥円は負けとされました。それだけではなく、宥円が城を出ると、勝った僧の従者たちが宥円の法衣をはぎ取るという暴挙まで行いました。宥円はこの狼藉に抗議するには死ぬよりないと自害し、その墓石は恨みで捻れたネジリ石となって、今もこの寺に伝わっています。\n\n参考: 『館林・邑楽の民話と伝説』川島維知著",
+            "image": "nejiri.jpg"
         }
     ]
 }
