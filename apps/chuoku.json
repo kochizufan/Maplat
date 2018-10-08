@@ -32,6 +32,10 @@
             "label" : "現代築地"
         },
         {
+            "mapID" : "miesan_ginza_map",
+            "label" : "現代銀座"
+        },
+        {
             "mapID" : "miesan_kayabacho_map",
             "label" : "現代茅場町"
         },
