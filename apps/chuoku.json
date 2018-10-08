@@ -28,6 +28,10 @@
             "label" : "明治日本橋"
         },
         {
+            "mapID" : "miesan_tsukiji_map",
+            "label" : "現代築地"
+        },
+        {
             "mapID" : "miesan_kayabacho_map",
             "label" : "現代茅場町"
         },
