@@ -40,6 +40,10 @@
             "label" : "街歩き築地"
         },
         {
+            "mapID" : "miesan_ningyocho_map",
+            "label" : "街歩き人形町"
+        },
+        {
             "mapID" : "miesan_kayabacho_map",
             "label" : "街歩き茅場町"
         },
