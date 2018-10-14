@@ -1,0 +1,43 @@
+{
+    "app_name": "Maplat 2018秋発表",
+    "lang": "ja",
+    "fake_gps": true,
+    "fake_center": "伏見城",
+    "fake_radius": 10,
+    "home_position": [
+        139.929796,
+        37.487708
+    ],
+    "default_zoom": 18,
+    "start_from": "maplat_2018_nov_1",
+    "sources": [
+        {
+            "mapID": "maplat_2018_nov_1",
+            "label": "(1)"
+        },
+        {
+            "mapID": "maplat_2018_nov_2",
+            "label": "(2)"
+        },
+        {
+            "mapID": "maplat_2018_nov_3",
+            "label": "(3)"
+        },
+        {
+            "mapID": "maplat_2018_nov_4",
+            "label": "(4)"
+        },
+        {
+            "mapID": "maplat_2018_nov_5",
+            "label": "(5)"
+        },
+        {
+            "mapID": "maplat_aizu-jonai-kyoho-period",
+            "label": "デモ会津(1)"
+        },
+        "gsi",
+        "gsi_ortho",
+        "osm"
+    ],
+    "pois": []
+}
