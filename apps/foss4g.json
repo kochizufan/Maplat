@@ -63,6 +63,14 @@
             "mapID": "maplat_aizuwakamatsu-annai-showa5",
             "label": "デモ会津(2)"
         },
+        {
+            "mapID": "maplat_paris_1784",
+            "label": "デモパリ(1)"
+        },
+        {
+            "mapID": "maplat_paris_1821",
+            "label": "デモパリ(2)"
+        },
         "gsi",
         "gsi_ortho",
         "osm"
