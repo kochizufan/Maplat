@@ -27,9 +27,10 @@
     {
       "lat": 37.485126,
       "lng": 139.958679,
-      "address": "",
-      "name": "次のスライド",
-      "desc": "<a href=\"#!s:maplat_2018_nov_1/c/z:3\">次のスライド</a>"
+      "directgo": {
+        "href": "#!s:maplat_2018_nov_1/b:osm/x:-5366490.881828856/y:11784755.272876307/z:3",
+        "blank": true
+      }
     }
   ],
   "thumbnail": "./tmbs/aizuwakamatsu-annai-showa5_menu.jpg"}

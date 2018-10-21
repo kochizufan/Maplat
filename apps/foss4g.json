@@ -39,6 +39,30 @@
             "mapID": "maplat_aizuwakamatsu-annai-showa5",
             "label": "デモ会津(2)"
         },
+        {
+            "mapID": "maplat_2018_nov_6",
+            "label": "(6)"
+        },
+        {
+            "mapID": "maplat_2018_nov_7",
+            "label": "(7)"
+        },
+        {
+            "mapID": "maplat_2018_nov_8",
+            "label": "(8)"
+        },
+        {
+            "mapID": "maplat_2018_nov_9",
+            "label": "(9)"
+        },
+        {
+            "mapID": "maplat_2018_nov_10",
+            "label": "(10)"
+        },
+        {
+            "mapID": "maplat_2018_nov_11",
+            "label": "(11)"
+        },
         "gsi",
         "gsi_ortho",
         "osm"
