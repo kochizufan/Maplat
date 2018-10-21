@@ -245,5 +245,21 @@
   ],
   "height": 8424,
   "width": 11989,
-  "year": 1784
+  "year": 1784,
+  "pois":[
+    {
+      "lat": 48.860366171808664,
+      "lng": 2.3407172318359564,
+      "directgo": {
+        "href": "https://stroly.com/viewer/1499243561/?lat=48.86130464228002&lng=2.3383523075868595&direction=0.02301114707478291&radius=572.5558707483676",
+        "blank": true
+      },
+      "icon": {
+        "anchor": [0.5, 0.5],
+        "anchorXUnits": "fraction",
+        "anchorYUnits": "fraction",
+        "src": "parts/stroly.png"
+      }
+    }
+  ]
 }
