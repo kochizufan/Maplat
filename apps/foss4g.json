@@ -32,14 +32,6 @@
             "label": "(5)"
         },
         {
-            "mapID": "maplat_aizu-jonai-kyoho-period",
-            "label": "デモ会津(1)"
-        },
-        {
-            "mapID": "maplat_aizuwakamatsu-annai-showa5",
-            "label": "デモ会津(2)"
-        },
-        {
             "mapID": "maplat_2018_nov_6",
             "label": "(6)"
         },
@@ -62,6 +54,14 @@
         {
             "mapID": "maplat_2018_nov_11",
             "label": "(11)"
+        },
+        {
+            "mapID": "maplat_aizu-jonai-kyoho-period",
+            "label": "デモ会津(1)"
+        },
+        {
+            "mapID": "maplat_aizuwakamatsu-annai-showa5",
+            "label": "デモ会津(2)"
         },
         "gsi",
         "gsi_ortho",

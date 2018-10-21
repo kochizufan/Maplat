@@ -25,11 +25,16 @@
       }
     },
     {
-      "lat": 37.485126,
-      "lng": 139.958679,
+      "lat": 37.476025059431976,
+      "lng": 139.95725289608248,
       "directgo": {
-        "href": "#!s:maplat_2018_nov_1/b:osm/x:-5366490.881828856/y:11784755.272876307/z:3",
-        "blank": true
+        "href": "#!s:maplat_2018_nov_6/b:osm/x:-5366490.881828856/y:11784755.272876307/z:3"
+      },
+      "icon": {
+        "anchor": [0.5, 0.5],
+        "anchorXUnits": "fraction",
+        "anchorYUnits": "fraction",
+        "src": "parts/turnback.png"
       }
     }
   ],
