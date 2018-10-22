@@ -3,6 +3,7 @@
         "ja" : "ぷらっと東京中央区",
         "en" : "Maplat Tokyo Chuoku"
     },
+    "splash" : "chuoku_splash.png",
     "lang": "ja",
     "fake_gps" : true,
     "fake_center" : "JR八丁堀",
