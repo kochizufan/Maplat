@@ -15,8 +15,9 @@
         var Tin = function(options) {
             this.points = options.points;
             this.wh = options.wh;
-            this.vertexMode = options.vertexMode || 'plain';
-            this.strictMode = options.strictMode || 'auto';
+            this.vertexMode = options.vertexMode || Tin.VERTEX_PLAIN;
+            this.strictMode = options.strictMode || Tin.MODE_AUTO;
+            this.yaxisMode = options.yaxisMode || Tin.YAXIS_INVERT;
 
             // pt is [x,y] and ring is [[x,y], [x,y],..]
             turf.inRing = function(pt, ring, ignoreBoundary) {
@@ -38,12 +39,27 @@
                 return isInside;
             };
         };
+        Tin.VERTEX_PLAIN = 'plain';
+        Tin.VERTEX_BIRDEYE = 'birdeye';
+        Tin.MODE_STRICT = 'strict';
+        Tin.MODE_AUTO = 'auto';
+        Tin.MODE_LOOSE = 'loose';
+        Tin.STATUS_STRICT = 'strict';
+        Tin.STATUS_ERROR = 'strict_error';
+        Tin.STATUS_LOOSE = 'loose';
+        Tin.YAXIS_FOLLOW = 'follow';
+        Tin.YAXIS_INVERT = 'invert';
 
         Tin.setTurf = function(turf_) {
             turf = turf_;
         };
 
         Tin.prototype.setPoints = function(points) {
+            if (this.yaxisMode == Tin.YAXIS_FOLLOW) {
+                points = points.map(function(point) {
+                    return [point[0], [point[1][0], -1 * point[1][1]]];
+                });
+            }
             this.points = points;
             this.tins = undefined;
         };
@@ -58,24 +74,24 @@
                 if (compiled.strict_status) {
                     this.strict_status = compiled.strict_status;
                 } else if (compiled.kinks_points) {
-                    this.strict_status = 'strict_error';
+                    this.strict_status = Tin.STATUS_ERROR;
                 } else if (compiled.tins_points.length == 2) {
-                    this.strict_status = 'loose';
+                    this.strict_status = Tin.STATUS_LOOSE;
                 } else {
-                    this.strict_status = 'strict';
+                    this.strict_status = Tin.STATUS_STRICT;
                 }
                 // vertices_paramsを復元
                 this.vertices_params = {
                     'forw' : [ compiled.vertices_params[0] ],
                     'bakw' : [ compiled.vertices_params[1] ]
                 };
-                this.vertices_params.forw[1] = [0, 1, 2, 3].map(function(idx){
+                this.vertices_params.forw[1] = [0, 1, 2, 3].map(function(idx) {
                     var idxNxt = (idx + 1) % 4;
                     var tri = indexesToTri(['cent', 'bbox' + idx, 'bbox' + idxNxt], compiled.points,
                         compiled.centroid_point, compiled.vertices_points, false);
                     return turf.featureCollection([tri]);
                 });
-                this.vertices_params.bakw[1] = [0, 1, 2, 3].map(function(idx){
+                this.vertices_params.bakw[1] = [0, 1, 2, 3].map(function(idx) {
                     var idxNxt = (idx + 1) % 4;
                     var tri = indexesToTri(['cent', 'bbox' + idx, 'bbox' + idxNxt], compiled.points,
                         compiled.centroid_point, compiled.vertices_points, true);
@@ -83,8 +99,8 @@
                 });
                 // centroidを復元
                 this.centroid = {
-                    'forw' : turf.point(compiled.centroid_point[0], {'target': {'geom': compiled.centroid_point[1], 'index': 'cent'}}),
-                    'bakw' : turf.point(compiled.centroid_point[1], {'target': {'geom': compiled.centroid_point[0], 'index': 'cent'}})
+                    'forw': turf.point(compiled.centroid_point[0], {'target': {'geom': compiled.centroid_point[1], 'index': 'cent'}}),
+                    'bakw': turf.point(compiled.centroid_point[1], {'target': {'geom': compiled.centroid_point[0], 'index': 'cent'}})
                 };
                 // tinsを復元
                 var bakwI = compiled.tins_points.length == 1 ? 0 : 1;
@@ -103,6 +119,12 @@
                             return turf.point(coord)
                         }))
                     };
+                }
+                // yaxisModeを復元
+                if (compiled.yaxisMode) {
+                    this.yaxisMode = compiled.yaxisMode;
+                } else {
+                    this.yaxisMode = Tin.YAXIS_INVERT;
                 }
             } else {
                 // 旧コンパイルロジック
@@ -167,26 +189,30 @@
             compiled.strict_status = this.strict_status;
             // tinは座標インデックスのみ記録
             compiled.tins_points = [[]];
-            this.tins.forw.features.map(function(tin){
-                compiled.tins_points[0].push(['a','b','c'].map(function(idx){
+            this.tins.forw.features.map(function(tin) {
+                compiled.tins_points[0].push(['a', 'b', 'c'].map(function(idx) {
                     return tin.properties[idx].index;
                 }));
             });
             // 自動モードでエラーがある時（loose）は、逆方向のtinも記録。
             // 厳格モードでエラーがある時（strict_error）は、エラー点情報(kinks)を記録。
-            if (this.strict_status == 'loose') {
+            if (this.strict_status == Tin.STATUS_LOOSE) {
                 compiled.tins_points[1] = [];
-                this.tins.bakw.features.map(function(tin){
-                    compiled.tins_points[1].push(['a','b','c'].map(function(idx){
+                this.tins.bakw.features.map(function(tin) {
+                    compiled.tins_points[1].push(['a', 'b', 'c'].map(function(idx) {
                         return tin.properties[idx].index;
                     }));
                 });
-            } else if (this.strict_status == 'strict_error') {
+            } else if (this.strict_status == Tin.STATUS_ERROR) {
                 compiled.kinks_points = this.kinks.bakw.features.map(function(kink) {
                     return kink.geometry.coordinates;
                 });
             }
 
+            // yaxisMode対応
+            if (this.yaxisMode == Tin.YAXIS_FOLLOW) {
+                compiled.yaxisMode = Tin.YAXIS_FOLLOW;
+            }
             return compiled;
         };
 
@@ -281,10 +307,10 @@
                     });
                 })).then(function(result) {
                     if (result[0].length == 0 && result[1].length == 0) {
-                        self.strict_status = 'strict';
+                        self.strict_status = Tin.STATUS_STRICT;
                         delete self.kinks;
                     } else {
-                        self.strict_status = 'strict_error';
+                        self.strict_status = Tin.STATUS_ERROR;
                         self.kinks = {};
                         if (result[0].length > 0) self.kinks.forw = turf.featureCollection(result[0]);
                         if (result[1].length > 0) self.kinks.bakw = turf.featureCollection(result[1]);
@@ -301,7 +327,7 @@
             var self = this;
             var strict = this.strictMode;
             return new Promise(function(resolve, reject) {
-                if (strict != 'strict' && strict != 'loose') strict = 'auto';
+                if (strict != Tin.MODE_STRICT && strict != Tin.MODE_LOOSE) strict = Tin.MODE_AUTO;
 
                 var bbox = [];
                 if (self.wh) {
@@ -434,7 +460,7 @@
                         // If some orthants have no Convex full polygon's vertices, use same average factor to every orthants
                         return (prev.length == prev.filter(function(val) {
                             return val.length > 0;
-                        }).length && self.vertexMode == 'birdeye') ? prev : prev.reduce(function(pre, cur) {
+                        }).length && self.vertexMode == Tin.VERTEX_BIRDEYE) ? prev : prev.reduce(function(pre, cur) {
                                 var ret = [pre[0].concat(cur)];
                                 return ret;
                             }, [[]]);
@@ -539,16 +565,16 @@
                 self.pointsSet = pointsSet;
                 self.tins = {forw: rotateVerticesTriangle(turf.tin(pointsSet.forw, 'target'))};
                 var prom;
-                if (strict == 'strict' || strict == 'auto') {
+                if (strict == Tin.MODE_STRICT || strict == Tin.MODE_AUTO) {
                     prom = self.calcurateStrictTinAsync();
                 } else {
                     prom = Promise.resolve();
                 }
                 return prom.then(function() {
-                    if (strict == 'loose' || (strict == 'auto' && self.strict_status == 'strict_error')) {
+                    if (strict == Tin.MODE_LOOSE || (strict == Tin.MODE_AUTO && self.strict_status == Tin.STATUS_ERROR)) {
                         self.tins.bakw = rotateVerticesTriangle(turf.tin(pointsSet.bakw, 'target'));
                         delete self.kinks;
-                        self.strict_status = 'loose';
+                        self.strict_status = Tin.STATUS_LOOSE;
                     }
                     self.vertices_params = {forw: vertexCalc(verticesList.forw, self.centroid.forw),
                         bakw: vertexCalc(verticesList.bakw, self.centroid.bakw)};
@@ -564,18 +590,25 @@
 
         Tin.prototype.transform = function(point, backward) {
             // if (!this.tins) this.updateTin();
+            if (this.yaxisMode == Tin.YAXIS_FOLLOW && backward) {
+                point = [point[0], -1 * point[1]];
+            }
             var tpoint = turf.point(point);
             var tins = backward ? this.tins.bakw : this.tins.forw;
             var verticesParams = backward ? this.vertices_params.bakw : this.vertices_params.forw;
             var centroid = backward ? this.centroid.bakw : this.centroid.forw;
             var weightBuffer = backward ? this.pointsWeightBuffer.bakw : this.pointsWeightBuffer.forw;
-            return transformArr(tpoint, tins, verticesParams, centroid, weightBuffer);
+            var ret = transformArr(tpoint, tins, verticesParams, centroid, weightBuffer);
+            if (this.yaxisMode == Tin.YAXIS_FOLLOW && !backward) {
+                ret = [ret[0], -1 * ret[1]];
+            }
+            return ret;
         };
 
         Tin.prototype.calculatePointsWeightAsync = function() {
             var self = this;
             var calcTargets = ['forw'];
-            if (self.strict_status == 'loose') calcTargets.push('bakw');
+            if (self.strict_status == Tin.STATUS_LOOSE) calcTargets.push('bakw');
             var weightBuffer = {};
             return Promise.all(calcTargets.map(function(target) {
                 weightBuffer[target] = {};
@@ -616,20 +649,20 @@
                 var pointsWeightBuffer = {};
                 calcTargets.map(function(target) {
                     pointsWeightBuffer[target] = {};
-                    if (self.strict_status == 'strict') pointsWeightBuffer['bakw'] = {};
+                    if (self.strict_status == Tin.STATUS_STRICT) pointsWeightBuffer['bakw'] = {};
                     Object.keys(weightBuffer[target]).map(function(vtx) {
                         pointsWeightBuffer[target][vtx] = Object.keys(weightBuffer[target][vtx]).reduce(function(prev, key, idx, arr) {
                             prev = prev + weightBuffer[target][vtx][key];
                             return idx == arr.length - 1 ? prev / arr.length : prev;
                         }, 0);
-                        if (self.strict_status == 'strict') pointsWeightBuffer['bakw'][vtx] = 1 / pointsWeightBuffer[target][vtx];
+                        if (self.strict_status == Tin.STATUS_STRICT) pointsWeightBuffer['bakw'][vtx] = 1 / pointsWeightBuffer[target][vtx];
                     });
                     pointsWeightBuffer[target]['cent'] = [0, 1, 2, 3].reduce(function(prev, curr) {
                         var key = 'bbox' + curr;
                         prev = prev + pointsWeightBuffer[target][key];
                         return curr == 3 ? prev / 4 : prev;
                     }, 0);
-                    if (self.strict_status == 'strict') pointsWeightBuffer['bakw']['cent'] = 1 / pointsWeightBuffer[target]['cent'];
+                    if (self.strict_status == Tin.STATUS_STRICT) pointsWeightBuffer['bakw']['cent'] = 1 / pointsWeightBuffer[target]['cent'];
                 });
                 self.pointsWeightBuffer = pointsWeightBuffer;
             }).catch(function(err) {

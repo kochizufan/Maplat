@@ -131,6 +131,13 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'i18n', 'i18nx
                             break;
                         case 'sb':
                             restore.showBorder = parseInt(line[1]) ? true : false;
+                            break;
+                        case 'c':
+                            if (ui.core) {
+                                var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
+                                var modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
+                                modal.hide();
+                            }
                     }
                 });
                 if (!ui.core) {
@@ -163,6 +170,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'i18n', 'i18nx
         ui.core = new Core(appOption);
         var enableSplash = ui.core.initialRestore.sourceID ? false : true;
         var restoreTransparency = ui.core.initialRestore.transparency;
+        var enableOutOfMap = appOption.presentation_mode ? false : true;
 
         // Modal記述の動作を調整する関数
         var modalSetting = function(target) {
@@ -632,16 +640,36 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'i18n', 'i18nx
         });
 
         ui.core.addEventListener('outOfMap', function(evt) {
-            ui.core.mapDivDocument.querySelector('#modal_title').innerText = ui.t('app.out_of_map');
-            ui.core.mapDivDocument.querySelector('#modal_gpsD_content').innerText = ui.t('app.out_of_map_area');
-            var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
-            var modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
-            modalSetting('gpsD');
-            modal.show();
+            if (enableOutOfMap) {
+                ui.core.mapDivDocument.querySelector('#modal_title').innerText = ui.t('app.out_of_map');
+                ui.core.mapDivDocument.querySelector('#modal_gpsD_content').innerText = ui.t('app.out_of_map_area');
+                var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
+                var modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
+                modalSetting('gpsD');
+                modal.show();
+            }
         });
 
         ui.core.addEventListener('clickMarker', function(evt) {
             var data = evt.detail;
+
+            if (data.directgo) {
+                var blank = false;
+                var href = '';
+                if (typeof data.directgo == 'string') {
+                    href = data.directgo;
+                } else {
+                    href = data.directgo.href;
+                    blank = data.directgo.blank || false;
+                }
+                if (blank) {
+                    window.open(href, '_blank');
+                } else {
+                    window.location.href = href;
+                }
+                return;
+            }
+
             ui.core.mapDivDocument.querySelector('#modal_title').innerText = ui.translate(data.name);
             if (data.url || data.html) {
                 ui.core.mapDivDocument.querySelector('#poi_web').classList.remove('hide');
