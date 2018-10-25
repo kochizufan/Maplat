@@ -87,6 +87,10 @@
             "mapID": "maplat_paris_1821",
             "label": "デモパリ(2)"
         },
+        {
+            "mapID": "Tokyo5000-900913",
+            "label": "東京原図"
+        },
         "gsi",
         "gsi_ortho",
         "osm"
