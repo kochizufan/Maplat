@@ -32,7 +32,8 @@
     <input id="ui_sei" type="button" class="btn btn-default" value="正位置に">　
     <input id="ui_hidari" type="button" class="btn btn-default" value="左を上に">　
     <input id="ui_gyaku" type="button" class="btn btn-default" value="逆位置に">　
-    <input id="ui_migi" type="button" class="btn btn-default" value="右を上に">　
+    <input id="ui_migi" type="button" class="btn btn-default" value="右を上に">
+    クリック箇所経緯度: <span id="ui_latlng"></span>
   </div>
 </body>
 <!--script src="lib/aigle-es5.min.js"></script-->
@@ -59,6 +60,7 @@
         });*/
         app.core.addEventListener('clickMap', function (evt) {
             console.log(evt);
+            document.querySelector('#ui_latlng').innerText = evt.detail.latitude + ',' + evt.detail.longitude;
         });
         app.core.addEventListener('changeViewpoint', function (evt) {
             console.log(evt);
@@ -67,10 +69,10 @@
             console.log(evt);
         });
         app.core.addLine({
-            lnglats: [[141.151995, 39.701599], [141.151137, 39.703736], [141.1521671, 39.7090232]],
+            lnglats: [[135.84448984840537, 34.67345543805217], [135.83733617775167, 34.67967601394585], [135.8230478791817, 34.68581830545061], [135.82469660607725, 34.68707580243378], [135.83833615842798, 34.6830671212401]],
             stroke: {
-                color: '#ffcc33',
-                width: 2
+                color: '#33ccff',
+                width: 3
             }
         });
         document.querySelector('#ui_sei').addEventListener('click', function() {

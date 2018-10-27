@@ -260,6 +260,19 @@
         "anchorYUnits": "fraction",
         "src": "parts/stroly.png"
       }
+    },
+    {
+      "lat": 48.859848539005924,
+      "lng": 2.340361366721262,
+      "directgo": {
+        "href": "paris.html"
+      },
+      "icon": {
+        "anchor": [0.5, 0.5],
+        "anchorXUnits": "fraction",
+        "anchorYUnits": "fraction",
+        "src": "parts/go.png"
+      }
     }
   ]
 }
