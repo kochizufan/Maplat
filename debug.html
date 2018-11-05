@@ -22,7 +22,7 @@
     <div id="map_div"></div>
   </div>
 </body>
-<!--script src="lib/aigle-es5.min.js"></script-->
+<script src="lib/aigle-es5.min.js"></script>
 <script src="lib/require.min.js"></script>
 <script src="js/config_ui.js"></script>
 <script>
@@ -31,7 +31,8 @@
         restore_session: false,
         state_url: true,
         share_enable: true,
-        presentation_mode: true
+        presentation_mode: true,
+        pwa_manifest: true
     };
     var hashes = (window.location.href.split('#!'))[0];
     hashes = hashes.slice(window.location.href.indexOf('?') + 1).split('&');
