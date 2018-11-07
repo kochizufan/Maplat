@@ -1,7 +1,7 @@
 {
   "name": "Maplat",
   "description": "Maplat is the cool Historical Map/Illustrated Map Viewer. It can transform each map coordinates with nonlinear but bijective projection and makes possible that the maps can collaborate with GPS/accurate maps, without distorting original maps. Data editor of this solution is provided as another project, MaplatEditor.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "homepage": "https://github.com/code4nara/Maplat/wiki",
   "license": "MIT",
   "scripts": {
@@ -15,6 +15,8 @@
     "config": "gulp config",
     "js_build": "gulp js_build",
     "tin": "gulp tin",
+    "www_tin": "gulp www_tin",
+    "npm_tin": "gulp npm_tin",
     "test": "jasmine"
   },
   "dependencies": {
@@ -47,6 +49,7 @@
     "jasmine": "^3.3.0",
     "lodash": "^4.17.10",
     "mapshaper": "^0.4.31",
+    "randomatic": "^3.1.1",
     "sshpk": "^1.14.2",
     "workbox-build": "^3.4.1"
   }
