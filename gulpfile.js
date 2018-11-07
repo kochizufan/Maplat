@@ -12,6 +12,8 @@ var gulp = require('gulp'),
     glob = require('glob');
 
 var pkg = require('./package.json');
+var pkg_tin = require('./npm/tmpl/package.json');
+pkg_tin.version = pkg.version;
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
   ' * @version v<%= pkg.version %>',
@@ -283,9 +285,25 @@ gulp.task('mobile_build', ['js_build', 'css_build'], function() {
     copyAssets();
 });
 
-gulp.task('tin', function() {
+gulp.task('tin', ['www_tin', 'npm_tin'], function() {});
+
+gulp.task('www_tin', function() {
     gulp.src(['./lib/turf_maplat.min.js', './lib/mapshaper_maplat.js', './js/tin.js'])
         .pipe(concat('maplat_tin.js'))
         .pipe(uglify())
+        .pipe(header(banner, {pkg: pkg_tin}))
         .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('npm_tin', function() {
+    gulp.src(['./js/tin.js'])
+        .pipe(concat('index.js'))
+        .pipe(gulp.dest('./npm/'));
+    gulp.src(['./npm/tmpl/package.json'])
+        .pipe(concat('package.json'))
+        .pipe(replace(/\{version\}/, pkg.version))
+        .pipe(gulp.dest('./npm/'));
+    gulp.src(['./LICENSE'])
+        .pipe(concat('LICENSE'))
+        .pipe(gulp.dest('./npm/'));
 });
