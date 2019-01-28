@@ -1,5 +1,5 @@
-define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziToast', 'qrcode'],
-    function(Core, sprintf, Swiper, ol, bsn, page, iziToast, QRCode) {
+define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziToast', 'qrcode', 'turf'],
+    function(Core, sprintf, Swiper, ol, bsn, page, iziToast, QRCode, turf) {
     var browserLanguage = function() {
         var ua = window.navigator.userAgent.toLowerCase();
         try {
@@ -168,6 +168,19 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
     MaplatUi.prototype.initializer = function(appOption) {
         var ui = this;
         ui.core = new Core(appOption);
+
+        if (appOption.restore) {
+            ui.setShowBorder(appOption.restore.showBorder || false);
+        } else if (appOption.restore_session) {
+            var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
+            var currentTime = Math.floor(new Date().getTime() / 1000);
+            if (lastEpoch && currentTime - lastEpoch < 3600) {
+                ui.setShowBorder(parseInt(localStorage.getItem('showBorder') || '0') ? true : false);
+            }
+        } else {
+            ui.setShowBorder(false);
+        }
+
         var enableSplash = ui.core.initialRestore.sourceID ? false : true;
         var restoreTransparency = ui.core.initialRestore.transparency;
         var enableOutOfMap = appOption.presentation_mode ? false : true;
@@ -524,6 +537,30 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
         ui.core.addEventListener('sourceLoaded', function(evt) {
             var sources = evt.detail;
 
+            var colors = ['maroon', 'deeppink', 'indigo', 'olive', 'royalblue',
+                'red', 'hotpink', 'green', 'yellow', 'navy',
+                'saddlebrown', 'fuchsia', 'darkslategray', 'yellowgreen', 'blue',
+                'mediumvioletred', 'purple', 'lime', 'darkorange', 'teal',
+                'crimson', 'darkviolet', 'darkolivegreen', 'steelblue', 'aqua'];
+            var cIndex = 0;
+            for (var i=0; i<sources.length; i++) {
+                var source = sources[i];
+                if (source.envelop) {
+                    source.envelopColor = colors[cIndex];
+                    cIndex = cIndex + 1;
+                    if (cIndex == colors.length) cIndex = 0;
+
+                    var xys = source.envelop.geometry.coordinates[0];
+                    source.envelopAreaIndex = 0.5 * Math.abs([0, 1, 2, 3].reduce(function(prev, curr, i) {
+                        var xy1 = xys[i];
+                        var xy2 = xys[i+1];
+                        return prev + (xy1[0] - xy2[0]) * (xy1[1] + xy2[1]);
+                    }, 0));
+                    console.log(source.sourceID);
+                    console.log(source.envelopAreaIndex);
+                }
+            }
+
             if (ui.splashPromise) {
                 ui.splashPromise.then(function() {
                     var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
@@ -564,6 +601,8 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 if (!baseSwiper.clickedSlide) return;
                 var slide = baseSwiper.clickedSlide;
                 ui.core.changeMap(slide.getAttribute('data'));
+                delete ui.selectCandidate;
+                delete ui._selectCandidateSource;
                 baseSwiper.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
             });
             if (baseSources.length < 2) {
@@ -588,6 +627,8 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 if (!overlaySwiper.clickedSlide) return;
                 var slide = overlaySwiper.clickedSlide;
                 ui.core.changeMap(slide.getAttribute('data'));
+                delete ui.selectCandidate;
+                delete ui._selectCandidateSource;
                 overlaySwiper.setSlideIndexAsSelected(slide.getAttribute('data-swiper-slide-index'));
             });
             if (overlaySources.length < 2) {
@@ -630,6 +671,8 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             }
             var transparency = ui.sliderCommon.get('slidervalue') * 100;
             ui.core.mapObject.setTransparency(transparency);
+
+            ui.updateEnvelop();
         });
 
         ui.core.addEventListener('outOfMap', function(evt) {
@@ -641,6 +684,45 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 modalSetting('gpsD');
                 modal.show();
             }
+        });
+
+        ui.core.mapDivDocument.addEventListener('pointerout', function(evt){
+            delete ui.selectCandidate;
+            if (ui._selectCandidateSource) {
+                ui.core.mapObject.removeEnvelop(ui._selectCandidateSource);
+                delete ui._selectCandidateSource;
+            }
+        });
+
+        ui.core.addEventListener('pointerMoveOnMapXy', function(evt) {
+            if (!ui.showBorder) {
+                delete ui.selectCandidate;
+                if (ui._selectCandidateSource) {
+                    ui.core.mapObject.removeEnvelop(ui._selectCandidateSource);
+                    delete ui._selectCandidateSource;
+                }
+                return;
+            }
+
+            ui.xyToSourceID(evt.detail, function(sourceID) {
+                ui.showFillEnvelop(sourceID);
+            });
+        });
+
+        ui.core.addEventListener('clickMapXy', function(evt) {
+            if (!ui.showBorder) {
+                return;
+            }
+
+            ui.xyToSourceID(evt.detail, function(sourceID) {
+                if (ui.selectCandidate && ui.selectCandidate == sourceID) {
+                    ui.core.changeMap(ui.selectCandidate);
+                    delete ui.selectCandidate;
+                    delete ui._selectCandidateSource;
+                } else {
+                    ui.showFillEnvelop(sourceID);
+                }
+            });
         });
 
         ui.core.addEventListener('clickMarker', function(evt) {
@@ -870,8 +952,8 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
 
                     modal.show();
                 } else if (control == 'border') {
-                    var flag = !ui.core.showBorder;
-                    ui.core.setShowBorder(flag);
+                    var flag = !ui.showBorder;
+                    ui.setShowBorder(flag);
                 }
             });
             if (fakeGps) {
@@ -888,6 +970,118 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 delete ui.waitReadyBridge;
             }
         });
+    };
+
+    MaplatUi.prototype.showFillEnvelop = function(sourceID) {
+        var ui = this;
+        if (sourceID && sourceID !== ui.core.from.sourceID) {
+            if (ui.selectCandidate != sourceID) {
+                if (ui._selectCandidateSource) {
+                    ui.core.mapObject.removeEnvelop(ui._selectCandidateSource);
+                }
+                var source = ui.core.cacheHash[sourceID];
+                var xyPromises = source.envelop.geometry.coordinates[0].map(function(coord) {
+                    return ui.core.from.merc2XyAsync(coord);
+                });
+                var hexColor = source.envelopColor;
+                var color = ol.color.asArray(hexColor);
+                color = color.slice();
+                color[3] = 0.2;
+                Promise.all(xyPromises).then(function(xys) {
+                    ui._selectCandidateSource = ui.core.mapObject.setFillEnvelop(xys, null, {color: color});
+                });
+                ui.overlaySwiper.setSlideMapID(sourceID);
+            }
+            ui.selectCandidate = sourceID;
+        } else {
+            if (ui._selectCandidateSource) {
+                ui.core.mapObject.removeEnvelop(ui._selectCandidateSource);
+                delete ui._selectCandidateSource;
+            }
+            delete ui.selectCandidate;
+        }
+    };
+
+    MaplatUi.prototype.xyToSourceID = function(xy, callback) {
+        var ui = this;
+        var point = turf.point(xy);
+        Promise.all(Object.keys(ui.core.cacheHash).filter(function(key) {
+            return ui.core.cacheHash[key].envelop;
+        }).map(function(key) {
+            var source = ui.core.cacheHash[key];
+            return Promise.all([
+                Promise.resolve(source),
+                Promise.all(source.envelop.geometry.coordinates[0].map(function(coord) {
+                    return ui.core.from.merc2XyAsync(coord);
+                }))
+            ]);
+        })).then(function(sources) {
+            var areaIndex;
+            var sourceID = sources.reduce(function(prev, curr) {
+                var source = curr[0];
+                var mercXys = curr[1];
+                var polygon = turf.polygon([mercXys]);
+                if (turf.booleanPointInPolygon(point, polygon)) {
+                    if (!areaIndex || source.envelopAreaIndex < areaIndex) {
+                        areaIndex = source.envelopAreaIndex;
+                        return source.sourceID;
+                    } else {
+                        return prev;
+                    }
+                } else {
+                    return prev;
+                }
+            }, null);
+            callback(sourceID);
+        });
+    };
+
+    MaplatUi.prototype.setShowBorder = function(flag) {
+        this.showBorder = flag;
+        this.updateEnvelop();
+        if (flag) {
+            this.core.mapDivDocument.classList.add('show-border');
+        } else {
+            this.core.mapDivDocument.classList.remove('show-border');
+        }
+        if (this.core.restoreSession) {
+            var currentTime = Math.floor(new Date().getTime() / 1000);
+            localStorage.setItem('epoch', currentTime);
+            localStorage.setItem('showBorder', this.showBorder ? 1 : 0);
+        }
+        this.core.requestUpdateState({showBorder: this.showBorder ? 1 : 0});
+    };
+
+    MaplatUi.prototype.updateEnvelop = function() {
+        var ui = this;
+        if (!ui.core.mapObject) return;
+
+        ui.core.mapObject.resetEnvelop();
+        delete ui.selectCandidate;
+        delete ui._selectCandidateSource;
+
+        if (ui.showBorder) {
+            Object.keys(ui.core.cacheHash).filter(function (key) {
+                return ui.core.cacheHash[key].envelop;
+            }).map(function(key) {
+                var source = ui.core.cacheHash[key];
+                var xyPromises = (key == ui.core.from.sourceID) && (source instanceof ol.source.HistMap) ?
+                    [[0, 0], [source.width, 0], [source.width, source.height], [0, source.height], [0, 0]].map(function(xy) {
+                        return Promise.resolve(source.xy2HistMapCoords(xy));
+                    }) :
+                    source.envelop.geometry.coordinates[0].map(function(coord) {
+                        return ui.core.from.merc2XyAsync(coord);
+                    });
+
+                Promise.all(xyPromises).then(function(xys) {
+                    ui.core.mapObject.setEnvelop(xys, {
+                        color: source.envelopColor,
+                        width: 2,
+                        lineDash: [6, 6]
+                    });
+                });
+            });
+        }
     };
 
     MaplatUi.prototype.resolveRelativeLink = function(file, fallbackPath) {

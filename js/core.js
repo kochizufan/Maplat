@@ -133,7 +133,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         if (appOption.restore) {
             if (appOption.restore_session) app.restoreSession = true;
             app.initialRestore = appOption.restore;
-            app.setShowBorder(appOption.restore.showBorder || false);
         } else if (appOption.restore_session) {
             app.restoreSession = true;
             var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
@@ -148,10 +147,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                     rotation: parseFloat(localStorage.getItem('rotation'))
                 };
                 app.initialRestore.transparency = parseFloat(localStorage.getItem('transparency') || 0);
-                app.setShowBorder(parseInt(localStorage.getItem('showBorder') || '0') ? true : false);
             }
-        } else {
-            app.setShowBorder(false);
         }
 
         // Add UI HTML Element
@@ -216,8 +212,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                 app.i18n = result[1];
                 app.t = result[0];
 
-                app.dispatchEvent(new CustomEvent('uiPrepare'));
-
                 app.mercBuffer = null;
                 var homePos = app.appData.home_position;
                 var defZoom = app.appData.default_zoom;
@@ -231,6 +225,9 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                 app.currentPosition = null;
                 app.backMap = null;
                 app.__init = true;
+
+                app.dispatchEvent(new CustomEvent('uiPrepare'));
+
                 var frontDiv = app.mapDiv + '_front';
                 var newElem = createElement('<div id="' + frontDiv + '" class="map" style="top:0; left:0; right:0; bottom:0; ' +
                     'position:absolute;"></div>')[0];
@@ -320,17 +317,9 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
 
                         var cache = [];
                         app.cacheHash = {};
-                        var colors = ['maroon', 'red', 'purple', 'fuchsia', 'green', 'lime', 'olive',
-                            'yellow', 'navy', 'blue', 'teal', 'aqua'];
-                        var cIndex = 0;
                         for (var i = 0; i < sources.length; i++) {
                             var source = sources[i];
                             source._map = app.mapObject;
-                            if (source.envelop) {
-                                source.envelopColor = colors[cIndex];
-                                cIndex = cIndex + 1;
-                                if (cIndex == colors.length) cIndex = 0;
-                            }
                             cache.push(source);
                             app.cacheHash[source.sourceID] = source;
                         }
@@ -347,11 +336,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                         }, null);
                         app.changeMap(initial, app.initialRestore);
 
-                        var showInfo = function (data) {
-                            app.dispatchEvent(new CustomEvent('clickMarker', data));
-                        };
-
-                        var clickHandler = function (evt) {
+                        app.mapObject.on('click', function(evt) {
                             app.logger.debug(evt.pixel);
                             var feature = this.forEachFeatureAtPixel(evt.pixel,
                                 function (feature) {
@@ -359,10 +344,12 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                                     if (feature.get('datum')) return feature;
                                 });
                             if (feature) {
-                                showInfo(feature.get('datum'));
+                                app.dispatchEvent(new CustomEvent('clickMarker', feature.get('datum')));
                             } else {
                                 var xy = evt.coordinate;
+                                app.dispatchEvent(new CustomEvent('clickMapXy', xy));
                                 app.from.xy2MercAsync(xy).then(function (merc) {
+                                    app.dispatchEvent(new CustomEvent('clickMapMerc', merc));
                                     var lnglat = ol.proj.transform(merc, 'EPSG:3857', 'EPSG:4326');
                                     app.dispatchEvent(new CustomEvent('clickMap', {
                                         longitude: lnglat[0],
@@ -370,8 +357,40 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                                     }));
                                 });
                             }
-                        };
-                        app.mapObject.on('click', clickHandler);
+                        });
+
+                        var xyBuffer;
+                        var waiting = false;
+                        var dragging = false;
+                        var pointermoveHandler = function(xy) {
+                            app.dispatchEvent(new CustomEvent('pointerMoveOnMapXy', xy));
+                            app.from.xy2MercAsync(xy).then(function(merc) {
+                                app.dispatchEvent(new CustomEvent('pointerMoveOnMapMerc', merc));
+                                if (xyBuffer) {
+                                    var next = xyBuffer;
+                                    xyBuffer = false;
+                                    pointermoveHandler(next);
+                                } else {
+                                    waiting = false;
+                                }
+                            });
+                        }
+
+                        app.mapObject.on('pointermove', function(evt) {
+                            if (dragging) return;
+                            if (waiting) {
+                                xyBuffer = evt.coordinate;
+                            } else {
+                                waiting = true;
+                                pointermoveHandler(evt.coordinate);
+                            }
+                        });
+                        app.mapObject.on('pointerdrag', function(evt) {
+                            dragging = true;
+                        });
+                        app.mapObject.on('pointerup', function(evt) {
+                            dragging = false;
+                        });
 
                         // MapUI on off
                         var timer;
@@ -540,22 +559,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         return createMapInfo(app.cacheHash[sourceID]);
     };
 
-    MaplatApp.prototype.setShowBorder = function(flag) {
-        this.showBorder = flag;
-        this.updateEnvelop();
-        if (flag) {
-            this.mapDivDocument.classList.add('show-border');
-        } else {
-            this.mapDivDocument.classList.remove('show-border');
-        }
-        if (this.restoreSession) {
-            var currentTime = Math.floor(new Date().getTime() / 1000);
-            localStorage.setItem('epoch', currentTime);
-            localStorage.setItem('showBorder', this.showBorder ? 1 : 0);
-        }
-        this.requestUpdateState({showBorder: this.showBorder ? 1 : 0});
-    };
-
     MaplatApp.prototype.setMarker = function(data) {
         var app = this;
         app.logger.debug(data);
@@ -637,36 +640,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         this.from.setGPSMarker(position, true);
     };
 
-    MaplatApp.prototype.updateEnvelop = function() {
-        var app = this;
-        if (!app.mapObject) return;
-
-        app.mapObject.resetEnvelop();
-
-        if (app.showBorder) {
-            Object.keys(app.cacheHash).filter(function (key) {
-                return app.cacheHash[key].envelop;
-            }).map(function(key) {
-                var source = app.cacheHash[key];
-                var xyPromises = (key == app.from.sourceID) && (source instanceof ol.source.HistMap) ?
-                    [[0, 0], [source.width, 0], [source.width, source.height], [0, source.height], [0, 0]].map(function(xy) {
-                        return Promise.resolve(source.xy2HistMapCoords(xy));
-                    }) :
-                    source.envelop.geometry.coordinates[0].map(function(coord) {
-                        return app.from.merc2XyAsync(coord);
-                    });
-
-                Promise.all(xyPromises).then(function(xys) {
-                    app.mapObject.setEnvelop(xys, {
-                        color: source.envelopColor,
-                        width: 2,
-                        lineDash: [6, 6]
-                    });
-                });
-            });
-        }
-    };
-
     MaplatApp.prototype.changeMap = function(sourceID, restore) {
         var app = this;
         if (!restore) restore = {};
@@ -741,7 +714,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                         app.mapObject.setLayer();
                         app.mapObject.exchangeSource(to);
                     }
-                    app.dispatchEvent(new CustomEvent('mapChanged', app.getMapMeta(to.sourceID)));
                     if (app.restoreSession) {
                         var currentTime = Math.floor(new Date().getTime() / 1000);
                         localStorage.setItem('epoch', currentTime);
@@ -792,7 +764,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                             app.setLine(data);
                         })(app.lines[i]);
                     }
-                    app.updateEnvelop();
+                    app.dispatchEvent(new CustomEvent('mapChanged', app.getMapMeta(to.sourceID)));
 
                     app.mapObject.updateSize();
                     app.mapObject.renderSync();
