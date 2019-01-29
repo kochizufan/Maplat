@@ -556,8 +556,6 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                         var xy2 = xys[i+1];
                         return prev + (xy1[0] - xy2[0]) * (xy1[1] + xy2[1]);
                     }, 0));
-                    console.log(source.sourceID);
-                    console.log(source.envelopAreaIndex);
                 }
             }
 
@@ -686,7 +684,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             }
         });
 
-        ui.core.mapDivDocument.addEventListener('pointerout', function(evt){
+        ui.core.mapDivDocument.addEventListener('mouseout', function(evt){
             delete ui.selectCandidate;
             if (ui._selectCandidateSource) {
                 ui.core.mapObject.removeEnvelop(ui._selectCandidateSource);

@@ -362,6 +362,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                         var xyBuffer;
                         var waiting = false;
                         var dragging = false;
+                        var pointerCounter = {};
                         var pointermoveHandler = function(xy) {
                             app.dispatchEvent(new CustomEvent('pointerMoveOnMapXy', xy));
                             app.from.xy2MercAsync(xy).then(function(merc) {
@@ -386,13 +387,32 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                             }
                         });
                         app.mapObject.on('pointerdown', function(evt) {
+                            if (evt.originalEvent && evt.originalEvent.pointerId != null) {
+                                pointerCounter[evt.originalEvent.pointerId] = true;
+                            }
                             dragging = true;
                         });
                         app.mapObject.on('pointerdrag', function(evt) {
+                            if (evt.originalEvent && evt.originalEvent.pointerId != null) {
+                                pointerCounter[evt.originalEvent.pointerId] = true;
+                            }
                             dragging = true;
                         });
                         app.mapObject.on('pointerup', function(evt) {
-                            dragging = false;
+                            // Android
+                            if (evt.originalEvent && evt.originalEvent.pointerId != null) {
+                                delete pointerCounter[evt.originalEvent.pointerId];
+                                if (Object.keys(pointerCounter).length == 0) {
+                                    dragging = false;
+                                }
+                            // iOS
+                            } else if (evt.originalEvent && evt.originalEvent.touches) {
+                                if (evt.originalEvent.touches.length == 0) {
+                                    dragging = false;
+                                }
+                            } else {
+                                dragging = false;
+                            }
                         });
 
                         // MapUI on off
