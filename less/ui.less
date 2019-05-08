@@ -24,21 +24,21 @@
 
     #modal_poi_content, #modal_map_content, #modal_load_content, #modal_gpsW_content, #modal_gpsD_content,
     #modal_help_content, #modal_title, #modal_load_title, #modal_gpsW_title, #modal_help_title,
-    #modal_share_content, #modal_share_title {
+    #modal_share_content, #modal_share_title, #modal_hide_marker_content, #modal_hide_marker_title {
         display: none;
     }
 
     .modal_poi #modal_poi_content, .modal_map #modal_map_content,
     .modal_load #modal_load_content, .modal_help #modal_help_content,
     .modal_gpsW #modal_gpsW_content, .modal_gpsD #modal_gpsD_content,
-    .modal_share #modal_share_content {
+    .modal_share #modal_share_content, .modal_hide_marker #modal_hide_marker_content {
         display: block;
     }
 
     .modal_poi #modal_title, .modal_map #modal_title,
     .modal_gpsD #modal_title, .modal_help #modal_help_title,
     .modal_load #modal_load_title, .modal_gpsW #modal_gpsW_title,
-    .modal_share #modal_share_title {
+    .modal_share #modal_share_title, .modal_hide_marker #modal_hide_marker_title {
         display: inline;
     }
 
@@ -86,18 +86,15 @@
         top: calc(.5em + 50px);
     }
 
-    .poi_img {
+    .poi_img, .help_img {
         position: relative;
         display: table-cell;
         text-align: center;
         vertical-align: middle;
     }
 
-    .poi_img img {
-        width: 100%;
-        height: auto;
-        max-width: 600px;
-        max-height: 600px;
+    .poi_img img, .help_img img {
+        max-width: 100%;
         top: 0px;
         bottom: 0px;
         left: 0px;
@@ -106,24 +103,69 @@
         vertical-align: middle; /*IE7*/
     }
 
-    .help_img {
-        position: relative;
-        display: table-cell;
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .help_img imgs {
-        width: 100%;
-        height: auto;
-        max-width: 600px;
-        max-height: 600px;
+    img.markerlist {
+        max-width: 100%;
+        max-height: 100%;
         top: 0px;
         bottom: 0px;
         left: 0px;
         right: 0px;
         margin: auto;
         vertical-align: middle; /*IE7*/
+    }
+
+    input[type="checkbox"].markerlist {
+        display: none;
+    }
+
+    input[type="checkbox"].markerlist + label.check {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        width: 60px;
+        height: 28px;
+        color: #969696;
+        border: 1px solid #a3a3a3;
+        border-radius: 3px;
+        background-color: #ffffff;
+    }
+
+    input[type="checkbox"].markerlist:checked + label.check {
+        border: 1px solid #4db4e4;
+        background-color: #4db4e4;
+    }
+
+    input[type="checkbox"].markerlist + label.check::before {
+        content: "OFF";
+        position: absolute;
+        top: 4px;
+        left: auto;
+        right: 6px;
+    }
+
+    input[type="checkbox"].markerlist:checked + label.check::before {
+        content: "ON";
+        position: absolute;
+        left: 6px;
+        right: auto;
+        color: #ffffff;
+    }
+
+    input[type="checkbox"].markerlist + label.check > div {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 12px;
+        height: 22px;
+        border: 1px solid #a3a3a3;
+        border-radius: 3px;
+        background-color: #ffffff;
+        transition: 0.2s;
+    }
+
+    input[type="checkbox"].markerlist:checked + label.check > div {
+        border: 1px solid transparent;
+        left: 44px;
     }
 
     @media screen and (max-width: 640px) {
@@ -457,6 +499,19 @@
         bottom: calc(115px + .5em + env(safe-area-inset-bottom));
     }
 
+    .ol-hide-marker {
+        right: .5em;
+        right: calc(.5em + constant(safe-area-inset-right));
+        right: calc(.5em + env(safe-area-inset-right));
+        bottom: calc(145px + .5em);
+    }
+
+    .ol-touch .ol-hide-marker {
+        bottom: calc(165px + .5em);
+        bottom: calc(165px + .5em + constant(safe-area-inset-bottom));
+        bottom: calc(165px + .5em + env(safe-area-inset-bottom));
+    }
+
     .ol-copyright {
         right: .5em;
         right: calc(.5em + constant(safe-area-inset-right));
@@ -486,17 +541,27 @@
     }
 
     .ol-control.fade {
-        opacity: 0;
+        display: none;
+    }
+
+    &.with-opacity .ol-slidercommon.fade {
+        display: none;
+    }
+
+    &.no_poi .ol-hide-marker {
+        display: none;
     }
 
     .ol-control.disable button,
-    &.show-border .ol-control.ol-border button {
+    &.show-border .ol-control.ol-border button,
+    &.hide-marker .ol-control.ol-hide-marker button {
         color: rgba(255, 255, 255, .7);
         background-color: rgba(120, 5, 8, .2);
     }
 
     .ol-control.disable button:focus, .ol-control.disable button:hover,
-    &.show-border .ol-control.ol-border button:focus, &.show-border .ol-control.ol-border button:hover {
+    &.show-border .ol-control.ol-border button:focus, &.show-border .ol-control.ol-border button:hover,
+    &.hide-marker .ol-control.ol-hide-marker button:focus, &.hide-marker .ol-control.ol-hide-marker button:hover{
         color: rgba(255, 255, 255, .7);
         background-color: rgba(120, 5, 8, .2)
     }

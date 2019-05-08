@@ -132,6 +132,12 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                         case 'sb':
                             restore.showBorder = parseInt(line[1]) ? true : false;
                             break;
+                        case 'hm':
+                            restore.hideMarker = parseInt(line[1]) ? true : false;
+                            break;
+                        case 'hl':
+                            restore.hideLayer = line[1];
+                            break;
                         case 'c':
                             if (ui.core) {
                                 var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
@@ -171,11 +177,17 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
 
         if (appOption.restore) {
             ui.setShowBorder(appOption.restore.showBorder || false);
+            if (appOption.restore.hideMarker) {
+                ui.core.mapDivDocument.classList.add('hide-marker');
+            }
         } else if (appOption.restore_session) {
             var lastEpoch = parseInt(localStorage.getItem('epoch') || 0);
             var currentTime = Math.floor(new Date().getTime() / 1000);
             if (lastEpoch && currentTime - lastEpoch < 3600) {
                 ui.setShowBorder(parseInt(localStorage.getItem('showBorder') || '0') ? true : false);
+            }
+            if (ui.core.initialRestore.hideMarker) {
+                ui.core.mapDivDocument.classList.add('hide-marker');
             }
         } else {
             ui.setShowBorder(false);
@@ -188,7 +200,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
         // Modal記述の動作を調整する関数
         var modalSetting = function(target) {
             var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
-            ['poi', 'map', 'load', 'gpsW', 'gpsD', 'help', 'share'].map(function(target_) {
+            ['poi', 'map', 'load', 'gpsW', 'gpsD', 'help', 'share', 'hide_marker'].map(function(target_) {
                 var className = 'modal_' + target_;
                 if (target == target_) {
                     modalElm.classList.add(className);
@@ -257,6 +269,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             '<span id="modal_gpsW_title" data-i18n="html.acquiring_gps"></span>' +
             '<span id="modal_help_title" data-i18n="html.help_title"></span>' +
             '<span id="modal_share_title" data-i18n="html.share_title"></span>' +
+            '<span id="modal_hide_marker_title" data-i18n="html.hide_marker_title"></span>' +
 
             '</h4>' +
             '</div>' +
@@ -280,6 +293,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             '<li data-i18n-html="html.help_etc_help" class="recipient"></li>' +
             '<span class="share_help"><li data-i18n-html="html.help_share_help" class="recipient"></li></span>' +
             '<li data-i18n-html="html.help_etc_border" class="recipient"></li>' +
+            '<li data-i18n-html="html.help_etc_hide_marker" class="recipient"></li>' +
             '<li data-i18n-html="html.help_etc_slider" class="recipient"></li>' +
             '</ul>' +
             '<p><a href="https://github.com/code4nara/Maplat/wiki" target="_blank">Maplat</a>' +
@@ -292,7 +306,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             '<iframe id="poi_iframe" class="iframe_poi" frameborder="0" src=""></iframe>' +
             '</div>' +
             '<div id="poi_data" class="hide">' +
-            '<p class="col-xs-12 poi_img"><img id="poi_img" src=""></p>' +
+            '<p class="col-xs-12 poi_img"><img id="poi_img" src="parts/loading_image.png"></p>' +
             '<p class="recipient" id="poi_address"></p>' +
             '<p class="recipient" id="poi_desc"></p>' +
             '</div>' +
@@ -336,9 +350,34 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             '</div>' +
 
             '<div id="modal_load_content">' +
-            '<p class="recipient"><img src="parts/loading.gif"><span data-i18n="html.app_loading_body"></span></p>' +
+            '<p class="recipient"><img src="parts/loading.png"><span data-i18n="html.app_loading_body"></span></p>' +
             '<div id="splash_div" class="hide row"><p class="col-xs-12 poi_img"><img id="splash_img" src=""></p></div>' +
             '<p><img src="" height="0px" width="0px"></p>' +
+            '</div>' +
+
+            '<div id="modal_hide_marker_content">' +
+            '<ul class="list-group">' +
+            '<li class="list-group-item">' +
+            '<div class="row">' +
+            '<div class="col-sm-1"><img class="markerlist" src="parts/defaultpin.png"></div>' +
+            '<div class="col-sm-9">col-sm-4</div>' +
+            '<div class="col-sm-2">' +
+            '<input type="checkbox" class="markerlist" data="1" id="marker_1"/>' +
+            '<label class="check" for="marker_1"><div></div></label>' +
+            '</div>' +
+            '</div>' +
+            '</li>' +
+            '<li class="list-group-item">' +
+            '<div class="row">' +
+            '<div class="col-sm-1"><img class="markerlist" src="parts/defaultpin.png"></div>' +
+            '<div class="col-sm-9">col-sm-4</div>' +
+            '<div class="col-sm-2">' +
+            '<input type="checkbox" class="markerlist" data="2" id="marker_2"/>' +
+            '<label class="check" for="marker_2"><div></div></label>' +
+            '</div>' +
+            '</div>' +
+            '</li>' +
+            '</ul>' +
             '</div>' +
 
             '<p id="modal_gpsD_content" class="recipient"></p>' +
@@ -491,7 +530,8 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 new ol.control.GoHome({tipLabel: ui.core.t('control.home', {ns: 'translation'})}),
                 ui.sliderCommon,
                 new ol.control.Maplat({tipLabel: ui.core.t('control.help', {ns: 'translation'})}),
-                new ol.control.Border({tipLabel: ui.core.t('control.border', {ns: 'translation'})})
+                new ol.control.Border({tipLabel: ui.core.t('control.border', {ns: 'translation'})}),
+                new ol.control.HideMarker({tipLabel: ui.core.t('control.hide_marker', {ns: 'translation'})})
             ];
             if (ui.shareEnable) {
                 ui.core.appData.controls.push(new ol.control.Share({tipLabel: ui.core.t('control.share', {ns: 'translation'})}));
@@ -673,6 +713,15 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
             ui.updateEnvelop();
         });
 
+        ui.core.addEventListener('poi_number', function(evt) {
+            var number = evt.detail;
+            if (number) {
+                ui.core.mapDivDocument.classList.remove('no_poi');
+            } else {
+                ui.core.mapDivDocument.classList.add('no_poi');
+            }
+        });
+
         ui.core.addEventListener('outOfMap', function(evt) {
             if (enableOutOfMap) {
                 ui.core.mapDivDocument.querySelector('#modal_title').innerText = ui.core.t('app.out_of_map');
@@ -693,7 +742,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
         });
 
         ui.core.addEventListener('pointerMoveOnMapXy', function(evt) {
-            if (!ui.showBorder) {
+            if (!ui.core.stateBuffer.showBorder) {
                 delete ui.selectCandidate;
                 if (ui._selectCandidateSource) {
                     ui.core.mapObject.removeEnvelop(ui._selectCandidateSource);
@@ -708,7 +757,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
         });
 
         ui.core.addEventListener('clickMapXy', function(evt) {
-            if (!ui.showBorder) {
+            if (!ui.core.stateBuffer.showBorder) {
                 return;
             }
 
@@ -756,16 +805,29 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 ui.core.mapDivDocument.querySelector('#poi_data').classList.remove('hide');
                 ui.core.mapDivDocument.querySelector('#poi_web').classList.add('hide');
 
+                var img = ui.core.mapDivDocument.querySelector('#poi_img');
                 if (data.image && data.image != '') {
-                    ui.core.mapDivDocument.querySelector('#poi_img').setAttribute('src', ui.resolveRelativeLink(data.image, 'img'));
+                    img.setAttribute('src', ui.resolveRelativeLink(data.image, 'img'));
                 } else {
-                    ui.core.mapDivDocument.querySelector('#poi_img').setAttribute('src', 'parts/no_image.png');
+                    img.setAttribute('src', 'parts/no_image.png');
                 }
                 ui.core.mapDivDocument.querySelector('#poi_address').innerText = ui.core.translate(data.address);
                 ui.core.mapDivDocument.querySelector('#poi_desc').innerHTML = ui.core.translate(data.desc).replace(/\n/g, '<br>');
             }
             var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
             var modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
+            ui.core.selectMarker(data.namespace_id);
+            var hideFunc = function(event) {
+                modalElm.removeEventListener('hide.bs.modal', hideFunc, false);
+                ui.core.unselectMarker();
+            };
+            var hiddenFunc = function(event) {
+                modalElm.removeEventListener('hidden.bs.modal', hiddenFunc, false);
+                var img = ui.core.mapDivDocument.querySelector('#poi_img');
+                img.setAttribute('src', 'parts/loading_image.png');
+            };
+            modalElm.addEventListener('hide.bs.modal', hideFunc, false);
+            modalElm.addEventListener('hidden.bs.modal', hiddenFunc, false);
             modalSetting('poi');
             modal.show();
         });
@@ -781,6 +843,8 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
                 link = link + '/z:' + value.position.zoom;
                 if (value.position.rotation) link = link + '/r:' + value.position.rotation;
                 if (value.showBorder) link = link + '/sb:' + value.showBorder;
+                if (value.hideMarker) link = link + '/hm:' + value.hideMarker;
+                if (value.hideLayer) link = link + '/hl:' + value.hideLayer;
 
                 ui.pathThatSet = link;
                 page(link);
@@ -950,8 +1014,51 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
 
                     modal.show();
                 } else if (control == 'border') {
-                    var flag = !ui.showBorder;
+                    var flag = !ui.core.stateBuffer.showBorder;
                     ui.setShowBorder(flag);
+                } else if (control == 'hideMarker') {
+                    var flag = !ui.core.stateBuffer.hideMarker;
+                    ui.setHideMarker(flag);
+                } else if (control == 'hideLayer') {
+                    modalSetting('hide_marker');
+                    var layers = ui.core.listPoiLayers(false, true);
+                    var elem = ui.core.mapDivDocument.querySelector('ul.list-group');
+                    var modalElm = ui.core.mapDivDocument.querySelector('#modalBase');
+                    elem.innerHTML = '';
+                    layers.map(function(layer, index) {
+                        var icon = layer.icon || 'parts/defaultpin.png';
+                        var title = ui.core.translate(layer.name);
+                        var check = !layer.hide;
+                        var id = layer.namespace_id;
+                        var newElems = Core.createElement('<li class="list-group-item">' +
+                            '<div class="row">' +
+                            '<div class="col-sm-1"><img class="markerlist" src="' + icon + '"></div>' +
+                            '<div class="col-sm-9">' + title + '</div>' +
+                            '<div class="col-sm-2">' +
+                            '<input type="checkbox" class="markerlist" data="' + id +
+                            '" id="marker_' + index + '"' + (check ? ' checked' : '') + '/>' +
+                            '<label class="check" for="marker_' + index + '"><div></div></label>' +
+                            '</div>' +
+                            '</div>' +
+                            '</li>');
+                        for (var i = 0; i < newElems.length; i++) {
+                            elem.appendChild(newElems[i]);
+                        }
+                        var checkbox = ui.core.mapDivDocument.querySelector('#marker_' + index);
+                        var checkFunc = function(event) {
+                            var id = event.target.getAttribute('data');
+                            var checked = event.target.checked;
+                            if (checked) ui.core.showPoiLayer(id);
+                            else ui.core.hidePoiLayer(id);
+                        };
+                        var hideFunc = function(event) {
+                            modalElm.removeEventListener('hide.bs.modal', hideFunc, false);
+                            checkbox.removeEventListener('change', checkFunc, false);
+                        };
+                        modalElm.addEventListener('hide.bs.modal', hideFunc, false);
+                        checkbox.addEventListener('change', checkFunc, false);
+                    });
+                    modal.show();
                 }
             });
             if (fakeGps) {
@@ -1036,7 +1143,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
     };
 
     MaplatUi.prototype.setShowBorder = function(flag) {
-        this.showBorder = flag;
+        this.core.requestUpdateState({showBorder: flag ? 1 : 0});
         this.updateEnvelop();
         if (flag) {
             this.core.mapDivDocument.classList.add('show-border');
@@ -1046,9 +1153,18 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
         if (this.core.restoreSession) {
             var currentTime = Math.floor(new Date().getTime() / 1000);
             localStorage.setItem('epoch', currentTime);
-            localStorage.setItem('showBorder', this.showBorder ? 1 : 0);
+            localStorage.setItem('showBorder', flag ? 1 : 0);
         }
-        this.core.requestUpdateState({showBorder: this.showBorder ? 1 : 0});
+    };
+
+    MaplatUi.prototype.setHideMarker = function(flag) {
+        if (flag) {
+            this.core.hideAllMarkers();
+            this.core.mapDivDocument.classList.add('hide-marker');
+        } else {
+            this.core.showAllMarkers();
+            this.core.mapDivDocument.classList.remove('hide-marker');
+        }
     };
 
     MaplatUi.prototype.updateEnvelop = function() {
@@ -1059,7 +1175,7 @@ define(['core', 'sprintf', 'swiper', 'ol-ui-custom', 'bootstrap', 'page', 'iziTo
         delete ui.selectCandidate;
         delete ui._selectCandidateSource;
 
-        if (ui.showBorder) {
+        if (ui.core.stateBuffer.showBorder) {
             Object.keys(ui.core.cacheHash).filter(function(key) {
                 return ui.core.cacheHash[key].envelop;
             }).map(function(key) {

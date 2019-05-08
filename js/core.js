@@ -150,6 +150,8 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                     rotation: parseFloat(localStorage.getItem('rotation'))
                 };
                 app.initialRestore.transparency = parseFloat(localStorage.getItem('transparency') || 0);
+                app.initialRestore.hideMarker = parseInt(localStorage.getItem('hideMarker') || '0') ? true : false;
+                app.initialRestore.hideLayer = localStorage.getItem('hideLayer');
             }
         }
 
@@ -271,7 +273,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                         xhr.open('GET', url, true);
                         xhr.responseType = 'json';
 
-                        xhr.onload = function (e) {
+                        xhr.onload = function(e) {
                             if (this.status == 200 || this.status == 0) { // 0 for UIWebView
                                 try {
                                     var resp = this.response;
@@ -293,6 +295,34 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                 }
 
                 return poisWait.then(function() {
+                    if (Array.isArray(app.pois)) {
+                        app.pois = {
+                            main: {
+                                namespace_id: 'main',
+                                name: app.appName,
+                                pois: app.pois
+                            }
+                        };
+                        app.addIdToPoi('main');
+                    } else {
+                        if (!app.pois['main']) {
+                            app.pois['main'] = {};
+                        }
+                        Object.keys(app.pois).map(function(key) {
+                            if (!app.pois[key].name) {
+                                if (key == 'main') {
+                                    app.pois[key].name = app.appName;
+                                } else {
+                                    app.pois[key].name = key;
+                                }
+                            }
+                            if (!app.pois[key].pois) {
+                                app.pois[key].pois = [];
+                            }
+                            app.pois[key].namespace_id = key;
+                            app.addIdToPoi(key);
+                        });
+                    }
                     var dataSource = app.appData.sources;
                     var sourcePromise = [];
                     var commonOption = {
@@ -533,14 +563,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                                     direction: direction,
                                     rotation: rotation
                                 }));
-                                if (app.restoreSession) {
-                                    var currentTime = Math.floor(new Date().getTime() / 1000);
-                                    localStorage.setItem('epoch', currentTime);
-                                    localStorage.setItem('x', center[0]);
-                                    localStorage.setItem('y', center[1]);
-                                    localStorage.setItem('zoom', zoom);
-                                    localStorage.setItem('rotation', rotation);
-                                }
                                 app.requestUpdateState({
                                     position: {
                                         x: center[0],
@@ -585,6 +607,24 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         return createMapInfo(app.cacheHash[sourceID]);
     };
 
+    MaplatApp.prototype.addIdToPoi = function(clusterId) {
+        if (!this.pois[clusterId]) return;
+        var cluster = this.pois[clusterId];
+        var pois = cluster.pois;
+        if (!cluster.__nextId) {
+            cluster.__nextId = 0;
+        }
+        pois.map(function(poi) {
+            if (!poi.id) {
+                poi.id = clusterId + '_' + cluster.__nextId;
+                cluster.__nextId++;
+            }
+            if (!poi.namespace_id) {
+                poi.namespace_id = poi.id;
+            }
+        });
+    };
+
     MaplatApp.prototype.setMarker = function(data) {
         var app = this;
         app.logger.debug(data);
@@ -593,6 +633,9 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         var y = data.y;
         var coords = data.coordinates;
         var src = app.from;
+        var icon = data.icon ?
+            app.__selectedMarker == data.namespace_id && data.selected_icon ? data.selected_icon : data.icon :
+            app.__selectedMarker == data.namespace_id ? 'parts/defaultpin_selected.png' : 'parts/defaultpin.png';
         var promise = coords ?
             (function() {
                 return src.merc2XyAsync(coords);
@@ -607,7 +650,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
             })();
         promise.then(function(xy) {
             if (src.insideCheckHistMapCoords(xy)) {
-                app.mapObject.setMarker(xy, {'datum': data}, data.icon);
+                app.mapObject.setMarker(xy, {'datum': data}, icon);
             }
         });
     };
@@ -641,14 +684,274 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         this.mapObject.resetLine();
     };
 
-    MaplatApp.prototype.addMarker = function(data) {
-        this.pois.push(data);
-        this.setMarker(data);
+    MaplatApp.prototype.redrawMarkers= function(source) {
+        var app = this;
+        if (!source) {
+            source = app.from;
+        }
+        app.resetMarker();
+        if (app.stateBuffer.hideMarker) return;
+        Object.keys(app.pois).map(function(key) {
+            var cluster = app.pois[key];
+            if (!cluster.hide) {
+                cluster.pois.map(function(data) {
+                    var dataCopy = Object.assign({}, data);
+                    if (!dataCopy.icon) {
+                        dataCopy.icon = cluster.icon;
+                        dataCopy.selected_icon = cluster.selected_icon;
+                    }
+                    app.setMarker(dataCopy);
+                });
+            }
+        });
+        if (source.pois) {
+            Object.keys(source.pois).map(function(key) {
+                var cluster = source.pois[key];
+                if (!cluster.hide) {
+                    cluster.pois.map(function (data) {
+                        var dataCopy = Object.assign({}, data);
+                        if (!dataCopy.icon) {
+                            dataCopy.icon = cluster.icon;
+                            dataCopy.selected_icon = cluster.selected_icon;
+                        }
+                        app.setMarker(dataCopy);
+                    });
+                }
+            });
+        }
     };
 
-    MaplatApp.prototype.clearMarker = function() {
-        this.pois = [];
-        this.resetMarker();
+    MaplatApp.prototype.selectMarker = function(id) {
+        var data = this.getMarker(id);
+        if (!data) return;
+        this.__selectedMarker = id;
+        var latlng = {
+            latitude: data.lnglat ? data.lnglat[1] : data.lat ? data.lat : data.latitude,
+            longitude: data.lnglat ? data.lnglat[0] : data.lng ? data.lng : data.longitude
+        };
+        this.setViewpoint(latlng);
+        this.redrawMarkers();
+    };
+
+    MaplatApp.prototype.unselectMarker = function() {
+        delete this.__selectedMarker;
+        this.redrawMarkers();
+    };
+
+    MaplatApp.prototype.getMarker = function(id) {
+        var app = this;
+        if (id.indexOf('#') < 0) {
+            var ret;
+            Object.keys(app.pois).map(function(key) {
+                app.pois[key].pois.map(function(poi, i) {
+                    if (poi.id == id) {
+                        ret = app.pois[key].pois[i];
+                    }
+                });
+            });
+            return ret;
+        } else {
+            var splits = id.split('#');
+            var source = app.cacheHash[splits[0]];
+            if (source) {
+                return source.getPoi(splits[1]);
+            }
+        }
+    };
+
+    MaplatApp.prototype.addMarker = function(data, clusterId) {
+        if (!clusterId) {
+            clusterId = 'main';
+        }
+        if (clusterId.indexOf('#') < 0) {
+            if (this.pois[clusterId]) {
+                this.pois[clusterId]['pois'].push(data);
+                this.addIdToPoi(clusterId);
+                this.dispatchPoiNumber();
+                this.redrawMarkers();
+                return data.namespace_id;
+            }
+        } else {
+            var splits = clusterId.split('#');
+            var source = this.cacheHash[splits[0]];
+            if (source) {
+                var ret = source.addPoi(data, splits[1]);
+                this.dispatchPoiNumber();
+                this.redrawMarkers();
+                return ret;
+            }
+        }
+    };
+
+    MaplatApp.prototype.removeMarker = function(id) {
+        var app = this;
+        if (id.indexOf('#') < 0) {
+            Object.keys(app.pois).map(function(key) {
+                app.pois[key].pois.map(function(poi, i) {
+                    if (poi.id == id) {
+                        delete app.pois[key].pois[i];
+                        app.dispatchPoiNumber();
+                        app.redrawMarkers();
+                    }
+                });
+            });
+        } else {
+            var splits = id.split('#');
+            var source = app.cacheHash[splits[0]];
+            if (source) {
+                source.removePoi(splits[1]);
+                app.dispatchPoiNumber();
+                app.redrawMarkers();
+            }
+        }
+    };
+
+    MaplatApp.prototype.clearMarker = function(clusterId) {
+        var app = this;
+        if (!clusterId) {
+            clusterId = 'main';
+        }
+        if (clusterId.indexOf('#') < 0) {
+            if (clusterId == 'all') {
+                Object.keys(app.pois).map(function(key) {
+                    app.pois[key]['pois'] = [];
+                });
+            } else if (app.pois[clusterId]) {
+                app.pois[clusterId]['pois'] = [];
+            } else return;
+            app.dispatchPoiNumber();
+            app.redrawMarkers();
+        } else {
+            var splits = clusterId.split('#');
+            var source = app.cacheHash[splits[0]];
+            if (source) {
+                source.clearPoi(splits[1]);
+                app.dispatchPoiNumber();
+                app.redrawMarkers();
+            }
+        }
+    };
+
+    MaplatApp.prototype.showAllMarkers = function() {
+        this.requestUpdateState({hideMarker: 0});
+        this.redrawMarkers();
+    };
+
+    MaplatApp.prototype.hideAllMarkers = function() {
+        this.requestUpdateState({hideMarker: 1});
+        this.redrawMarkers();
+    };
+
+    MaplatApp.prototype.dispatchPoiNumber = function() {
+        this.dispatchEvent(new CustomEvent('poi_number', this.listPoiLayers(false, true).reduce(function(prev, curr) {
+            return prev + curr.pois.length;
+        }, 0)));
+    };
+
+    MaplatApp.prototype.listPoiLayers = function(hideOnly, nonzero) {
+        var app = this;
+        var appPois = Object.keys(app.pois).sort(function(a, b) {
+            if (a == 'main') return -1;
+            else if (b == 'main') return 1;
+            else if (a < b) return -1;
+            else if (a > b) return 1;
+            else return 0;
+        }).map(function(key) {
+            return app.pois[key];
+        }).filter(function(layer) {
+            return nonzero ? hideOnly ? layer.pois.length && layer.hide : layer.pois.length : hideOnly ? layer.hide : true;
+        });
+        var mapPois = app.from.listPoiLayers(hideOnly, nonzero);
+        return appPois.concat(mapPois);
+    };
+
+    MaplatApp.prototype.showPoiLayer = function(id) {
+        var layer = this.getPoiLayer(id);
+        if (layer) {
+            delete layer.hide;
+            this.requestUpdateState({hideLayer: this.listPoiLayers(true).map(function(layer) {
+                return layer.namespace_id;
+                }).join(',')});
+            this.redrawMarkers();
+        }
+    };
+
+    MaplatApp.prototype.hidePoiLayer = function(id) {
+        var layer = this.getPoiLayer(id);
+        if (layer) {
+            layer.hide = true;
+            this.requestUpdateState({hideLayer: this.listPoiLayers(true).map(function(layer) {
+                    return layer.namespace_id;
+                }).join(',')});
+            this.redrawMarkers();
+        }
+    };
+
+    MaplatApp.prototype.getPoiLayer = function(id) {
+        if (id.indexOf('#') < 0) {
+            return this.pois[id];
+        } else {
+            var splits = id.split('#');
+            var source = this.cacheHash[splits[0]];
+            if (source) {
+                return source.getPoiLayer(splits[1]);
+            }
+        }
+    };
+
+    MaplatApp.prototype.addPoiLayer = function(id, data) {
+        if (id == 'main') return;
+        if (this.pois[id]) return;
+        if (id.indexOf('#') < 0) {
+            if (!data) {
+                data = {
+                    namespace_id: id,
+                    name: id,
+                    pois: []
+                };
+            } else {
+                if (!data.name) {
+                    data.name = id;
+                }
+                if (!data.pois) {
+                    data.pois = [];
+                }
+                data.namespace_id = id;
+            }
+            this.pois[id] = data;
+            this.redrawMarkers();
+        } else {
+            var splits = id.split('#');
+            var source = this.cacheHash[splits[0]];
+            if (source) {
+                source.addPoiLayer(splits[1], data);
+                this.redrawMarkers();
+            }
+        }
+    };
+
+    MaplatApp.prototype.removePoiLayer = function(id) {
+        if (id == 'main') return;
+        if (!this.pois[id]) return;
+        if (id.indexOf('#') < 0) {
+            delete this.pois[id];
+            this.requestUpdateState({hideLayer: this.listPoiLayers(true).map(function(layer) {
+                    return layer.namespace_id;
+                }).join(',')});
+            this.dispatchPoiNumber();
+            this.redrawMarkers();
+        } else {
+            var splits = id.split('#');
+            var source = this.cacheHash[splits[0]];
+            if (source) {
+                source.removePoiLayer(splits[1]);
+                this.requestUpdateState({hideLayer: this.listPoiLayers(true).map(function(layer) {
+                        return layer.namespace_id;
+                    }).join(',')});
+                this.dispatchPoiNumber();
+                this.redrawMarkers();
+            }
+        }
     };
 
     MaplatApp.prototype.addLine = function(data) {
@@ -707,11 +1010,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                                     backTo = backSrc;
                                 }
                             }
-                            if (app.restoreSession) {
-                                var currentTime = Math.floor(new Date().getTime() / 1000);
-                                localStorage.setItem('epoch', currentTime);
-                                localStorage.setItem('backgroundID', backTo.sourceID);
-                            }
                             app.requestUpdateState({backgroundID: backTo.sourceID});
                         } else if (to instanceof ol.source.NowMap) {
                             // If new foreground source is basemap or TMS overlay, remove source from background map
@@ -729,21 +1027,11 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                             var backToLocal = backSrc || now;
                             app.mapObject.exchangeSource(backToLocal);
                         }
-                        if (app.restoreSession) {
-                            var currentTime = Math.floor(new Date().getTime() / 1000);
-                            localStorage.setItem('epoch', currentTime);
-                            localStorage.setItem('backgroundID', app.mapObject.getSource().sourceID);
-                        }
                         app.requestUpdateState({backgroundID: app.mapObject.getSource().sourceID});
                     } else {
                         // Remove overlay from foreground and set current source to foreground
                         app.mapObject.setLayer();
                         app.mapObject.exchangeSource(to);
-                    }
-                    if (app.restoreSession) {
-                        var currentTime = Math.floor(new Date().getTime() / 1000);
-                        localStorage.setItem('epoch', currentTime);
-                        localStorage.setItem('sourceID', to.sourceID);
                     }
                     var updateState = {
                         sourceID: to.sourceID
@@ -756,6 +1044,7 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                     // This must be here: Because, render process works after view.setCenter,
                     // and Changing "from" content must be finished before "postrender" event
                     app.from = to;
+                    app.dispatchPoiNumber();
 
                     var view = app.mapObject.getView();
                     if (app.appData.zoom_restriction) {
@@ -771,18 +1060,20 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
                         to.goHome();
                     }
                     to.setGPSMarker(app.currentPosition, true);
-                    app.resetMarker();
-                    for (var i = 0; i < app.pois.length; i++) {
-                        (function(data) {
-                            app.setMarker(data);
-                        })(app.pois[i]);
+                    if (restore.hideLayer) {
+                        var layers = restore.hideLayer.split(',');
+                        layers.map(function(key) {
+                            var layer = app.getPoiLayer(key);
+                            if (layer) {
+                                layer.hide = true;
+                            }
+                        });
+                        app.requestUpdateState({hideLayer: restore.hideLayer});
                     }
-                    if (to.pois) {
-                        for (var i = 0; i < to.pois.length; i++) {
-                            (function(data) {
-                                app.setMarker(data);
-                            })(to.pois[i]);
-                        }
+                    if (restore.hideMarker) {
+                        app.hideAllMarkers();
+                    } else {
+                        app.redrawMarkers();
                     }
                     app.resetLine();
                     for (var i = 0; i < app.lines.length; i++) {
@@ -827,6 +1118,22 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
         if (app.stateBuffer.backgroundID == '____delete____') {
             delete app.stateBuffer.backgroundID;
         }
+        if (app.restoreSession) {
+            var currentTime = Math.floor(new Date().getTime() / 1000);
+            localStorage.setItem('epoch', currentTime);
+            var loopSession = function(data) {
+                Object.keys(data).map(function(key) {
+                    if (key == 'position') {
+                        loopSession(data[key]);
+                    } else if (key == 'backgroundID' && data[key] == '____delete____') {
+                        localStorage.removeItem(key);
+                    } else {
+                        localStorage.setItem(key, data[key]);
+                    }
+                });
+            }
+            loopSession(data);
+        }
         if (app.timer) clearTimeout(app.timer);
         app.timer = setTimeout(function() {
             app.timer = undefined;
@@ -837,11 +1144,6 @@ define(['histmap', 'i18n', 'i18nxhr'], function(ol, i18n, i18nxhr) {
     MaplatApp.prototype.setTransparency = function(percentage) {
         this.transparency_ = percentage;
         this.mapObject.setTransparency(percentage);
-        if (this.restoreSession) {
-            var currentTime = Math.floor(new Date().getTime() / 1000);
-            localStorage.setItem('epoch', currentTime);
-            localStorage.setItem('transparency', percentage);
-        }
         this.requestUpdateState({transparency: percentage});
     };
 

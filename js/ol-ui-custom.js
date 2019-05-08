@@ -331,22 +331,37 @@ define(['ol-custom', 'resize'], function(ol, addResizeListener) {
         var span = document.createElement('span');
         span.innerHTML = options.character;
         button.appendChild(span);
+        var timer;
 
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            options.callback();
-        }, false);
         button.addEventListener('mouseup', function(e) {
+            if (timer) {
+                if (options.long_callback) {
+                    clearTimeout(timer);
+                }
+                timer = null;
+                options.callback();
+            }
             e.stopPropagation();
         }, false);
         button.addEventListener('mousemove', function(e) {
             e.stopPropagation();
         }, false);
         button.addEventListener('mousedown', function(e) {
+            if (options.long_callback) {
+                timer = setTimeout(function() {
+                    timer = null;
+                    options.long_callback();
+                }, 1500);
+            } else {
+                timer = true;
+            }
             e.stopPropagation();
         }, false);
         button.addEventListener('mouseout', function(e) {
+            if (options.long_callback) {
+                clearTimeout(timer);
+            }
+            timer = null;
             e.stopPropagation();
         }, false);
         button.addEventListener('dblclick', function(e) {
@@ -536,6 +551,24 @@ define(['ol-custom', 'resize'], function(ol, addResizeListener) {
         ol.control.CustomControl.call(this, options);
     };
     ol.inherits(ol.control.Copyright, ol.control.CustomControl);
+
+    ol.control.HideMarker = function(optOptions) {
+        var options = optOptions || {};
+        options.character = '<i class="fa fa-map-marker fa-lg"></i>';
+        options.cls = 'ol-hide-marker';
+        var self = this;
+        options.callback = function() {
+            var map = self.getMap();
+            map.dispatchEvent(new ol.MapEvent('click_control', map, {control: 'hideMarker'}));
+        };
+        options.long_callback = function() {
+            var map = self.getMap();
+            map.dispatchEvent(new ol.MapEvent('click_control', map, {control: 'hideLayer'}));
+        };
+
+        ol.control.CustomControl.call(this, options);
+    };
+    ol.inherits(ol.control.HideMarker, ol.control.CustomControl);
 
     return ol;
 });
