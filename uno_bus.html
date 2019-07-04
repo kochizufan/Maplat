@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Maplat</title>
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="icon" type="image/png" href="parts/favicon.png">
+  <link rel="stylesheet" href="css/core.css">
+  <style>
+    .mainview {
+        position: absolute;
+        top: 5%;
+        bottom: 5%;
+        left: 5%;
+        right: 30%;
+    }
+    .subview {
+      position: absolute;
+      top: 5%;
+      bottom: 5%;
+      left: 70%;
+      right: 5%;
+    }
+    .button {
+      position: absolute;
+      top: 95%;
+      bottom: 0%;
+      left: 5%;
+      right: 5%;
+    }
+  </style>
+</head>
+<body>
+  <div class="mainview">
+    <div id="map_div"></div>
+  </div>
+  <div class="subview">
+  </div>
+  <div class="button">
+    <button id="changeMap">OSMに切り替える</button>
+    <!--button id="show">showLayer(Main)</button>
+    <button id="hide">hideLayer(Main)</button>
+    <button id="clear">clearMarker(Main)</button>
+    <button id="move">moveMarker(Main)</button>
+    <button id="remove">removeMarker(Main)</button>
+    <button id="add2">addMarker(Main2)</button>
+    <button id="clear2">clearMarker(Main2)</button>
+    <button id="addMap">addMarker(Map)</button>
+    <button id="clearMap">clearMarker(Map)</button>
+    <button id="unSelect">unSelect</button>
+    <button id="showAll">showAll</button>
+    <button id="hideAll">hideAll</button-->
+  </div>
+</body>
+<!--script src="lib/aigle-es5.min.js"></script-->
+<script src="js/gtfs_loader_dist.js"></script>
+<script src="lib/require.min.js"></script>
+<script src="js/config_core.js"></script>
+<script>
+    var option = {
+        overlay: false,
+        appid: 'uno_bus',
+        no_rotate: true
+    };
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        option[hash[0]] = hash[1] == 'true' ? true : hash[1] == 'false' ? false : hash[1];
+    }
+    Maplat.createObject(option).then(function(app){
+        var headers;
+
+        document.getElementById('changeMap').addEventListener('click', function(e) {
+            var mapInfo = app.currentMapInfo();
+            if (mapInfo.sourceID == 'osm') {
+                app.changeMap('uno_bus_gtfs2').then(function() {
+                    app.mapObject.getView().setZoom(3);
+                });
+                document.getElementById('changeMap').innerHTML = 'OSMに切り替える';
+            } else {
+                app.changeMap('osm').then(function() {
+                    app.mapObject.getView().setZoom(13);
+                });
+                document.getElementById('changeMap').innerHTML = 'バス路線図に切り替える';
+            }
+        });
+
+        app.addEventListener('clickMarker', function(evt) {
+            app.unselectMarker();
+            var data = evt.detail.data;
+            var html = Object.keys(data).map(function(key) {
+                return '<dt><b>' + key + '</b></dt><dd>' + data[key] + '</dd>';
+            }).join('');
+
+            document.querySelector('.subview').innerHTML = '<small><dl>' + html + '</dl></small>';
+            app.selectMarker(evt.detail.namespace_id);
+        });
+
+        app.addEventListener('clickMap', function(evt) {
+            app.unselectMarker();
+            document.querySelector('.subview').innerHTML = '';
+        });
+
+        var showMarker = function() {
+            app.clearMarker();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://api.allorigins.win/raw?url=http://www3.unobus.co.jp/GPS/unobus.txt', true);
+            xhr.responseType = 'text';
+            xhr.onload = function(e) {
+                if (this.status == 200 || true) {
+                    //var content = this.response;
+                    var content ='13:34:05\n' +
+                            '1631,,2,,13:31(13:33) 牟佐下,1184,34.72111,133.97511,始発=13:00 表町BC,行先=ネオ西９（西 ・下市）\n' +
+                            '8001,,32,,12:55(13:27) 後楽園前(Korakuen),1329,34.66543,133.91995,始発=12:45 岡山駅(Okayama sta.),行先=岡山駅(Okayama sta.)（県立美術館）\n' +
+                            '1111,,4,,13:28(13:32) 清水,1354,34.68356,133.95886,始発=13:05 岡山駅(Okayama sta.),行先=四御神\n' +
+                            '1371,,8,,13:25(13:33) 裁判所前,1367,34.67100,133.92106,始発=12:10 表町BC,行先=表町BC（岡山駅前）\n' +
+                            '5142,,3,,13:30(13:33) 裁判所前,1369,34.67100,133.92221,始発=13:05 四御神車庫(東岡山),行先=表町BC\n' +
+                            '1282,,2,,13:31(13:33) 大原,1371,34.71690,133.97389,始発=13:03 野間,行先=表町BC（岡山駅前）\n' +
+                            '5142,,0,,13:34(13:33) 四御神車庫(東岡山),1395,34.69163,133.98160,始発=13:34 四御神車庫(東岡山),行先=表町BC（高島団地・岡山駅前）\n' +
+                            '1111,13:35,0,,13:35(13:33) 岡山駅(Okayama sta.),1396,34.66490,133.91870,始発=13:35 岡山駅(Okayama sta.),行先=四御神（県庁前）\n' +
+                            '5141,,6,,13:25(13:31) 県民局入口（東岡山）,1525,34.67128,133.92644,始発=13:15 表町BC,行先=東岡山（高島団地）\n' +
+                            '1612,,0,,13:27(13:27) 三野,1584,34.68181,133.92832,始発=12:55 桜が丘運動公園口,行先=表町BC（岡山駅前）\n' +
+                            '1611,,0,,13:33(13:33) 桜が丘西一丁目上,1614,34.76574,134.04004,始発=12:45 表町BC,行先=ネオ西９\n' +
+                            '1282,,5,,13:13(13:18) 中銀本店西,1616,34.66169,133.93031,始発=12:17 野間,行先=表町BC\n' +
+                            '1632,,2,,13:31(13:33) 桜が丘西二丁目,1618,34.76824,134.04196,始発=13:26 桜が丘運動公園口,行先=表町BC（下市・西・岡山駅前）\n' +
+                            '1112,,6,,13:27(13:33) 国富東,1658,34.66607,133.94608,始発=13:10 四御神車庫,行先=岡山駅（表町ＢＣ）\n' +
+                            '5141,,7,,13:26(13:33) 雄町中,1659,34.68465,133.97248,始発=12:55 表町BC,行先=東岡山\n' +
+                            '2021,,1,,13:28(13:29) 岡山駅前・ドレミの街,1661,34.66720,133.92617,始発=13:20 表町BC,行先=ネオ東６（中 ・下市）\n' +
+                            '1061,,3,,13:30(13:33) 藤井,1662,34.69100,134.00693,始発=12:55 岡山駅(Okayama sta.),行先=瀬戸駅\n' +
+                            '2001,,1,,13:32(13:33) 瀬戸駅前,1663,34.73537,134.04166,始発=12:35 岡山駅(Okayama sta.),行先=ネオ東６（瀬戸駅）\n' +
+                            '//LAST\n' +
+                            '//系統番号,岡山駅の発時間,遅延,運行状態,計画時間（通過時間）停留所名,車両番号,緯度,経度,始発停留所情報,行先情報\n';
+
+                    var lines = content.split('\n');
+                    lines.shift();
+                    lines.pop();
+                    headers = lines.pop().replace('//', '').split(',');
+                    lines.pop();
+                    console.log(lines);
+                    lines.map(function(line) {
+                        var vals = line.split(',');
+                        var lat = parseFloat(vals[6]);
+                        var lng = parseFloat(vals[7]);
+                        var data = vals.reduce(function(prev, curr, index) {
+                            if (index == 6 || index == 7) return prev;
+                            prev[headers[index]] = curr;
+                            return prev;
+                        }, {});
+                        app.addMarker({
+                            lat: lat,
+                            lng: lng,
+                            data: data,
+                            icon: 'parts/bus.png',
+                            selected_icon: 'parts/selected_bus.png'
+                        });
+                    })
+                }
+            };
+            xhr.send();
+
+            /*getGtfsRt('https://api.allorigins.win/raw?url=http://www3.unobus.co.jp/GTFS/GTFS_RT-VP.bin', function(err, feed) {
+                if (!err) {
+                    feed.entity.forEach(function(entity) {
+                        if (entity.vehicle) {
+                            console.log(entity);
+                            app.addMarker({
+                                lat: entity.vehicle.position.latitude,
+                                lng: entity.vehicle.position.longitude,
+                                name: "車両No" + entity.vehicle.vehicle.licensePlate
+                            });
+
+
+                /*latlng = {
+                  lat: ,
+                  lng:
+                };
+
+                marker = new google.maps.Marker({
+                  position: latlng,
+                  title: "車両No" + entity.vehicle.vehicle.license_plate
+                });
+                markers.push(marker);* /
+                        }
+                    });
+                }
+            });*/
+        };
+        showMarker();
+        setInterval(showMarker, 60000);
+
+        /*console.log(app.currentMapInfo());
+        console.log(app.mapInfo('gsi'));
+        var moveFlag = false;
+        app.addEventListener('clickMarker', function(evt) {
+            app.selectMarker(evt.detail.namespace_id);
+            console.log(evt);
+        });
+        app.addEventListener('clickMap', function (evt) {
+            console.log(evt);
+        });
+        app.addLine({
+            lnglats: [[141.151995, 39.701599], [141.151137, 39.703736], [141.1521671, 39.7090232]],
+            stroke: {
+                color: '#ffcc33',
+                width: 2
+            }
+        });
+        app.addPoiLayer('main2');
+        app.addPoiLayer('morioka_ndl2#main2', {
+            icon: 'parts/blue_marker.png',
+            selected_icon: 'parts/red_marker.png'
+        });
+        document.getElementById('show').addEventListener('click', function(e) {
+            app.showPoiLayer('main');
+        });
+        document.getElementById('hide').addEventListener('click', function(e) {
+            app.hidePoiLayer('main');
+        });
+        document.getElementById('clear').addEventListener('click', function(e) {
+            app.clearMarker('main');
+        });
+        document.getElementById('move').addEventListener('click', function(e) {
+            var data;
+            if (moveFlag) {
+                data = {lat: 39.698620, lng: 141.145358};
+            } else {
+                data = {lat: 39.694758, lng: 141.146534};
+            }
+            moveFlag = !moveFlag;
+            app.updateMarker('main_1', data);
+        });
+        document.getElementById('remove').addEventListener('click', function(e) {
+            app.removeMarker('main_2');
+        });
+        document.getElementById('add2').addEventListener('click', function(e) {
+            app.addMarker({
+                address: "岩手県盛岡市内丸1-42",
+                desc: "寛延２年創建で当時の藩主南部利視が初代藩主南部信直の功績を称え社殿を建立し御霊を勧請したのが始まりとされている。",
+                icon: undefined,
+                image: "sakurayama_jinja.jpg",
+                lat: 39.701599,
+                lng: 141.151995,
+                name: "桜山神社",
+                selected_icon: undefined,
+                start: 1749
+            }, 'main2');
+        });
+        document.getElementById('clear2').addEventListener('click', function(e) {
+            app.clearMarker('main2');
+        });
+        document.getElementById('addMap').addEventListener('click', function(e) {
+            app.addMarker({
+                address: "岩手県盛岡市内丸1-37",
+                desc: "南部（盛岡）藩南部氏の居城である。西部を流れる北上川と南東部を流れる中津川の合流地、現在の盛岡市中心部にあった花崗岩丘陵に築城された連郭式平山城。",
+                icon: undefined,
+                image: "moriokajo.jpg",
+                lat: 39.69994722,
+                lng: 141.1501111,
+                name: {ja: "盛岡城", en: "Morioka Castle"},
+                selected_icon: undefined,
+                start: 1598
+            }, 'morioka_ndl2#main2');
+        });
+        document.getElementById('clearMap').addEventListener('click', function(e) {
+            app.clearMarker('morioka_ndl2#all');
+        });
+        document.getElementById('unSelect').addEventListener('click', function(e) {
+            app.unselectMarker();
+        });
+        document.getElementById('showAll').addEventListener('click', function(e) {
+            app.showAllMarkers();
+        });
+        document.getElementById('hideAll').addEventListener('click', function(e) {
+            app.hideAllMarkers();
+        });*/
+    });
+</script>
+</html>
