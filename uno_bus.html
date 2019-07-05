@@ -46,11 +46,16 @@
   <div class="subview">
   </div>
   <div class="button">
-    <button id="changeMap">OSMに切り替える</button>
+    <button id="changeMap">OSMに切り替える</button>　
+    <select id="routes">
+      <option value="">全路線表示</option>
+    </select>
   </div>
 </body>
 <script src="js/gtfs_loader_dist.js"></script>
-<script src="dist/maplat_core.js"></script>
+<!--script src="dist/maplat_core.js"></script-->
+<script src="lib/require.min.js"></script>
+<script src="js/config_core.js"></script>
 <script>
     var option = {
         overlay: false,
@@ -62,8 +67,85 @@
         hash = hashes[i].split('=');
         option[hash[0]] = hash[1] == 'true' ? true : hash[1] == 'false' ? false : hash[1];
     }
-    Maplat.createObject(option).then(function(app){
+    var promises = [Maplat.createObject(option)];
+    promises.push(new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'data/uno_bus/routes.txt', true);
+        xhr.responseType = 'text';
+        xhr.onload = function(e) {
+            if (this.status == 200) {
+                var content = this.response;
+                var lines = content.split('\n');
+                lines.shift();
+                lines.pop();
+                var result = {};
+                lines.map(function(line) {
+                    var elements = line.split(',');
+                    result[elements[0]] = {
+                        'name': elements[3],
+                        'from_to': elements[4]
+                    };
+                });
+                resolve(result);
+            } else {
+                reject();
+            }
+        };
+        xhr.send();
+    }));
+    promises.push(new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'data/uno_bus/shapes.txt', true);
+        xhr.responseType = 'text';
+        xhr.onload = function(e) {
+            if (this.status == 200) {
+                var content = this.response;
+                var lines = content.split('\n');
+                lines.shift();
+                lines.pop();
+                var result = {};
+                lines.map(function(line) {
+                    var elements = line.split(',');
+                    if (!result[elements[0]]) result[elements[0]] = [];
+                    result[elements[0]].push([parseFloat(elements[2]), parseFloat(elements[1])]);
+                });
+                resolve(result);
+            } else {
+                reject();
+            }
+        };
+        xhr.send();
+    }));
+
+    Promise.all(promises).then(function(results){
+        var app = results[0];
+        var routes = results[1];
+        var shapes = results[2];
         var headers;
+        console.log(routes);
+        console.log(shapes);
+
+        var select = document.querySelector('#routes');
+        Object.keys(routes).map(function(key) {
+            var route = routes[key];
+            select.innerHTML = select.innerHTML + '<option value="' + key + '">' + route.name + ' (' + route.from_to + ')' + '</option>';
+        });
+        select.addEventListener('change', function(e) {
+            app.unselectMarker();
+            app.clearLine();
+            document.querySelector('.subview').innerHTML = '';
+            var shape = shapes[e.target.value];
+            if (shape) {
+                app.addLine({
+                    lnglats: shape,
+                    stroke: {
+                        color: '#ffcc33',
+                        width: 6
+                    }
+                });
+            }
+            showMarker();
+        });
 
         document.getElementById('changeMap').addEventListener('click', function(e) {
             var mapInfo = app.currentMapInfo();
@@ -96,15 +178,26 @@
             document.querySelector('.subview').innerHTML = '';
         });
 
+        var busList;
         var showMarker = function() {
             app.clearMarker();
+            var targetRoute = document.querySelector('#routes').value;
+            var list = !targetRoute ? busList : busList.filter(function(item) {
+                return item.route == targetRoute;
+            });
+            list.map(function(item) {
+                app.addMarker(item);
+            })
+        };
+        var requestGTFS = function() {
+
             var xhr = new XMLHttpRequest();
             xhr.open('GET', 'https://api.allorigins.win/raw?url=http://www3.unobus.co.jp/GPS/unobus.txt', true);
             xhr.responseType = 'text';
             xhr.onload = function(e) {
                 if (this.status == 200 || true) {
-                    var content = this.response;
-                    /*var content ='13:34:05\n' +
+                    //var content = this.response;
+                    var content ='13:34:05\n' +
                             '1631,,2,,13:31(13:33) 牟佐下,1184,34.72111,133.97511,始発=13:00 表町BC,行先=ネオ西９（西 ・下市）\n' +
                             '8001,,32,,12:55(13:27) 後楽園前(Korakuen),1329,34.66543,133.91995,始発=12:45 岡山駅(Okayama sta.),行先=岡山駅(Okayama sta.)（県立美術館）\n' +
                             '1111,,4,,13:28(13:32) 清水,1354,34.68356,133.95886,始発=13:05 岡山駅(Okayama sta.),行先=四御神\n' +
@@ -124,14 +217,14 @@
                             '1061,,3,,13:30(13:33) 藤井,1662,34.69100,134.00693,始発=12:55 岡山駅(Okayama sta.),行先=瀬戸駅\n' +
                             '2001,,1,,13:32(13:33) 瀬戸駅前,1663,34.73537,134.04166,始発=12:35 岡山駅(Okayama sta.),行先=ネオ東６（瀬戸駅）\n' +
                             '//LAST\n' +
-                            '//系統番号,岡山駅の発時間,遅延,運行状態,計画時間（通過時間）停留所名,車両番号,緯度,経度,始発停留所情報,行先情報\n';*/
+                            '//系統番号,岡山駅の発時間,遅延,運行状態,計画時間（通過時間）停留所名,車両番号,緯度,経度,始発停留所情報,行先情報\n';
 
                     var lines = content.split('\n');
                     lines.shift();
                     lines.pop();
                     headers = lines.pop().replace('//', '').split(',');
                     lines.pop();
-                    lines.map(function(line) {
+                    busList = lines.map(function(line) {
                         var vals = line.split(',');
                         var lat = parseFloat(vals[6]);
                         var lng = parseFloat(vals[7]);
@@ -140,47 +233,23 @@
                             prev[headers[index]] = curr;
                             return prev;
                         }, {});
-                        app.addMarker({
+                        return {
+                            id: vals[5],
+                            route: vals[0],
                             lat: lat,
                             lng: lng,
                             data: data,
                             icon: 'parts/bus.png',
                             selected_icon: 'parts/selected_bus.png'
-                        });
-                    })
+                        };
+                    });
+                    showMarker();
                 }
             };
             xhr.send();
-
-            /*getGtfsRt('https://api.allorigins.win/raw?url=http://www3.unobus.co.jp/GTFS/GTFS_RT-VP.bin', function(err, feed) {
-                if (!err) {
-                    feed.entity.forEach(function(entity) {
-                        if (entity.vehicle) {
-                            console.log(entity);
-                            app.addMarker({
-                                lat: entity.vehicle.position.latitude,
-                                lng: entity.vehicle.position.longitude,
-                                name: "車両No" + entity.vehicle.vehicle.licensePlate
-                            });
-
-
-                /*latlng = {
-                  lat: ,
-                  lng:
-                };
-
-                marker = new google.maps.Marker({
-                  position: latlng,
-                  title: "車両No" + entity.vehicle.vehicle.license_plate
-                });
-                markers.push(marker);* /
-                        }
-                    });
-                }
-            });*/
         };
-        showMarker();
-        setInterval(showMarker, 60000);
+        requestGTFS();
+        setInterval(requestGTFS, 60000);
     });
 </script>
 </html>
