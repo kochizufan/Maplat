@@ -8,6 +8,13 @@
   <link rel="icon" type="image/png" href="parts/favicon.png">
   <link rel="stylesheet" href="css/core.css">
   <style>
+    .title {
+      position: absolute;
+      top: 0%;
+      bottom: 95%;
+      left: 5%;
+      right: 30%;
+    }
     .mainview {
         position: absolute;
         top: 5%;
@@ -32,6 +39,7 @@
   </style>
 </head>
 <body>
+  <div class="title">宇野バス運行状況表示</div>
   <div class="mainview">
     <div id="map_div"></div>
   </div>
@@ -39,24 +47,10 @@
   </div>
   <div class="button">
     <button id="changeMap">OSMに切り替える</button>
-    <!--button id="show">showLayer(Main)</button>
-    <button id="hide">hideLayer(Main)</button>
-    <button id="clear">clearMarker(Main)</button>
-    <button id="move">moveMarker(Main)</button>
-    <button id="remove">removeMarker(Main)</button>
-    <button id="add2">addMarker(Main2)</button>
-    <button id="clear2">clearMarker(Main2)</button>
-    <button id="addMap">addMarker(Map)</button>
-    <button id="clearMap">clearMarker(Map)</button>
-    <button id="unSelect">unSelect</button>
-    <button id="showAll">showAll</button>
-    <button id="hideAll">hideAll</button-->
   </div>
 </body>
-<!--script src="lib/aigle-es5.min.js"></script-->
 <script src="js/gtfs_loader_dist.js"></script>
-<script src="lib/require.min.js"></script>
-<script src="js/config_core.js"></script>
+<script src="dist/maplat_core.js"></script>
 <script>
     var option = {
         overlay: false,
@@ -109,8 +103,8 @@
             xhr.responseType = 'text';
             xhr.onload = function(e) {
                 if (this.status == 200 || true) {
-                    //var content = this.response;
-                    var content ='13:34:05\n' +
+                    var content = this.response;
+                    /*var content ='13:34:05\n' +
                             '1631,,2,,13:31(13:33) 牟佐下,1184,34.72111,133.97511,始発=13:00 表町BC,行先=ネオ西９（西 ・下市）\n' +
                             '8001,,32,,12:55(13:27) 後楽園前(Korakuen),1329,34.66543,133.91995,始発=12:45 岡山駅(Okayama sta.),行先=岡山駅(Okayama sta.)（県立美術館）\n' +
                             '1111,,4,,13:28(13:32) 清水,1354,34.68356,133.95886,始発=13:05 岡山駅(Okayama sta.),行先=四御神\n' +
@@ -130,14 +124,13 @@
                             '1061,,3,,13:30(13:33) 藤井,1662,34.69100,134.00693,始発=12:55 岡山駅(Okayama sta.),行先=瀬戸駅\n' +
                             '2001,,1,,13:32(13:33) 瀬戸駅前,1663,34.73537,134.04166,始発=12:35 岡山駅(Okayama sta.),行先=ネオ東６（瀬戸駅）\n' +
                             '//LAST\n' +
-                            '//系統番号,岡山駅の発時間,遅延,運行状態,計画時間（通過時間）停留所名,車両番号,緯度,経度,始発停留所情報,行先情報\n';
+                            '//系統番号,岡山駅の発時間,遅延,運行状態,計画時間（通過時間）停留所名,車両番号,緯度,経度,始発停留所情報,行先情報\n';*/
 
                     var lines = content.split('\n');
                     lines.shift();
                     lines.pop();
                     headers = lines.pop().replace('//', '').split(',');
                     lines.pop();
-                    console.log(lines);
                     lines.map(function(line) {
                         var vals = line.split(',');
                         var lat = parseFloat(vals[6]);
@@ -188,92 +181,6 @@
         };
         showMarker();
         setInterval(showMarker, 60000);
-
-        /*console.log(app.currentMapInfo());
-        console.log(app.mapInfo('gsi'));
-        var moveFlag = false;
-        app.addEventListener('clickMarker', function(evt) {
-            app.selectMarker(evt.detail.namespace_id);
-            console.log(evt);
-        });
-        app.addEventListener('clickMap', function (evt) {
-            console.log(evt);
-        });
-        app.addLine({
-            lnglats: [[141.151995, 39.701599], [141.151137, 39.703736], [141.1521671, 39.7090232]],
-            stroke: {
-                color: '#ffcc33',
-                width: 2
-            }
-        });
-        app.addPoiLayer('main2');
-        app.addPoiLayer('morioka_ndl2#main2', {
-            icon: 'parts/blue_marker.png',
-            selected_icon: 'parts/red_marker.png'
-        });
-        document.getElementById('show').addEventListener('click', function(e) {
-            app.showPoiLayer('main');
-        });
-        document.getElementById('hide').addEventListener('click', function(e) {
-            app.hidePoiLayer('main');
-        });
-        document.getElementById('clear').addEventListener('click', function(e) {
-            app.clearMarker('main');
-        });
-        document.getElementById('move').addEventListener('click', function(e) {
-            var data;
-            if (moveFlag) {
-                data = {lat: 39.698620, lng: 141.145358};
-            } else {
-                data = {lat: 39.694758, lng: 141.146534};
-            }
-            moveFlag = !moveFlag;
-            app.updateMarker('main_1', data);
-        });
-        document.getElementById('remove').addEventListener('click', function(e) {
-            app.removeMarker('main_2');
-        });
-        document.getElementById('add2').addEventListener('click', function(e) {
-            app.addMarker({
-                address: "岩手県盛岡市内丸1-42",
-                desc: "寛延２年創建で当時の藩主南部利視が初代藩主南部信直の功績を称え社殿を建立し御霊を勧請したのが始まりとされている。",
-                icon: undefined,
-                image: "sakurayama_jinja.jpg",
-                lat: 39.701599,
-                lng: 141.151995,
-                name: "桜山神社",
-                selected_icon: undefined,
-                start: 1749
-            }, 'main2');
-        });
-        document.getElementById('clear2').addEventListener('click', function(e) {
-            app.clearMarker('main2');
-        });
-        document.getElementById('addMap').addEventListener('click', function(e) {
-            app.addMarker({
-                address: "岩手県盛岡市内丸1-37",
-                desc: "南部（盛岡）藩南部氏の居城である。西部を流れる北上川と南東部を流れる中津川の合流地、現在の盛岡市中心部にあった花崗岩丘陵に築城された連郭式平山城。",
-                icon: undefined,
-                image: "moriokajo.jpg",
-                lat: 39.69994722,
-                lng: 141.1501111,
-                name: {ja: "盛岡城", en: "Morioka Castle"},
-                selected_icon: undefined,
-                start: 1598
-            }, 'morioka_ndl2#main2');
-        });
-        document.getElementById('clearMap').addEventListener('click', function(e) {
-            app.clearMarker('morioka_ndl2#all');
-        });
-        document.getElementById('unSelect').addEventListener('click', function(e) {
-            app.unselectMarker();
-        });
-        document.getElementById('showAll').addEventListener('click', function(e) {
-            app.showAllMarkers();
-        });
-        document.getElementById('hideAll').addEventListener('click', function(e) {
-            app.hideAllMarkers();
-        });*/
     });
 </script>
 </html>
