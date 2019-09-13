@@ -1,46 +1,10 @@
 var gulp = require('gulp'),
-    execSync = require('child_process').execSync,
-    spawn = require('child_process').spawn,
     concat = require('gulp-concat'),
-    header = require('gulp-header'),
-    zip = require('gulp-zip'),
     replace = require('gulp-replace'),
-    uglify = require('gulp-uglify'),
-    os = require('os'),
+    spawn = require('child_process').spawn,
     fs = require('fs-extra'),
     wbBuild = require('workbox-build'),
-    glob = require('glob');
-
-var pkg = require('./package.json');
-var pkg_tin = require('./npm/tmpl/package.json');
-pkg_tin.version = pkg.version;
-var banner = ['/**',
-  ' * <%= pkg.name %> - <%= pkg.description %>',
-  ' * @version v<%= pkg.version %>',
-  ' * @link <%= pkg.homepage %>',
-  ' * @license <%= pkg.license %>',
-  ' * Copyright (c) 2015- Kohei Otsuka, Code for Nara, RekishiKokudo project',
-  ' *',
-  ' * Permission is hereby granted, free of charge, to any person obtaining a copy',
-  ' * of this software and associated documentation files (the "Software"), to deal',
-  ' * in the Software without restriction, including without limitation the rights',
-  ' * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
-  ' * copies of the Software, and to permit persons to whom the Software is',
-  ' * furnished to do so, subject to the following conditions:',
-  ' *',
-  ' * The above copyright notice and this permission notice shall be included in all',
-  ' * copies or substantial portions of the Software.',
-  ' *',
-  ' * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR',
-  ' * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,',
-  ' * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE',
-  ' * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER',
-  ' * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
-  ' * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE',
-  ' * SOFTWARE.',
-  ' */',
-  ''].join('\n');
-var isWin = os.type().toString().match('Windows') !== null;
+    zip = require('gulp-zip');
 
 gulp.task('server', function() {
     spawn('node', ['server.js'], {
@@ -50,84 +14,69 @@ gulp.task('server', function() {
     return Promise.resolve();
 });
 
-gulp.task('config', function() {
-    return Promise.all([
-        configMaker('core'),
-        configMaker('ui')
-    ]);
-});
+gulp.task('zip', function() {
+    try {
+        fs.removeSync('./distribution.zip');
+    } catch (e) {
+    }
+    try {
+        fs.removeSync('./distribution');
+    } catch (e) {
+    }
+    try {
+        fs.removeSync('./example.zip');
+    } catch (e) {
+    }
+    try {
+        fs.removeSync('./example');
+    } catch (e) {
+    }
 
-gulp.task('js_build_task', function() {
-    var cmd = isWin ? 'r.js.cmd' : 'r.js';
-    execSync(cmd + ' -o rjs_config_core.js');
-    execSync(cmd + ' -o rjs_config_ui.js');
-    return Promise.all([
-        new Promise(function(resolve, reject) {
-            gulp.src(['./lib/aigle-es5.min.js', 'dist/maplat_core_withoutpromise.js'])
-                .pipe(concat('maplat_core.js'))
-                .pipe(header(banner, {pkg: pkg}))
+    fs.ensureDirSync('./distribution');
+    fs.copySync('./dist', './distribution/dist');
+    fs.copySync('./parts', './distribution/parts');
+    fs.copySync('./fonts', './distribution/fonts');
+    fs.copySync('./locales', './distribution/locales');
+
+    return new Promise(function(resolve, reject) {
+        gulp.src(['./distribution/**/*'])
+            .pipe(zip('distribution.zip'))
+            .on('error', reject)
+            .pipe(gulp.dest('./'))
+            .on('end', resolve);
+    }).then(function() {
+        fs.moveSync('./distribution', './example');
+        fs.copySync('./index.html', './example/index.html');
+        fs.copySync('./apps', './example/apps');
+        fs.copySync('./maps', './example/maps');
+        fs.copySync('./pois', './example/pois');
+        fs.copySync('./tiles', './example/tiles');
+        fs.copySync('./img', './example/img');
+        fs.copySync('./pwa', './example/pwa');
+        fs.copySync('./tmbs', './example/tmbs');
+        fs.copySync('./service-worker.js', './example/service-worker.js');
+        return new Promise(function(resolve, reject) {
+            gulp.src(['./example/**/*'])
+                .pipe(zip('example.zip'))
                 .on('error', reject)
-                .pipe(gulp.dest('./dist/'))
+                .pipe(gulp.dest('./'))
                 .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(['./lib/aigle-es5.min.js', 'dist/maplat_withoutpromise.js'])
-                .pipe(concat('maplat.js'))
-                .pipe(header(banner, {pkg: pkg}))
-                .on('error', reject)
-                .pipe(gulp.dest('./dist/'))
-                .on('end', resolve);
-        })
-    ]).then(function() {
-        fs.unlinkSync('./dist/maplat_withoutpromise.js');
-        fs.unlinkSync('./dist/maplat_core_withoutpromise.js');
+        });
+    }).then(function() {
+        fs.removeSync('./example');
+    });
+
+
+    return new Promise(function(resolve, reject) {
+        gulp.src(['./web_set/*', './web_set/*/*'])
+            .pipe(zip('web_set.zip'))
+            .on('error', reject)
+            .pipe(gulp.dest('./'))
+            .on('end', resolve);
+    }).then(function() {
+        fs.removeSync('./web_set');
     });
 });
-
-gulp.task('js_build', gulp.series('config', 'js_build_task'));
-
-gulp.task('less', function() {
-    var lesses = ['ol-maplat', 'font-awesome', 'bootstrap', 'swiper', 'core', 'ui', 'iziToast'];
-    lesses.map(function(less) {
-        execSync('lessc -x less/' + less + '.less > css/' + less + '.css');
-    });
-    return Promise.resolve();
-});
-
-gulp.task('css_build_task', function() {
-    var cmd = isWin ? 'r.js.cmd' : 'r.js';
-    execSync(cmd + ' -o cssIn=css/core.css out=dist/maplat_core.css');
-    execSync(cmd + ' -o cssIn=css/ui.css out=dist/maplat.css');
-    return Promise.resolve();
-});
-
-gulp.task('css_build', gulp.series('less', 'css_build_task'));
-
-gulp.task('mobile_build_task', function() {
-    removeResource();
-    copyResource(mobileCopy);
-    copyResource(mobileBaseCopy);
-    fs.copySync('mobile.html', './mobile_android/mobile_android_lib/src/main/res/raw/mobile_html');
-    fs.copySync('mobile.html', './mobile_ios/mobile_ios_lib/MaplatView/Maplat.bundle/mobile.html');
-    copyAssets();
-    return Promise.all([new Promise(function(resolve, reject) {
-        gulp.src(['./mobile_android/mobile_android_lib/build.gradle'])
-            .pipe(concat('build.gradle'))
-            .pipe(replace(/def VERSION_NAME = ".+"/g, 'def VERSION_NAME = "' + pkg.version + '"'))
-            .on('error', reject)
-            .pipe(gulp.dest('./mobile_android/mobile_android_lib/'))
-            .on('end', resolve);
-    }),new Promise(function(resolve, reject) {
-        gulp.src(['./mobile_ios/mobile_ios_lib/MaplatView/Info.plist'])
-            .pipe(concat('Info.plist'))
-            .pipe(replace(/<key>CFBundleShortVersionString<\/key>\n\t<string>.+<\/string>/g, '<key>CFBundleShortVersionString</key>\n\t<string>' + pkg.version + '</string>'))
-            .on('error', reject)
-            .pipe(gulp.dest('./mobile_ios/mobile_ios_lib/MaplatView/'))
-            .on('end', resolve);
-    })]);
-});
-
-gulp.task('mobile_build', gulp.series('js_build', 'css_build', 'mobile_build_task'));
 
 gulp.task('sw_build', function() {
     return wbBuild.generateSW({
@@ -167,178 +116,3 @@ gulp.task('sw_build', function() {
         fs.unlinkSync('./service-worker_.js');
     });
 });
-
-gulp.task('build_task', function() {
-    try {
-        fs.removeSync('./example.zip');
-    } catch (e) {
-    }
-    try {
-        fs.removeSync('./example');
-    } catch (e) {
-    }
-
-    fs.ensureDirSync('./example');
-    fs.copySync('./dist', './example/dist');
-    fs.copySync('./locales', './example/locales');
-    fs.copySync('./parts', './example/parts');
-    fs.copySync('./fonts', './example/fonts');
-    fs.copySync('./apps/example_sample.json', './example/apps/sample.json');
-    fs.copySync('./maps/morioka.json', './example/maps/morioka.json');
-    fs.copySync('./maps/morioka_ndl.json', './example/maps/morioka_ndl.json');
-    fs.copySync('./tiles/morioka', './example/tiles/morioka');
-    fs.copySync('./tiles/morioka_ndl', './example/tiles/morioka_ndl');
-    fs.copySync('./tmbs/morioka_menu.jpg', './example/tmbs/morioka_menu.jpg');
-    fs.copySync('./tmbs/morioka_ndl_menu.jpg', './example/tmbs/morioka_ndl_menu.jpg');
-    fs.copySync('./tmbs/osm_menu.jpg', './example/tmbs/osm_menu.jpg');
-    fs.copySync('./tmbs/gsi_menu.jpg', './example/tmbs/gsi_menu.jpg');
-    fs.copySync('./img/houonji.jpg', './example/img/houonji.jpg');
-    fs.copySync('./img/ishiwari_zakura.jpg', './example/img/ishiwari_zakura.jpg');
-    fs.copySync('./img/mitsuishi_jinja.jpg', './example/img/mitsuishi_jinja.jpg');
-    fs.copySync('./img/moriokaginko.jpg', './example/img/moriokaginko.jpg');
-    fs.copySync('./img/moriokajo.jpg', './example/img/moriokajo.jpg');
-    fs.copySync('./img/sakurayama_jinja.jpg', './example/img/sakurayama_jinja.jpg');
-    fs.copySync('./example.html', './example/index.html');
-
-    return new Promise(function(resolve, reject) {
-        gulp.src(['./example/*', './example/*/*', './example/*/*/*', './example/*/*/*/*', './example/*/*/*/*/*'])
-            .pipe(zip('example.zip'))
-            .on('error', reject)
-            .pipe(gulp.dest('./'))
-            .on('end', resolve);
-    }).then(function() {
-        fs.removeSync('./example');
-    });
-});
-
-gulp.task('build', gulp.series('mobile_build', 'sw_build', 'build_task'));
-
-var configMaker = function(name) {
-    var out = name == 'ui' ? '' : name + '_';
-    return Promise.all([
-        new Promise(function(resolve, reject) {
-            gulp.src(['./js/polyfill.js', './js/config.js', './js/loader.js'])
-                .pipe(concat('config_' + name + '.js'))
-                .pipe(replace(/\s+name:[^\n]+,\r?\n+\s+out:[^\n]+,\r?\n\s+include:[^\n]+,/, ''))
-                .pipe(replace(/\{app\}/, name))
-                .pipe(replace(/\{name\}/, name))
-                .on('error', reject)
-                .pipe(gulp.dest('./js/'))
-                .on('end', resolve);
-        }),
-        new Promise(function(resolve, reject) {
-            gulp.src(['./js/config.js'])
-                .pipe(concat('rjs_config_' + name + '.js'))
-                .pipe(replace(/\{name\}/g, name))
-                .pipe(replace(/\{out\}/, out))
-                .on('error', reject)
-                .pipe(gulp.dest('./'))
-                .on('end', resolve);
-        })
-    ]);
-};
-
-var mobileTestCopy = [
-    'css/core.css',
-    'css/ol-maplat.css',
-    'lib/aigle-es5.min.js',
-    'lib/require.min.js',
-    'js/config_core.js',
-    'lib/ol-maplat.js',
-    'js/ol-custom.js',
-    'lib/turf_maplat.min.js',
-    'lib/mapshaper_maplat.js',
-    'lib/detect-element-resize.js',
-    'js/core.js',
-    'js/histmap.js',
-    'js/histmap_tin.js',
-    'js/tin.js'
-];
-var mobileCopy = [
-    'dist/maplat_core.css',
-    'dist/maplat_core.js'
-];
-var mobileBaseCopy = [
-    'js/maplatBridge.js',
-    'parts/bluedot.png',
-    'parts/defaultpin.png',
-    'parts/redcircle.png'
-];
-var assetsCopy = [
-    'maps/morioka_ndl.json',
-    'tiles/morioka_ndl'
-];
-
-function removeResource() {
-    var files = [
-        './mobile_android/mobile_android_lib/src/main/res/raw',
-        './mobile_ios/mobile_ios_lib/MaplatView/Maplat.bundle',
-        './mobile_android/mobile_android_sample/app/src/main/assets/maps',
-        './mobile_android/mobile_android_sample/app/src/main/assets/tiles',
-        './mobile_android/mobile_android_sample_kotlin/app/src/main/assets/maps',
-        './mobile_android/mobile_android_sample_kotlin/app/src/main/assets/tiles',
-        './mobile_ios/mobile_ios_sample/mobile_ios_sample/maps',
-        './mobile_ios/mobile_ios_sample/mobile_ios_sample/tiles',
-        './mobile_ios/mobile_ios_sample_swift/mobile_ios_sample_swift/maps',
-        './mobile_ios/mobile_ios_sample_swift/mobile_ios_sample_swift/tiles'
-    ];
-    for (var i=0; i<files.length; i++) {
-        var file = files[i];
-        try {
-            fs.removeSync(file);
-        } catch (e) {
-        }
-    }
-}
-
-function copyResource(files) {
-    for (var i=0; i<files.length; i++) {
-        var copy = files[i];
-        var copyTo = copy.replace(/[\/\.\-]/g, '_').toLowerCase();
-        fs.copySync(copy, './mobile_android/mobile_android_lib/src/main/res/raw/' + copyTo);
-        fs.copySync(copy, './mobile_ios/mobile_ios_lib/MaplatView/Maplat.bundle/' + copy);
-    }
-}
-
-function copyAssets() {
-    for (var i=0; i<assetsCopy.length; i++) {
-        var copy = assetsCopy[i];
-        fs.copySync(copy, './mobile_android/mobile_android_sample/app/src/main/assets/' + copy);
-        fs.copySync(copy, './mobile_android/mobile_android_sample_kotlin/app/src/main/assets/' + copy);
-        fs.copySync(copy, './mobile_ios/mobile_ios_sample/mobile_ios_sample/' + copy);
-        fs.copySync(copy, './mobile_ios/mobile_ios_sample_swift/mobile_ios_sample_swift/' + copy);
-    }
-}
-
-gulp.task('mobile_build_test', gulp.parallel('config', 'less'), function() {
-    removeResource();
-    copyResource(mobileTestCopy);
-    copyResource(mobileBaseCopy);
-    fs.copySync('mobile_test.html', './mobile_android/mobile_android_lib/src/main/res/raw/mobile_html');
-    fs.copySync('mobile_test.html', './mobile_ios/mobile_ios_lib/MaplatView/Maplat.bundle/mobile.html');
-    copyAssets();
-    return Promise.resolve();
-});
-
-gulp.task('www_tin', function() {
-    return gulp.src(['./lib/turf_maplat.min.js', './lib/mapshaper_maplat.js', './js/tin.js'])
-        .pipe(concat('maplat_tin.js'))
-        .pipe(uglify())
-        .pipe(header(banner, {pkg: pkg_tin}))
-        .pipe(gulp.dest('./dist/'));
-});
-
-gulp.task('npm_tin', function() {
-    gulp.src(['./js/tin.js'])
-        .pipe(concat('index.js'))
-        .pipe(gulp.dest('./npm/'));
-    gulp.src(['./npm/tmpl/package.json'])
-        .pipe(concat('package.json'))
-        .pipe(replace(/\{version\}/, pkg.version))
-        .pipe(gulp.dest('./npm/'));
-    return gulp.src(['./LICENSE'])
-        .pipe(concat('LICENSE'))
-        .pipe(gulp.dest('./npm/'));
-});
-
-gulp.task('tin', gulp.parallel('www_tin', 'npm_tin'));
