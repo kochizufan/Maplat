@@ -17,6 +17,10 @@
         },
         "gsi",
         "gsi_ortho",
+        {
+            "mapID" : "mapbox",
+            "label" : "Mapbox"
+        },
         "osm"
     ],
     "pois": [

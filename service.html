@@ -6,6 +6,7 @@
   <meta content="yes" name="apple-mobile-web-app-capable">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <link rel="icon" type="image/png" href="parts/favicon.png">
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet">
   <link rel="stylesheet" href="dist/maplat.css">
   <style>
     .mainview {
@@ -22,9 +23,13 @@
     <div id="map_div"></div>
   </div>
 </body>
+<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
 <script src="dist/maplat.js"></script>
 <script>
+    var ip;
     var option = {};
+    option.mapboxgl = mapboxgl;
+    option.mapboxToken = 'pk.eyJ1IjoicmVraXNoaWtva3VkbyIsImEiOiJjazRoMmF3dncwODU2M2ttdzI2aDVqYXVwIn0.8Hb9sekgjfck6Setxk5uVg';
     var hashes = (window.location.href.split('#!'))[0];
     hashes = hashes.slice(window.location.href.indexOf('?') + 1).split('&');
     for (var i = 0; i < hashes.length; i++) {

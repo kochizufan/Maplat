@@ -23,6 +23,12 @@
             "mapID": "fushimi_joka_ezu",
             "label": "城下町絵図"
         },
+        "gsi",
+        "gsi_ortho",
+        {
+            "mapID" : "mapbox",
+            "label" : "Mapbox"
+        },
         "osm"
     ],
     "pois": [
