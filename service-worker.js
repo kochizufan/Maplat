@@ -25,15 +25,15 @@ workbox.core.clientsClaim();
 self.__precacheManifest = [
   {
     "url": ".",
-    "revision": "992a6c6c92b925130acea7ca8a1f78b780400620"
+    "revision": "dd57fadfe9445555f7392bc5b05f464450a7806b"
   },
   {
     "url": "dist/maplat.js",
-    "revision": "19600b28e85edfb969d99f491dec713d"
+    "revision": "669b25d87d9fbabef44d16d9be6f7371"
   },
   {
     "url": "dist/maplat.css",
-    "revision": "916c0052b728a88cdd1e1e81c0de48a2"
+    "revision": "18d21803aed100bd626bb22739c1c04e"
   },
   {
     "url": "parts/all_right_reserved.png",
@@ -221,4 +221,5 @@ self.__precacheManifest = [
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
 workbox.routing.registerRoute(/(?:maps\/.+\.json|pwa\/.+|pois\/.+\.json|apps\/.+\.json|tmbs\/.+_menu\.jpg|img\/.+\.(?:png|jpg))$/, new workbox.strategies.StaleWhileRevalidate({ "cacheName":"resourcesCache", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 86400, purgeOnQuotaError: false })] }), 'GET');
