@@ -63,6 +63,13 @@
             "envelopLngLats" : [[139.454802, 36.209997], [139.630240, 36.209997], [139.630240, 36.283371], [139.454802, 36.283371]]
         },
         {
+            "mapID" : "zendoji_garan",
+            "label" : {
+                "ja" : "善導寺伽藍配置",
+                "en" : "Zengo-ji Layout"
+            }
+        },
+        {
             "mapID" : "tatebayashi_bunkazai_center",
             "label" : {
                 "ja" : "文化財中心部",
