@@ -9,22 +9,27 @@ import QRCode from '../legacy/qrcode';
 import { point, polygon } from '@turf/helpers';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import sprintf from '../legacy/sprintf';
-import { META_KEYS, NowMap, TmsMap } from '@maplat/core/src/source_ex';
+import { META_KEYS } from '@maplat/core/src/source_ex';
 import { Copyright, CompassRotate, SetGPS, GoHome, Maplat, Border, HideMarker, SliderCommon, Share } from './maplat_control';
 import { Zoom } from 'ol/control';
 import { asArray } from 'ol/color';
-import { HistMap } from '@maplat/core/src/histmap';
+import { HistMap } from '@maplat/core/src/source/histmap';
+import { TmsMap } from '@maplat/core/src/source/tmsmap';
+import { NowMap } from '@maplat/core/src/source/nowmap';
 import pointer from './pointer_images';
+import Weiwudi from "weiwudi";
+import {normalizeArg} from "./function";
 
 // Maplat UI Class
 export class MaplatUi extends EventTarget {
     constructor(appOption) {
         super();
+        appOption = normalizeArg(appOption);
 
         const ui = this;
         ui.html_id_seed = `${Math.floor( Math.random() * 9000 ) + 1000}`;
 
-        if (appOption.state_url) {
+        if (appOption.stateUrl) {
             page((ctx, next) => { // eslint-disable-line no-unused-vars
                 let pathes = ctx.canonicalPath.split('#!');
                 let path = pathes.length > 1 ? pathes[1] : pathes[0];
@@ -44,7 +49,7 @@ export class MaplatUi extends EventTarget {
                     const line = state.split(':');
                     switch (line[0]) {
                         case 's':
-                            restore.sourceID = line[1];
+                            restore.mapID = line[1];
                             break;
                         case 'b':
                             restore.backgroundID = line[1];
@@ -80,13 +85,13 @@ export class MaplatUi extends EventTarget {
                     }
                 });
                 if (!ui.core) {
-                    if (restore.sourceID) {
+                    if (restore.mapID) {
                         appOption.restore = restore;
                     }
                     ui.initializer(appOption);
-                } else if (restore.sourceID) {
+                } else if (restore.mapID) {
                     ui.core.waitReady.then(() => {
-                        ui.core.changeMap(restore.sourceID, restore);
+                        ui.core.changeMap(restore.mapID, restore);
                     });
                 }
             });
@@ -102,9 +107,9 @@ export class MaplatUi extends EventTarget {
         }
     }
 
-    initializer(appOption) {
+    async initializer(appOption) {
         const ui = this;
-        appOption.translate_ui = true;
+        appOption.translateUI = true;
         ui.core = new Core(appOption);
 
         if (appOption.restore) {
@@ -112,7 +117,7 @@ export class MaplatUi extends EventTarget {
             if (appOption.restore.hideMarker) {
                 ui.core.mapDivDocument.classList.add('hide-marker');
             }
-        } else if (appOption.restore_session) {
+        } else if (appOption.restoreSession) {
             const lastEpoch = parseInt(localStorage.getItem('epoch') || 0); // eslint-disable-line no-undef
             const currentTime = Math.floor(new Date().getTime() / 1000);
             if (lastEpoch && currentTime - lastEpoch < 3600) {
@@ -125,7 +130,7 @@ export class MaplatUi extends EventTarget {
             ui.setShowBorder(false);
         }
 
-        const enableSplash = ui.core.initialRestore.sourceID ? false : true;
+        const enableSplash = ui.core.initialRestore.mapID ? false : true;
         const restoreTransparency = ui.core.initialRestore.transparency;
         const enableOutOfMap = appOption.presentation_mode ? false : true;
 
@@ -142,11 +147,11 @@ export class MaplatUi extends EventTarget {
             });
         };
 
-        if (appOption.enable_share) {
+        if (appOption.enableShare) {
             ui.core.mapDivDocument.classList.add('enable_share');
             ui.enableShare = true;
         }
-        if (appOption.state_url) {
+        if (appOption.stateUrl) {
             ui.core.mapDivDocument.classList.add('state_url');
         }
         if (ui.core.enableCache) {
@@ -155,12 +160,13 @@ export class MaplatUi extends EventTarget {
         if ('ontouchstart' in window) { // eslint-disable-line no-undef
             ui.core.mapDivDocument.classList.add('ol-touch');
         }
-        if (appOption.mobile_if) {
+        if (appOption.mobileIF) {
             appOption.debug = true;
         }
 
-        let pwaManifest = appOption.pwa_manifest;
-        let pwaWorker = appOption.pwa_worker;
+        let pwaManifest = appOption.pwaManifest;
+        let pwaWorker = appOption.pwaWorker;
+        let pwaScope = appOption.pwaScope;
 
         // Add UI HTML Element
         let newElems = createElement(`<div class="ol-control map-title"><span></span></div>
@@ -363,6 +369,7 @@ export class MaplatUi extends EventTarget {
         }
 
         // PWA対応: 非同期処理
+        let waitWeiwudi
         if (pwaManifest) {
             if (pwaManifest === true) {
                 pwaManifest = `./pwa/${ui.core.appid}_manifest.json`;
@@ -370,25 +377,16 @@ export class MaplatUi extends EventTarget {
             if (!pwaWorker) {
                 pwaWorker = './service-worker.js';
             }
+            if (!pwaScope) {
+                pwaScope = './';
+            }
 
             const head = document.querySelector('head'); // eslint-disable-line no-undef
             if (!head.querySelector('link[rel="manifest"]')) {
                 head.appendChild((createElement(`<link rel="manifest" href="${pwaManifest}">`))[0]);
             }
             // service workerが有効なら、service-worker.js を登録します
-            if ('serviceWorker' in navigator) { // eslint-disable-line no-undef
-                navigator.serviceWorker.register(pwaWorker).then((reg) => { // eslint-disable-line no-undef
-                    console.log('Service Worker Registered'); // eslint-disable-line no-undef
-                    reg.onupdatefound = function() {
-                        console.log('Found Service Worker update'); // eslint-disable-line no-undef
-                        reg.update().catch((e) => {
-                            throw e;
-                        });
-                    };
-                }).catch((err) => {
-                    console.log(err); // eslint-disable-line no-undef
-                });
-            }
+            waitWeiwudi = Weiwudi.registerSW(pwaWorker, {scope: pwaScope});
 
             if (!head.querySelector('link[rel="apple-touch-icon"]')) {
                 const xhr = new XMLHttpRequest(); // eslint-disable-line no-undef
@@ -474,7 +472,7 @@ export class MaplatUi extends EventTarget {
 
                 const modalElm = ui.core.mapDivDocument.querySelector('.modalBase');
                 const modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
-                ui.core.mapDivDocument.querySelector('.modal_load_title').innerText = ui.core.translate(ui.core.appData.app_name);
+                ui.core.mapDivDocument.querySelector('.modal_load_title').innerText = ui.core.translate(ui.core.appData.appName);
                 if (splash) {
                     ui.core.mapDivDocument.querySelector('.splash_img').setAttribute('src', `img/${ui.core.appData.splash}`);
                     ui.core.mapDivDocument.querySelector('.splash_div').classList.remove('hide');
@@ -594,13 +592,13 @@ export class MaplatUi extends EventTarget {
             for (let i=0; i<baseSources.length; i++) {
                 const source = baseSources[i];
                 const colorCss = source.envelope ? ` ${source.envelopeColor}` : ''; // eslint-disable-line no-unused-vars
-                baseSwiper.appendSlide(`<div class="swiper-slide" data="${source.sourceID}">` +
+                baseSwiper.appendSlide(`<div class="swiper-slide" data="${source.mapID}">` +
                     `<img crossorigin="anonymous" src="${source.thumbnail}"><div>${ui.core.translate(source.label)}</div></div>`);
             }
             for (let i=0; i<overlaySources.length; i++) {
                 const source = overlaySources[i];
                 const colorCss = source.envelope ? ` ${source.envelopeColor}` : '';
-                overlaySwiper.appendSlide(`<div class="swiper-slide${colorCss}" data="${source.sourceID}">` +
+                overlaySwiper.appendSlide(`<div class="swiper-slide${colorCss}" data="${source.mapID}">` +
                     `<img crossorigin="anonymous" src="${source.thumbnail}"><div>${ui.core.translate(source.label)}</div></div>`);
             }
 
@@ -614,13 +612,13 @@ export class MaplatUi extends EventTarget {
         ui.core.addEventListener('mapChanged', (evt) => {
             const map = evt.detail;
 
-            ui.baseSwiper.setSlideMapID(map.sourceID);
-            ui.overlaySwiper.setSlideMapID(map.sourceID);
+            ui.baseSwiper.setSlideMapID(map.mapID);
+            ui.overlaySwiper.setSlideMapID(map.mapID);
 
             const title = map.officialTitle || map.title || map.label;
             ui.core.mapDivDocument.querySelector('.map-title span').innerText = ui.core.translate(title);
 
-            if (ui.checkOverlayID(map.sourceID)) {
+            if (ui.checkOverlayID(map.mapID)) {
                 ui.sliderCommon.setEnable(true);
             } else {
                 ui.sliderCommon.setEnable(false);
@@ -669,8 +667,8 @@ export class MaplatUi extends EventTarget {
                 return;
             }
 
-            ui.xyToSourceID(evt.detail, (sourceID) => {
-                ui.showFillEnvelope(sourceID);
+            ui.xyToMapID(evt.detail, (mapID) => {
+                ui.showFillEnvelope(mapID);
             });
         });
 
@@ -679,13 +677,13 @@ export class MaplatUi extends EventTarget {
                 return;
             }
 
-            ui.xyToSourceID(evt.detail, (sourceID) => {
-                if (ui.selectCandidate && ui.selectCandidate == sourceID) {
+            ui.xyToMapID(evt.detail, (mapID) => {
+                if (ui.selectCandidate && ui.selectCandidate == mapID) {
                     ui.core.changeMap(ui.selectCandidate);
                     delete ui.selectCandidate;
                     delete ui._selectCandidateSource;
                 } else {
-                    ui.showFillEnvelope(sourceID);
+                    ui.showFillEnvelope(mapID);
                 }
             });
         });
@@ -743,7 +741,7 @@ export class MaplatUi extends EventTarget {
             }
             const modalElm = ui.core.mapDivDocument.querySelector('.modalBase');
             const modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
-            ui.core.selectMarker(data.namespace_id);
+            ui.core.selectMarker(data.namespaceID);
             const hideFunc = function(event) { // eslint-disable-line no-unused-vars
                 modalElm.removeEventListener('hide.bs.modal', hideFunc, false);
                 ui.core.unselectMarker();
@@ -759,11 +757,11 @@ export class MaplatUi extends EventTarget {
             modal.show();
         });
 
-        if (appOption.state_url) {
+        if (appOption.stateUrl) {
             ui.core.addEventListener('updateState', (evt) => {
                 const value = evt.detail;
-                if (!value.position || !value.sourceID) return;
-                let link = `s:${value.sourceID}`;
+                if (!value.position || !value.mapID) return;
+                let link = `s:${value.mapID}`;
                 if (value.backgroundID) link = `${link}/b:${value.backgroundID}`;
                 if (value.transparency) link = `${link}/t:${value.transparency}`;
                 link = `${link}/x:${value.position.x}/y:${value.position.y}`;
@@ -776,6 +774,10 @@ export class MaplatUi extends EventTarget {
                 ui.pathThatSet = link;
                 page(link);
             });
+        }
+
+        if (waitWeiwudi) {
+            await waitWeiwudi;
         }
 
         ui.waitReady = ui.core.waitReady.then(() => {
@@ -842,7 +844,7 @@ export class MaplatUi extends EventTarget {
 
             let qr_app;
             let qr_view;
-            ui.core.mapObject.on('click_control', (evt) => {
+            ui.core.mapObject.on('click_control', async (evt) => {
                 const control = evt.frameState.control;
                 const modalElm = ui.core.mapDivDocument.querySelector('.modalBase');
                 const modal = new bsn.Modal(modalElm, {'root': ui.core.mapDivDocument});
@@ -887,12 +889,11 @@ export class MaplatUi extends EventTarget {
 
                     modalSetting('map');
                     const deleteButton = document.querySelector('.cache_delete'); // eslint-disable-line no-undef
-                    const deleteFunc = function(evt) {
+                    const deleteFunc = async function(evt) {
                         evt.preventDefault();
                         const from = ui.core.getMapMeta();
-                        ui.core.clearMapTileCacheAsync(from.sourceID, true).then(() => {
-                            ui.core.getMapTileCacheSizeAsync(from.sourceID).then(putTileCacheSize);
-                        });
+                        await ui.core.clearMapTileCacheAsync(from.mapID);
+                        putTileCacheSize(await ui.core.getMapTileCacheSizeAsync(from.mapID));
                     };
                     const hideFunc = function(event) { // eslint-disable-line no-unused-vars
                         deleteButton.removeEventListener('click', deleteFunc, false);
@@ -900,7 +901,7 @@ export class MaplatUi extends EventTarget {
                     };
                     modalElm.addEventListener('hide.bs.modal', hideFunc, false);
 
-                    ui.core.getMapTileCacheSizeAsync(from.sourceID).then(putTileCacheSize);
+                    putTileCacheSize(await ui.core.getMapTileCacheSizeAsync(from.mapID));
 
                     modal.show();
                     setTimeout(() => { // eslint-disable-line no-undef
@@ -964,7 +965,7 @@ export class MaplatUi extends EventTarget {
                         const icon = layer.icon || pointer['defaultpin.png'];
                         const title = ui.core.translate(layer.name);
                         const check = !layer.hide;
-                        const id = layer.namespace_id;
+                        const id = layer.namespaceID;
                         const newElems = createElement(`<li class="list-group-item">
   <div class="row">
     <div class="col-sm-1"><img class="markerlist" src="${icon}"></div>
@@ -1011,14 +1012,14 @@ export class MaplatUi extends EventTarget {
         });
     }
 
-    showFillEnvelope(sourceID) {
+    showFillEnvelope(mapID) {
         const ui = this;
-        if (sourceID && sourceID !== ui.core.from.sourceID) {
-            if (ui.selectCandidate != sourceID) {
+        if (mapID && mapID !== ui.core.from.mapID) {
+            if (ui.selectCandidate != mapID) {
                 if (ui._selectCandidateSource) {
                     ui.core.mapObject.removeEnvelope(ui._selectCandidateSource);
                 }
-                const source = ui.core.cacheHash[sourceID];
+                const source = ui.core.cacheHash[mapID];
                 const xyPromises = source.envelope.geometry.coordinates[0].map((coord) => ui.core.from.merc2XyAsync(coord));
                 const hexColor = source.envelopeColor;
                 let color = asArray(hexColor);
@@ -1027,9 +1028,9 @@ export class MaplatUi extends EventTarget {
                 Promise.all(xyPromises).then((xys) => {
                     ui._selectCandidateSource = ui.core.mapObject.setFillEnvelope(xys, null, {color});
                 });
-                ui.overlaySwiper.slideToMapID(sourceID);
+                ui.overlaySwiper.slideToMapID(mapID);
             }
-            ui.selectCandidate = sourceID;
+            ui.selectCandidate = mapID;
         } else {
             if (ui._selectCandidateSource) {
                 ui.core.mapObject.removeEnvelope(ui._selectCandidateSource);
@@ -1039,7 +1040,7 @@ export class MaplatUi extends EventTarget {
         }
     }
 
-    xyToSourceID(xy, callback) {
+    xyToMapID(xy, callback) {
         const ui = this;
         const point_ = point(xy);
         Promise.all(Object.keys(ui.core.cacheHash).filter((key) => ui.core.cacheHash[key].envelope).map((key) => {
@@ -1050,15 +1051,15 @@ export class MaplatUi extends EventTarget {
             ]);
         })).then((sources) => {
             let areaIndex;
-            const sourceID = sources.reduce((prev, curr) => {
+            const mapID = sources.reduce((prev, curr) => {
                 const source = curr[0];
                 const mercXys = curr[1];
-                if (source.sourceID == ui.core.from.sourceID) return prev;
+                if (source.mapID == ui.core.from.mapID) return prev;
                 const polygon_ = polygon([mercXys]);
                 if (booleanPointInPolygon(point_, polygon_)) {
                     if (!areaIndex || source.envelopeAreaIndex < areaIndex) {
                         areaIndex = source.envelopeAreaIndex;
-                        return source.sourceID;
+                        return source.mapID;
                     } else {
                         return prev;
                     }
@@ -1066,7 +1067,7 @@ export class MaplatUi extends EventTarget {
                     return prev;
                 }
             }, null);
-            callback(sourceID);
+            callback(mapID);
         });
     }
 
@@ -1106,7 +1107,7 @@ export class MaplatUi extends EventTarget {
         if (ui.core.stateBuffer.showBorder) {
             Object.keys(ui.core.cacheHash).filter((key) => ui.core.cacheHash[key].envelope).map((key) => {
                 const source = ui.core.cacheHash[key];
-                const xyPromises = (key == ui.core.from.sourceID) && (source instanceof HistMap) ?
+                const xyPromises = (key == ui.core.from.mapID) && (source instanceof HistMap) ?
                     [[0, 0], [source.width, 0], [source.width, source.height], [0, source.height], [0, 0]].map((xy) => Promise.resolve(source.xy2HistMapCoords(xy))) :
                     source.envelope.geometry.coordinates[0].map((coord) => ui.core.from.merc2XyAsync(coord));
 
