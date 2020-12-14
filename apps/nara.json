@@ -11,7 +11,7 @@
     "fake_radius" : 10,
     "home_position" : [ 135.8311667, 34.68325 ],
     "default_zoom" : 17,
-    "start_from": "nara_ezuya",
+    "start_from": "naramachi_yasui_bunko",
     "sources" : [
         {
             "mapID" : "heijokyo_timetrip",
@@ -35,6 +35,10 @@
             }
         },
         {
+            "mapID" : "naramachi_yasui_bunko",
+            "label" : "173X"
+        },
+        {
             "mapID" : "nara_ezuya",
             "label" : 1844
         },
@@ -56,6 +60,14 @@
         {
             "mapID" : "narapreflib_138194_nara",
             "label" : 1925
+        },
+        {
+            "mapID" : "NaraSightseeingMap1953",
+            "label" : 1953
+        },
+        {
+            "mapID" : "Nara_Enjoying_Map_1965",
+            "label" : 1965
         },
         {
             "mapID" : "naramachi_omoshiro_part1",
