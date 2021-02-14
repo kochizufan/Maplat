@@ -8,6 +8,6 @@ const prod = require("./webpack.config.standard.js");
 module.exports = merge(prod, {
   output: {
     path: path.resolve(__dirname, "../dev"),
-    filename: '[name].js'
-  },
+    filename: './assets/[name].js',
+  }
 });

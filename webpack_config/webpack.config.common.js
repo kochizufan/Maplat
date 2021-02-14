@@ -8,6 +8,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const {InjectManifest} = require('workbox-webpack-plugin');
 
 const port = process.env.PORT || 8888;
 
@@ -16,7 +17,7 @@ module.exports = {
   devtool: 'source-map',
 
   entry: {
-    "maplat": path.resolve(__dirname, "../tmpl/web-bridge.js")
+    "maplat": path.resolve(__dirname, "../tmpl/web-bridge.js"),
   },
 
   plugins: [
@@ -24,8 +25,17 @@ module.exports = {
       banner: `${pjson.name} v${pjson.version} | ${pjson.author} | license: ${pjson.license}`
     }),
     new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({ template: "./public/index.html" }),
-    new MiniCssExtractPlugin()
+    new HtmlWebpackPlugin({
+      template: "./public/index.html"
+    }),
+    new MiniCssExtractPlugin({
+      filename: "./assets/[name].css"
+    }),
+    new InjectManifest({
+      swDest: "./service-worker.js",
+      swSrc: './src/service-worker.js'
+    })
+
   ],
 
   externals: [
@@ -50,7 +60,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules(?![/\\](@maplat|swiper|dom7|weiwudi)[/\\])/,
-        loader: 'babel-loader',
+        loader: ['strip-whitespace-loader', 'babel-loader'],
       },
       {
         test: /\.less$/,
