@@ -1,7 +1,7 @@
 {
   "name": "上田城城下町アプリ",
   "short_name": "上田城",
-  "background_color": "#f6f0d3",
+  "background_color": "#780508",
   "icons": [
     {
       "src": "sample/manifest-icon-192.png",
@@ -18,5 +18,6 @@
   ],
   "start_url": "https://s.maplat.jp/r/uedamap/",
   "scope": "/r/uedamap/",
-  "display": "standalone"
+  "display": "standalone",
+  "theme_color": "#780508"
 }

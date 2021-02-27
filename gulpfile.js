@@ -102,7 +102,7 @@ gulp.task("publish:plat", async () => {
   const title = settings.title || (apps.app_name ? (apps.app_name.ja || apps.app_name) : "");
   let description = settings.description || (apps.description ? (apps.description.ja || apps.description) : "");
   if (!description) description = `古地図/絵地図街歩きアプリMaplat:「${title}」版`;
-  const color = settings.color || options.color;
+  const color = settings.isSample ? "#780508" : (settings.color || options.color);
   const name = settings.name || options.name;
   const short = settings.short || options.short;
   const splash = !(settings.isSample || target === "sample") ?
@@ -112,6 +112,7 @@ gulp.task("publish:plat", async () => {
   manifest.name = name;
   manifest.short_name = short;
   manifest.background_color = color;
+  manifest.theme_color = color;
   manifest.start_url = `https://s.maplat.jp/r/${target}map/`;
   manifest.scope = `/r/${target}map/`;
   await new Promise((resolve, reject) => {

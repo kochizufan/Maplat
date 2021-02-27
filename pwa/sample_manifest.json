@@ -18,5 +18,6 @@
   ],
   "start_url": "https://s.maplat.jp/r/samplemap/",
   "scope": "/r/samplemap/",
-  "display": "standalone"
+  "display": "standalone",
+  "theme_color": "#780508"
 }
