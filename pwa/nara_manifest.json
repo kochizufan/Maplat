@@ -2,6 +2,7 @@
   "name": "ぷらっと奈良",
   "short_name": "ぷら奈良",
   "background_color": "#f6f0d3",
+  "theme_color": "#f6f0d3",
   "icons": [
     {
       "src": "nara/manifest-icon-192.png",
