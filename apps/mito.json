@@ -1,0 +1,28 @@
+{
+    "app_name" : {
+        "ja" : "ぷらっと水戸 - 水戸を楽しむ古地図/絵地図街歩きアプリ",
+        "en" : "Maplat Mito"
+    },
+    "splash" : "mito_splash.png",
+    "lang": "ja",
+    "fake_gps" : true,
+    "fake_center" : "弘道館",
+    "fake_radius" : 10,
+    "home_position" : [ 140.4773091747215, 36.37532743309838 ],
+    "default_zoom" : 17,
+    "start_from": "mito_1890",
+    "sources" : [
+        {
+            "mapID" : "mito_1890",
+            "label" : "1890"
+        },
+        "gsi",
+        "gsi_ortho",
+        {
+            "mapID" : "mapbox",
+            "label" : "Mapbox"
+        },
+        "osm"
+    ], 
+    "pois" :[]
+}
