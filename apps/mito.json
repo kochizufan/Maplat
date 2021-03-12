@@ -13,8 +13,12 @@
     "start_from": "mito_1890",
     "sources" : [
         {
+            "mapID" : "mito_edo",
+            "label" : "江戸"
+        },
+        {
             "mapID" : "mito_1890",
-            "label" : "1890"
+            "label" : "明治23"
         },
         "gsi",
         "gsi_ortho",
