@@ -10,16 +10,21 @@
     "fake_radius" : 10,
     "home_position" : [ 140.4773091747215, 36.37532743309838 ],
     "default_zoom" : 17,
-    "start_from": "mito_1890",
+    "start_from": "mito_edo",
     "sources" : [
         {
             "mapID" : "mito_edo",
             "label" : "江戸"
         },
         {
+            "mapID" : "mito_1661",
+            "label" : "万治4"
+        },
+        {
             "mapID" : "mito_1890",
             "label" : "明治23"
         },
+        "gsi",
         "gsi",
         "gsi_ortho",
         {
