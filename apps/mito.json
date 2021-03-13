@@ -24,6 +24,10 @@
             "mapID" : "mito_1890",
             "label" : "明治23"
         },
+        {
+            "mapID" : "mito_1915",
+            "label" : "大正4"
+        },
         "gsi",
         "gsi",
         "gsi_ortho",
