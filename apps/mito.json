@@ -37,5 +37,8 @@
         },
         "osm"
     ], 
-    "pois" :[]
+    "pois" :[
+      "mito_chomei.geojson",
+      "mito_kanko_poi.geojson"
+    ]
 }
