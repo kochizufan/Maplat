@@ -36,11 +36,17 @@
         },
         {
             "mapID" : "naramachi_yasui_bunko",
-            "label" : "173X"
+            "label" : {
+                "ja" : "享保頃",
+                "en" : "173X"
+            }
         },
         {
             "mapID" : "nara_ezuya",
-            "label" : "1844"
+            "label" : {
+                "ja" : "天保15",
+                "en" : "1844"
+            }
         },
         {
             "mapID" : "NaraOldMap1",
@@ -51,23 +57,45 @@
         },
         {
             "mapID" : "nara_saiken_ndl",
-            "label" : "1889"
+            "label" : {
+                "ja" : "明治22",
+                "en" : "1889"
+            }
+        },
+        {
+            "mapID" : "nara_1894",
+            "label" : {
+                "ja" : "明治27",
+                "en" : "1894"
+            }
         },
         {
             "mapID" : "narapreflib_138174_nara",
-            "label" : "1917"
+            "label" : {
+                "ja" : "大正6",
+                "en" : "1917"
+            }
         },
         {
             "mapID" : "narapreflib_138194_nara",
-            "label" : "1925"
+            "label" : {
+                "ja" : "大正14",
+                "en" : "1925"
+            }
         },
         {
             "mapID" : "NaraSightseeingMap1953",
-            "label" : "1953"
+            "label" : {
+                "ja" : "昭和28",
+                "en" : "1953"
+            }
         },
         {
             "mapID" : "Nara_Enjoying_Map_1965",
-            "label" : "1965"
+            "label" : {
+                "ja" : "昭和40",
+                "en" : "1965"
+            }
         },
         {
             "mapID" : "naramachi_omoshiro_part1",
