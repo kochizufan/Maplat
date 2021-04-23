@@ -1,5 +1,9 @@
 {
-    "app_name": "ぷらっと伏見城",
+    "app_name": {
+        "ja": "ぷらっと伏見 - 伏見を楽しむ古地図/絵地図街歩きアプリ",
+        "en": "Maplat Fushimi"
+    },
+    "splash" : "fushimi_splash.png",
     "lang": "ja",
     "fake_gps": true,
     "fake_center": "伏見城",
@@ -13,15 +17,24 @@
     "sources": [
         {
             "mapID": "fushimijo_maplat",
-            "label": "丸の内圖"
+            "label": {
+                "ja": "丸の内圖",
+                "en": "Castle Center"
+            }
         },
         {
             "mapID": "fushimi_kojo_ezu",
-            "label": "古城絵図"
+            "label": {
+                "ja": "古城絵図",
+                "en": "Old Castle Map"
+            }
         },
         {
             "mapID": "fushimi_joka_ezu",
-            "label": "城下町絵図"
+            "label": {
+                "ja": "城下町絵図",
+                "en": "Castle Town"
+            }
         },
         "gsi",
         "gsi_ortho",
