@@ -36,6 +36,13 @@
                 "en": "Castle Town"
             }
         },
+        {
+            "mapID": "fushimi_zenzu",
+            "label": {
+                "ja": "伏見市全図",
+                "en": "Fushimi City"
+            }
+        },
         "gsi",
         "gsi_ortho",
         {
