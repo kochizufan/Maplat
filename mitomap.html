@@ -91,7 +91,7 @@
     option[hash[0]] = hash[1] == 'true' ? true : hash[1] == 'false' ? false : hash[1];
   }
   Maplat.createObject(option).then(function(app){
-    app.addEventListener('clickMarker', function(evt) {
+    app.core.addEventListener('clickMap', function(evt) {
       console.log(evt);
     });
   });

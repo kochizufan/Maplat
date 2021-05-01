@@ -29,6 +29,22 @@
             "mapID" : "mito_1915",
             "label" : "大正4"
         },
+        {
+            "title": "Mito - Japan City Plans",
+            "contributor": "University of Texas Libraries",
+            "createdAt": "1945-1946",
+            "author": "U.S.Army Map Service",
+            "attr": "Courtesy of the University of Texas Libraries, The University of Texas at Austin, Tilemap.JP.",
+            "label": {
+                "ja": "戦後",
+                "en": "After WW II (1946)"
+            },
+            "mapID": "jcp_maps_mito",
+            "maptype": "overlay",
+            "url": "https://t.tilemap.jp/jcp_maps/mito/{z}/{x}/{-y}.png",
+            "maxZoom": 16,
+            "envelopeLngLats" : [[140.54449947954032, 36.350708959947866], [140.41850861038526, 36.35069007036196], [140.4189621678005, 36.41283812382862], [140.54506031532773, 36.412831003870636]]
+        },
         "gsi",
         "gsi",
         "gsi_ortho",
